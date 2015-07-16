@@ -1,0 +1,191 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{KJN}[2005/10/12 Additional packages, commands, etc for KJN]
+
+\typeout{Document Style `KJN.sty' <2005/10/12>}
+\typeout{Rev. 1.1.0}
+
+
+%
+% Some sections shamelessly borrowed from Steve, who in turn shamelessly borrowed from myself,
+% and I am sure material from Alan Clark was involved somewhere too.
+%
+
+
+%------------------------------------------------------------------------------
+%                       Switch to detect LaTeX or PDFTeX
+%------------------------------------------------------------------------------
+\usepackage{ifpdf}      
+%---------------------------------------------------------------------
+%                       Options for PDFTeX
+%------------------------------------------------------------------------------
+\ifpdf
+    \RequirePackage[pdftex,final]{graphicx}
+%    \graphicspath{{figures/pdf/}}                           % graphics files are in the pdf directory
+%    \RequirePackage[pdftex]{hyperref}                       % without back-refs in the bibliography section
+    %\RequirePackage[pdftex,a4paper,pagebackref]{hyperref}  % with back-references
+% for nifty things for online PDF documents
+\usepackage[a4paper,colorlinks,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+    %\pdfcompresslevel=9 included in pdftex.cfg
+    %\DeclareGraphicsExtensions{.png,.pdf,.jpg,.jpeg}  %graphicx with pdftex automatically searches for these files
+\else
+%------------------------------------------------------------------------------
+%              Options for PDF from DVI or PDF from PS (via DVI)
+%------------------------------------------------------------------------------
+    \RequirePackage[final]{graphicx}
+%    \graphicspath{{figures/eps/}}           % graphics files are in the eps directory
+                                            % Comment the options that are not to be used
+    \RequirePackage[dvipdfm]{hyperref}      % for LaTeX -> DVIPDFM
+    %\RequirePackage[dvips]{hyperref}       % for LaTeX -> DVIPS -> PS2PDF. Does not support linebreaks in URLs!
+    %\RequirePackage{hyperref}
+    %\RequirePackage[pagebackref]{hyperref} % with back-references
+    \DeclareGraphicsExtensions{.eps,.bmp,.jpg,.mps,.png}
+\fi
+
+%------------------------------------------------------------------------------
+%                           Packages
+%------------------------------------------------------------------------------
+
+% Mostly SPL
+
+%\usepackage{siunits}                                    % For SI Units (meters, degrees, volts etc.)
+%\usepackage{shadow}                                     % for shadow boxing text
+%\usepackage{listings}                                   % for source code listings
+%\lstset{tabsize=3, %% numbers=left, numberstyle=\tiny,  % arguments for the listings package
+%        basicstyle=\small, stepnumber=2, numbersep=5pt,
+%        showstringspaces=false,language=C++}
+\usepackage{xspace}                                     % inserts spaces after macro expansions
+%\usepackage{latexcad}                                   % for latexcad pictures
+%\usepackage{boxedminipage}                              % boxes
+%\input{annotation.sty}                                  % for comments
+%\usepackage[square,comma]{natbib}                      % for citations and references - Harvard Style
+\usepackage[square,comma,numbers,sort&compress]{natbib} % for citations and references - Numerical
+%\usepackage{hypernat}                                   % allows natbib and hyperref packages to interwork
+%\usepackage{fink}                                       % Ascertain this file's name
+%\usepackage{lastpage}                                   % Determine the last page
+%\usepackage{fancyhdr}                                   % Headers and footers
+%\usepackage[long,nodayofweek]{datetime}                 % date/time formats - redefines \today
+\usepackage{url}                                        % for typesetting and linking URLs, used by natbib
+%\usepackage{color}                                      % for defining custom colours
+%\definecolor{darkblue}{rgb}{0,0,0.5}                    % 'red', 'green' and 'blue' are predefined
+\usepackage{balance}                                     % balance that last page of two-column output
+%\usepackage{texnames}                                   % defines \LaTeX \BibTeX etc
+%\usepackage{microtype}                                   % character protusion and expansion for better alignment at right margin
+% Mostly KJN
+
+%\usepackage{subfigure}
+%\usepackage{rotate}
+%\usepackage{amsmath}                                    % very useful math functionality
+%\usepackage{multirow}                                   % Multiple rows in tables
+
+%------------------------------------------------------------------------------
+%                           New Commands
+%------------------------------------------------------------------------------
+
+\newcommand{\micro}{\mbox{$\mu$}}
+\newcommand{\usec}{\ensuremath{\mu}s\xspace}
+\newcommand{\kApusec}{\ensuremath{kA/\mu}s\xspace}
+\newcommand{\uF}{\ensuremath{\mu}F\xspace}
+\newcommand{\uH}{\ensuremath{\mu}H\xspace}
+\newcommand{\uA}{\ensuremath{\mu}A\xspace}
+
+\newcommand{\Ohm}{\ensuremath{\Omega}\xspace}
+\newcommand{\ohm}{\Ohm}
+\newcommand{\ohms}{\Ohm}
+\newcommand{\ohmm}{\ensuremath{\Omega}m\xspace}
+% The Degree symbol (works in any mode) - thnx Dr Clark
+% Usage: ..... 90\degrees North .....
+\newcommand{\degrees}{\ensuremath{^\circ}}
+\newcommand{\degree}{\degrees\xspace}
+
+%\newcommand{\first}{1$^{st}$}
+%\newcommand{\secnd}{2$^{nd}$}
+\newcommand{\first}{1st}
+\newcommand{\secnd}{2nd}
+
+% Steve
+\newcommand{\jw}{j\omega}
+\newcommand{\w}{\omega}
+\newcommand{\matlab}{\mbox{\textrm{M\kern-.05em\textsc{a\kern-.01em t\kern-.05em\-l\kern-.05em a\kern-.05em b}}}\xspace}
+%\newcommand{\ahref}[1]{\href{#1}{\url{#1}}}            % unnecessary as \url is redefined by hyperref to form a link
+\newcommand{\email}[1]{\href{mailto:#1}{#1}}            % for email hyperlinks
+
+% Shorthands for references
+\newcommand{\figref}[1]{{\sl Figure~\ref{#1}\/}}
+\newcommand{\figrefs}[2]{{Figures~\ref{#1}\/} and {\sl \ref{#2}}\/}
+\newcommand{\tabref}[1]{{\sl Table~\ref{#1}\/}}
+\newcommand{\tabrefs}[2]{{\sl Tables~\ref{#1}\/} and {\sl \ref{#2}}\/}
+\newcommand{\eqnref}[1]{{\sl Equation~\ref{#1}\/}}
+\newcommand{\eqnrefs}[2]{{(\ref{#1})\/} and {(\ref{#2})}\/}
+\newcommand{\secref}[1]{{\sl Section~\ref{#1}}\xspace}
+\newcommand{\secrefs}[2]{{\sl Sections~\ref{#1}\/} and {\sl \ref{#2}}\/}
+\newcommand{\secrefn}[3]{{\sl Sections~\ref{#1}\/}, {\sl \ref{#2}} and {\sl \ref{#3}}\/}
+
+%
+% Miscellaneous
+
+\newcommand{\smallitem}{\setlength{\itemsep}{-0.5ex}}
+\newcommand{\Bit}{\begin{itemize}\smallitem}
+\newcommand{\Eit}{\end{itemize}}
+
+% To fix font problems changed ptmb to ptmb8r (SPL)
+\newfont{\msbf}{ptmb8r}
+
+%\newtheorem{theorem}{Theorem}
+\newtheorem{thrm}{Theorem}
+
+
+% Allow global changes to "units" in equations
+\newcommand{\units}[1]
+{\rm \hspace{1em} [#1]}
+
+%\newcommand{\ahref}[1]
+%{\href{#1}{#1}}
+\newcommand{\ahref}[1]{#1}
+
+
+% Macros for easy inclusion of figures
+
+\newcommand{\inputfig}[2]
+{
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics{#1} % it will pull in the figure
+        \caption{#2}   % includes fig num
+        \label{fig:#1} % ie may \ref{fig:#1}
+    \end{center}
+\end{figure}
+}
+\newcommand{\inputfigtop}[2]
+{
+\begin{figure}[t!]
+    \begin{center}
+        \includegraphics{#1} % it will pull in the figure
+        \caption{#2}   % includes fig num
+        \label{fig:#1} % ie may \ref{fig:#1}
+    \end{center}
+\end{figure}
+}
+\newcommand{\inputfigbot}[2]
+{
+\begin{figure}[b!]
+    \begin{center}
+        \includegraphics{#1} % it will pull in the figure
+        \caption{#2}   % includes fig num
+        \label{fig:#1} % ie may \ref{fig:#1}
+    \end{center}
+\end{figure}
+}
+
+% This for equation "wheres"
+\newcommand{\where}[1]
+{
+\begin{center}
+  \begin{scriptsize}
+    \begin{tabular}{clc}
+    {#1}
+    \end{tabular}
+  \end{scriptsize}
+\end{center}
+}
+
+
