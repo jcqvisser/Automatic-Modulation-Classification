@@ -49,30 +49,49 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 
 \section{DESIGN PROCESS OVERVIEW}
 	\subsection{Development Methodology}
-		% Agile? More of an engineering-oriented method
+		% Engineering oriented method
+		% make use of Trello
+		% Add screenshots to appendix
 	\subsection{Estimated Project Schedule}
 		% Design, Implementation, Simulated Testing, Iteration, Practical Testing and Evaluation
+		% Overview and Trello screenshots
 	\subsection{Estimated Costs and Hardware Required}
-		% Two USRP's and two ariels
+		% Two USRP's and two antennas
+		The practical implementation of this project will require at least two USRP devices. The first of which will be used for receiving radio signals, the modulation of which is to be classified. The second will be used to generate modulated signals in order to practically test the operation of the system. Seeing as Wits has these available, no charges would be incurred.
+
+		Furthermore, at least two computers running Linux will be required. The team-members' labptops will be used for this purpose.
 
 \section{IMPLEMENTATION OVERVIEW}
 	\subsection{Hardware}
 		% USRP
 		% Antenna?
 		% Runs on a Linux pc, not win cos of UHD
+	As mentioned before, two USRP's and two computers are neccesary. To avoid significant effort in compiling and installation of the USRP Hardware Driver (UHD) both computers will run Linux natively.
 
 	\subsection{Software}
 		\subsubsection{Basic Software Structure}
+			Due to the computationally intensive and time-dependent nature of the system, the software would have to be threaded, with each major component running on it's own thread.
+
+			The software would consist of various components centered around a main control loop. The UHD driver, run in it's own thread, passes the signal to the central control stucture, which filters the signal and passes it to various feature extraction functions, all run in parralel. These functions deliver the features that have been extracted form the signal to a classifier which finally determines the modulation scheme used. This process is represented as a flow diagram in Figure \ref{fig:sw_overview}
 			% fundamentally threaded
 			% UHD on one thread
 			% each of the feature extraction functions on their own thread
 			% classifier on a final thread
 		\subsubsection{Libraries and API's}
-			% UHD API
-			% FFT Library
-			% SFML for gui and plotting
-			% C++11 std
+			Due to the complicated nature of the software implementation, all of the components will not be locally developed. Rather, various API's and libraries will be used.
+
+			Firstly, the Ettus USRP Hardware Driver's (UHD) C++ API will be used for communication with the USRP. This is a free \& open source piece of software released under the GPLv3 license \cite{uhd_license}, and is thus free to be used for a project such as this.
+
+			In order to spectrally analyse the incoming signal the KissFFT library is to be used. KissFFT is developed by Mark Borgerding and is available under a Revised BSD license \cite{kissfft_license}
+
+			For displaying graphical information SFML (Simple and Fast Multimedia Library) will be used. This is distributed under the zlib/libpng License and may thus be freely used in a project such as this \cite{sfml_license}.
+
+			For threading and other miscelaneous functions the C++ 11 Standard library will be used. GNU libstdc++ which is used with GCC is distributed under the GPLv3 license.
+
 		\subsubsection{Build System}
+			Due to the open-source nature and wide availability of the libraries and API's used in this project the software produced will be able to run on various platforms. To fully support this the CMake build-system-generator will be used so that this project may easily be compiled on various platforms.
+
+			CMake is distributed under the BSD 3-Clause license \cite{cmake_license} and it can thus be distributed with and used in this project.
 			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
 
 \section{PROPOSED TESTING PROCEDURE}
