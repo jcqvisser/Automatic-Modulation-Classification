@@ -47,6 +47,8 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 	\subsection{Civilian}
 		% cognative radio, effective use of bandwith
 
+\section{SOLUTION SELECTION}
+
 \section{DESIGN PROCESS OVERVIEW}
 	\subsection{Development Methodology}
 		% Engineering oriented method
@@ -93,6 +95,26 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 
 			CMake is distributed under the BSD 3-Clause license \cite{cmake_license} and it can thus be distributed with and used in this project.
 			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
+
+			\subsection{Feature Extraction Functions}
+			Individual functions will have to be developed for the extraction of each of the 10 features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
+
+			A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT. 
+			
+			To obtain the instantaneous phase of the signal, the negative portion of the spectral representation of the signal is to be removed and an IFFT is to be performed \cite{picinbono1997instantaneous}. Following this, phase unwrapping must be performed \cite{park2009introduction, picinbono1997instantaneous}.
+
+			The Instantaneous frequency of the signal may then be obtained from the instantaneous phase by differentiation \cite{park2009introduction}
+
+			This results in a complex series of events that must be performed. They are shown as a flow diagram in Figure \ref{fig:feature_flow}.
+
+		\subsection{Signal Filtering}
+			Filtering of the input signal to isolate the bandwidth in which a single signal exists is a delicate process. 
+			Phase distortion may negatively affect the results as some of the features are dependant on the non-linear portion of the phase only. 
+			Thus it is important to implement zero-phase digital filtering.
+			This may be done by either performing forward and reverse filtering or by selecting an FIR filter with a vary flat phase response \cite{something?}.
+
+			The former option would require buffering a large portion of the signal, but might yeild better results than the latter. This tradeoff, as well as selecting the bandwith of the band-pass filter to be used is still under investigation.
+
 
 \section{PROPOSED TESTING PROCEDURE}
 	\subsection{Simulated Testing}
