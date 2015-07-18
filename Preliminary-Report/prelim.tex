@@ -96,7 +96,7 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 			CMake is distributed under the BSD 3-Clause license \cite{cmake_license} and it can thus be distributed with and used in this project.
 			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
 
-			\subsection{Feature Extraction Functions}
+		\subsection{Feature Extraction Functions}
 			Individual functions will have to be developed for the extraction of each of the 10 features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
 
 			A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT. 
@@ -115,6 +115,8 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 
 			The former option would require buffering a large portion of the signal, but might yeild better results than the latter. This tradeoff, as well as selecting the bandwith of the band-pass filter to be used is still under investigation.
 
+		\subsection{Classifier}
+
 
 \section{PROPOSED TESTING PROCEDURE}
 	\subsection{Simulated Testing}
@@ -124,6 +126,18 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 	\subsection{Practical Testing}
 		% correlate real world results with simulation
 		% Don't make a new program, just use GNURadio companion to make signals to classify
+
+\section{PRELIMINARY RESULTS}
+	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear seperation between different modulation schemes. This can be seen in Figures \ref{fig:0, fig:1}. 
+
+	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
+
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width=1.1\textwidth]{plot0.eps}
+		\caption{Awesome Image}
+		\label{fig:awesome_image}
+	\end{figure}
 
 \section{CONCLUSION AND RECOMMENDATIONS}
 
