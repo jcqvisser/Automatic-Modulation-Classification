@@ -28,9 +28,10 @@ Witwatersrand, Private Bag 3, 2050, Johannesburg, South Africa}
 
 % TODO How does one even write an introduction?
 \section{INTRODUCTION}
+% mention USRP's and define the term
 
 \section{LITERATURE SURVEY}
-Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to automatic modulation classification; likelihood-based, distribution-test-based and feature-based. These are briefly detailled below.
+Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to automatic modulation classification; likelihood-based, distribution-test-based and feature-based. These are briefly detailed below.
 	\subsection{Likelihood Based Classification}
 	\subsection{Distribution Test Based Classification}
 	\subsection{Feature Based Classification}
@@ -44,7 +45,7 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 	\begin{enumerate}
 		\item $\gamma_{max}$: Maximum value of Power Spectral Density 
 		\item $\sigma_{ap}$: Standard deviation of the absolute value of the non-linear component of the instantaneous phase.
-		\item $\sigma_{dp}$: Standard deviation of the non-linear component of the direct instantaenous phase.
+		\item $\sigma_{dp}$: Standard deviation of the non-linear component of the direct instantaneous phase.
 		\item $P$: Spectrum symmetry
 		\item $\sigma_{aa}$: Standard deviation of the absolute value of the normalized and centered instantaneous amplitude
 		\item $\sigma_{af}$: Standard deviation of the absolute value of the normalized and centered instantaneous frequency
@@ -52,8 +53,9 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		\item $\mu_{42}^{a}$: Kurtosis of the normalized and centered instantaneous amplitude
 		\item $\mu_{42}^{f}$: Kurtosis of the normalized and centered instantaneous frequency
 	\end{enumerate}
-	
 
+	The formulae for the computation of these features can be found in either \textit{Automatic Modulation Classification: Principles, Algorithms and Applications} by Zhu and Nandi \cite{zhu2014automatic} or \textit{Automatic modulation recognition of communication signals} by Azzouz and Nandi \cite{azzouz2013automatic}, and are omitted here for brevity.
+	
 \section{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}
 	\subsection{Military}
 		% jamming, listening in on communications
@@ -71,37 +73,33 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 	\subsection{Estimated Project Schedule}
 		% Design, Implementation, Simulated Testing, Iteration, Practical Testing and Evaluation
 		% Overview and Trello screenshots
-	\subsection{Estimated Costs and Hardware Required}
-		The practical implementation of this project will require at least two USRP devices. The first of which will be used for receiving radio signals, the modulation of which is to be classified. The second will be used to generate modulated signals in order to practically test the operation of the system. Seeing as Wits has these available, no charges would be incurred.
 
-		Furthermore, at least two computers running Linux will be required. The team-members' labptops will be used for this purpose.
 
 \section{IMPLEMENTATION OVERVIEW}
-	\subsection{Hardware}
-		% USRP
-		% Antenna?
-		% Runs on a Linux pc, not win cos of UHD
-	As mentioned before, two USRP's and two computers are neccesary. To avoid significant effort in compiling and installation of the USRP Hardware Driver (UHD) both computers will run Linux natively.
 
 	\subsection{Software}
 		\subsubsection{Basic Software Structure}
 			Due to the computationally intensive and time-dependent nature of the system, the software would have to be threaded, with each major component running on it's own thread.
 
-			The software would consist of various components centered around a main control loop. The UHD driver, run in it's own thread, passes the signal to the central control stucture, which filters the signal and passes it to various feature extraction functions, all run in parralel. These functions deliver the features that have been extracted form the signal to a classifier which finally determines the modulation scheme used. This process is represented as a flow diagram in Figure \ref{fig:sw_overview}
-			% fundamentally threaded
-			% UHD on one thread
-			% each of the feature extraction functions on their own thread
-			% classifier on a final thread
+			The software would consist of various components centered around a main control loop. The USRP Hardware Driver (UHD), run in it's own thread, passes the signal to the central control structure, which filters the signal and passes it to various feature extraction functions, all run in parallel. These functions deliver the features that have been extracted form the signal to a classifier which finally determines the modulation scheme used. This process is represented as a flow diagram in Figure \ref{fig:sw_overview}. The Feature extraction process is shown in Appendix \ref{app:feature} and discussed in Section \ref{sec:feat_fun}.
+
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[trim=1.2cm 31.5cm 9cm 8cm, clip=true,width=0.5\textwidth]{small.pdf}
+				\caption{Overview of the modulation classification process}
+				\label{fig:sw_overview}
+			\end{figure}
+
 		\subsubsection{Libraries and API's}
 			Due to the complicated nature of the software implementation, all of the components will not be locally developed. Rather, various API's and libraries will be used.
 
 			Firstly, the Ettus USRP Hardware Driver's (UHD) C++ API will be used for communication with the USRP. This is a free \& open source piece of software released under the GPLv3 license \cite{uhd_license}, and is thus free to be used for a project such as this.
 
-			In order to spectrally analyse the incoming signal the KissFFT library is to be used. KissFFT is developed by Mark Borgerding and is available under a Revised BSD license \cite{kissfft_license}
+			In order to spectrally analyze the incoming signal the FFTW3 library is to be used. FFTW3 is an open-source C library developed by Matteo Frigo and Steven G. Johnson. It is available under the GPLv3 license \cite{fftw3_license}.
 
 			For displaying graphical information SFML (Simple and Fast Multimedia Library) will be used. This is distributed under the zlib/libpng License and may thus be freely used in a project such as this \cite{sfml_license}.
 
-			For threading and other miscelaneous functions the C++ 11 Standard library will be used. GNU libstdc++ which is used with GCC is distributed under the GPLv3 license.
+			For threading and other miscellaneous functions the C++ 11 Standard library will be used. GNU libstdc++ which is used with GCC is distributed under the GPLv3 license.
 
 		\subsubsection{Build System}
 			Due to the open-source nature and wide availability of the libraries and API's used in this project the software produced will be able to run on various platforms. To fully support this the CMake build-system-generator will be used so that this project may easily be compiled on various platforms.
@@ -109,27 +107,35 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 			CMake is distributed under the BSD 3-Clause license \cite{cmake_license} and it can thus be distributed with and used in this project.
 			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
 
-		\subsection{Feature Extraction Functions}
-			Individual functions will have to be developed for the extraction of each of the nine features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
+	\subsection{Feature Extraction}
+		\label{sec:feat_fun}
+		Individual functions will have to be developed for the extraction of each of the nine features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
 
-			A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT using the KissFFT library. 
-			
-			To obtain the instantaneous phase of the signal, the negative portion of the spectral representation of the signal is to be removed and an IFFT is to be performed \cite{picinbono1997instantaneous}. Following this, phase unwrapping must be performed \cite{park2009introduction, picinbono1997instantaneous}.
+		A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT using the FFTW3 library. 
+		
+		To obtain the instantaneous phase of the signal, the negative portion of the spectral representation of the signal is to be removed and an IFFT is to be performed \cite{picinbono1997instantaneous}. Following this, phase unwrapping must be performed \cite{park2009introduction, picinbono1997instantaneous}.
 
-			The Instantaneous frequency of the signal may then be obtained from the instantaneous phase by differentiation \cite{park2009introduction}.
+		The Instantaneous frequency of the signal may then be obtained from the instantaneous phase by differentiation \cite{park2009introduction}.
 
-			This results in a complex series of events. They are shown in sequence as a flow diagram in Figure \ref{fig:feature_flow}.
+		This results in a complex series of events. They are shown in sequence as a flow diagram in Appendix \ref{app:feature}, Figure \ref{fig:feature}.
 
-		\subsection{Signal Filtering}
-			Filtering of the input signal to isolate the bandwidth in which a single signal exists is a delicate process. 
-			Phase distortion may negatively affect the results as some of the features are dependant on the non-linear portion of the phase only. 
-			Thus it is important to implement zero-phase digital filtering.
-			This may be done by either performing forward and reverse filtering or by selecting an FIR filter with a vary flat phase response \cite{something?}.
+	\subsection{Signal Filtering}
+		Filtering of the input signal to isolate the bandwidth in which a single signal exists is a delicate process. 
+		Phase distortion may negatively affect the results as some of the features are dependant on the non-linear portion of the phase only. 
+		Thus it is important to implement zero-phase digital filtering.
+		This may be done by either performing forward and reverse filtering or by selecting an FIR filter with a vary flat phase response \cite{sundararajan2003digital}.
 
-			The former option would require buffering a large portion of the signal, but might yeild better results than the latter. This tradeoff, as well as selecting the bandwith of the band-pass filter to be used is still under investigation.
+		The former option would require buffering a large portion of the signal, but might yield better results than the latter. This trade-off, as well as selecting the bandwidth of the band-pass filter to be used is still under investigation.
 
-		\subsection{Classifier}
+		Filtering will be implemented by convolution as the alternative, multiplication in the Fourier domain, would result in an extra step in feature extraction: finding the magnitude of the resulting signal after performing the IFFT. (See Appendix \cite{app:feature} for more information)
 
+	\subsection{Classifier}
+
+	\subsection{Estimated Costs and Hardware Required}
+		The practical implementation of this project will require at least two USRP devices. The first of which will be used for receiving radio signals, the modulation of which is to be classified. The second will be used to generate modulated signals in order to practically test the operation of the system. Seeing as Wits has these available, no charges would be incurred.
+
+
+		To avoid significant effort in compiling and installation of the USRP Hardware Driver (UHD) two computers running Linux natively will be required. The team-members' laptops will be used for this purpose.
 
 \section{PROPOSED TESTING PROCEDURE}
 	\subsection{Simulated Testing}
@@ -141,9 +147,7 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		% Don't make a new program, just use GNURadio companion to make signals to classify
 
 \section{PRELIMINARY RESULTS}
-	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear seperation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
-
-	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
+	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear separation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
 
 	\begin{figure*}[!h]
 		\centering
@@ -152,9 +156,30 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		\label{fig:plot0}
 	\end{figure*}
 
-\section{CONCLUSION AND RECOMMENDATIONS}
+	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
 
+
+\section{CONCLUSION AND RECOMMENDATIONS}
 
 \bibliographystyle{witseie}
 \bibliography{prelim} 
+
+\onecolumn
+\appendix
+\setcounter{figure}{0}
+\section{Feature Extraction Process}
+\label{app:feature}
+The process of feature extraction is fairly complex. It is presented as a flow graph in Figure. \ref{fig:feature} below. Because of the nature of the process it is amenable to parallelization. This will be performed using the C++ 11 Standard threading library.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[trim=0cm 10cm 0cm 12cm, clip=true,width=1\textwidth]{large.pdf}
+	\caption{Feature extraction process as a flow graph}
+	\label{fig:feature}
+\end{figure}
+
+Filtering of the signal prior to feature extraction is done by means of convolution. The alternative, filtering by multiplication in the Fourier domain, would imply that both the phase and magnitude of the output of the IFFT in Figure \ref{fig:feature} need to be found. The magnitude found here is equivalent to the input of the FFT. This approach would not only impact the accuracy of the instantaneous amplitude measure, but also introduce another unnecessary operation.
+
+
 \end{document}
+
