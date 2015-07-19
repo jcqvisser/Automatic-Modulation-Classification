@@ -30,12 +30,34 @@ Witwatersrand, Private Bag 3, 2050, Johannesburg, South Africa}
 \section{INTRODUCTION}
 
 \section{LITERATURE SURVEY}
+\label{sec:literature}
+According to Zhu and Nandi \cite{zhu2014automatic} there are three primary approaches to automatic modulation classification, these are: likelyhood-based, distribution-test-based and feature based. These will be discussed below.
+
+	\subsection{Likelihood Based Classification}
+	\label{subsec:likelyhood}
+	Likelihood based classification is the considered the most popular method of classification, due to the accuracy of the classification when the channel is perfectly modeled \cite{zhu2014automatic}. This method requires knowledge of the channel that the signal is received from, which can be derived through evaluating every modulation hypothesis with observed signal samples \cite{zhu2014automatic}.\\[11pt]
+
+	The main likelihood based classifier approaches are as follows \cite{zhu2014automatic}:
+	\begin{itemize}
+		\item \textbf{Maximum Likelihood (ML)} - This classifier requires perfect channel knowledge and all parameters are known except for the signal modulation.
+		\item \textbf{Average Likelihood Ratio Test (ALRT)} - This classifier overcomes the limitation of not knowing every parameter through using accurate models for unknown parameters, making the calculation much more complex when unknown parameters are introduced.
+		\item \textbf{Generalized Likelihood Ratio Test (GLRT)} - Essentially a combination of ALRT and ML classifiers, it replaces the integration of unknown parameters (ALRT) with maximization of likelihood for a possible range of unkown parameters.
+		\item \textbf{Hybrid Likelihood Ratio Test (HLRT)} - The HLRT likelihood function is calculated by averaging transmitted symbols and maximizing the resulting function.
+	\end{itemize}
+	These classifiers are well documented by Zhu and Nandi \cite{zhu2014automatic}; Dobre, Abdi, Bar-Ness and Su \cite{dobre2007survey}. 
+
+	\subsection{Distribution Test Based Classification}
+	\label{subsec:distribution}
+
+	\subsection{Feature Based Classification}
+	\label{subsec:feature}
+
 
 \section{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}
 	\subsection{Military}
 		% jamming, listening in on communications
 	\subsection{Civilian}
-		% cognative radio, effective use of bandwith
+		% cognitive radio, effective use of bandwidth
 		% aircraft monitoring
 
 \section{SOLUTION SELECTION}
