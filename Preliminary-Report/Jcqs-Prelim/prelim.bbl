@@ -21,6 +21,27 @@ E.~Azzouz and A.~Nandi.
 \newblock {\em Automatic modulation recognition of communication signals\/}.
 \newblock Springer Science \& Business Media, 2013.
 
+\bibitem{incremental_model}
+A.~Ghahrai.
+\newblock \enquote{Incremental Model.}, 2008.
+\newblock \urlprefix\url{http://www.testingexcellence.com/incremental-model/}.
+
+\bibitem{waterfall_model}
+Tutorialspoint.
+\newblock \enquote{Waterfall Model.}, 2015.
+\newblock
+  \urlprefix\url{http://www.tutorialspoint.com/sdlc/sdlc_waterfall_model.htm}.
+
+\bibitem{trello}
+Trello.
+\newblock \enquote{Trello.}, 2015.
+\newblock \urlprefix\url{http://trello.com/}.
+
+\bibitem{kanban_model}
+D.~Peterson.
+\newblock \enquote{What is Kanban?}, 2015.
+\newblock \urlprefix\url{http://kanbanblog.com/explained/}.
+
 \bibitem{uhd_license}
 M.~Ettus.
 \newblock \enquote{Licensing Issues Related to UHD.}, 2014.

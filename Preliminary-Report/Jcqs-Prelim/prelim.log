@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.7.16)  19 JUL 2015 18:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2015/dev/Debian) (preloaded format=pdflatex 2015.7.16)  19 JUL 2015 23:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -228,36 +228,92 @@ Package: balance 1999/02/23 4.3 (PWD)
 \oldvsize=\dimen109
 )
 \c@thrm=\count98
-) (./prelim.aux)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/multicol.sty
+Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
+\c@tracingmulticols=\count99
+\mult@box=\box26
+\multicol@leftmargin=\dimen110
+\c@unbalance=\count100
+\c@collectmore=\count101
+\doublecol@number=\count102
+\multicoltolerance=\count103
+\multicolpretolerance=\count104
+\full@width=\dimen111
+\page@free=\dimen112
+\premulticols=\dimen113
+\postmulticols=\dimen114
+\multicolsep=\skip45
+\multicolbaselineskip=\skip46
+\partial@page=\box27
+\last@line=\box28
+\maxbalancingoverflow=\dimen115
+\mult@rightbox=\box29
+\mult@grightbox=\box30
+\mult@gfirstbox=\box31
+\mult@firstbox=\box32
+\@tempa=\box33
+\@tempa=\box34
+\@tempa=\box35
+\@tempa=\box36
+\@tempa=\box37
+\@tempa=\box38
+\@tempa=\box39
+\@tempa=\box40
+\@tempa=\box41
+\@tempa=\box42
+\@tempa=\box43
+\@tempa=\box44
+\@tempa=\box45
+\@tempa=\box46
+\@tempa=\box47
+\@tempa=\box48
+\@tempa=\box49
+\c@columnbadness=\count105
+\c@finalcolumnbadness=\count106
+\last@try=\dimen116
+\multicolovershoot=\dimen117
+\multicolundershoot=\dimen118
+\mult@nat@firstbox=\box50
+\colbreak@box=\box51
+\mc@col@check@num=\count107
+)
+(/usr/share/texlive/texmf-dist/tex/latex/chngcntr/chngcntr.sty
+Package: chngcntr 2009/09/02 v1.0a change counter resetting
+)
+
+LaTeX Warning: Unused global option(s):
+    [onecolumn].
+
+(./prelim.aux)
 \openout1 = `prelim.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-
-(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+ (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count99
-\scratchdimen=\dimen110
-\scratchbox=\box26
-\nofMPsegments=\count100
-\nofMParguments=\count101
+\scratchcounter=\count108
+\scratchdimen=\dimen119
+\scratchbox=\box52
+\nofMPsegments=\count109
+\nofMParguments=\count110
 \everyMPshowfont=\toks15
-\MPscratchCnt=\count102
-\MPscratchDim=\dimen111
-\MPnumerator=\count103
-\makeMPintoPDFobject=\count104
+\MPscratchCnt=\count111
+\MPscratchDim=\dimen120
+\MPnumerator=\count112
+\makeMPintoPDFobject=\count113
 \everyMPtoPDFconversion=\toks16
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
@@ -274,7 +330,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box27
+\AtBeginShipoutBox=\box53
 
 
 Package hyperref Warning: Height of page (\paperheight) is invalid (0.0pt),
@@ -288,7 +344,7 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 137.
 )
-Package hyperref Info: Link coloring ON on input line 12.
+Package hyperref Info: Link coloring ON on input line 14.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -296,56 +352,53 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count105
+\c@section@level=\count114
 )
-LaTeX Info: Redefining \ref on input line 12.
-LaTeX Info: Redefining \pageref on input line 12.
-LaTeX Info: Redefining \nameref on input line 12.
+LaTeX Info: Redefining \ref on input line 14.
+LaTeX Info: Redefining \pageref on input line 14.
+LaTeX Info: Redefining \nameref on input line 14.
 
 (./prelim.out) (./prelim.out)
 \@outlinefile=\write3
 \openout3 = `prelim.out'.
 
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 27.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 29.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 54.
+(Font)              <7> on input line 58.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 54.
+(Font)              <5> on input line 58.
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+LaTeX Warning: Reference `fig:sw_overview' on page 2 undefined on input line 10
+1.
 
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
-
-
-]
-<small.pdf, id=153, 830.10126pt x 1178.4025pt>
+<small.pdf, id=141, 830.10126pt x 1178.4025pt>
 File: small.pdf Graphic file (type pdf)
  <use small.pdf>
-Package pdftex.def Info: small.pdf used on input line 98.
+Package pdftex.def Info: small.pdf used on input line 105.
 (pdftex.def)             Requested size: 241.84842pt x 24.42253pt.
 
-Overfull \hbox (8.53583pt too wide) in paragraph at lines 98--99
+Overfull \hbox (8.53583pt too wide) in paragraph at lines 105--106
  [][] 
  []
 
 
+Package multicol Warning: Floats and marginpars not allowed inside `multicols' 
+environment!.
+
+
+Package multicol Warning: Floats and marginpars not allowed inside `multicols' 
+environment!.
+
+
 Package natbib Warning: Citation `sfml_license' on page 2 undefined on input li
-ne 110.
+ne 117.
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [2 <./small.pdf>]
-
-Package natbib Warning: Citation `app:feature' on page 3 undefined on input lin
-e 142.
-
+[2]
 Package epstopdf Info: Source file: <plot0.eps>
 (epstopdf)                    date: 2015-07-18 13:10:41
 (epstopdf)                    size: 271791 bytes
@@ -354,120 +407,86 @@ Package epstopdf Info: Source file: <plot0.eps>
 (epstopdf)                    size: 269738 bytes
 (epstopdf)             Command: <repstopdf --outfile=plot0-eps-converted-to.pdf
  plot0.eps>
-(epstopdf)             \includegraphics on input line 163.
+(epstopdf)             \includegraphics on input line 170.
 Package epstopdf Info: Output file is already uptodate.
-<plot0-eps-converted-to.pdf, id=187, 1028.84375pt x 490.83376pt>
+ <plot0-eps-converted-to.pdf, id=172, 1028.84375pt x 490.83376pt>
 File: plot0-eps-converted-to.pdf Graphic file (type pdf)
 
 <use plot0-eps-converted-to.pdf>
-Package pdftex.def Info: plot0-eps-converted-to.pdf used on input line 163.
-(pdftex.def)             Requested size: 532.06947pt x 253.84196pt.
-
-Overfull \hbox (48.37263pt too wide) in paragraph at lines 163--164
- [][] 
- []
+Package pdftex.def Info: plot0-eps-converted-to.pdf used on input line 170.
+(pdftex.def)             Requested size: 483.69684pt x 230.7593pt.
 
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 (./prelim.bbl
-Underfull \hbox (badness 4416) in paragraph at lines 13--18
-[]\OT1/cmr/m/n/10 P. Ur-riza, E. Re-beiz, P. Pawel-czak, and
+Underfull \hbox (badness 10000) in paragraph at lines 25--28
+\OT1/cmr/m/n/10 URL [][]$\OT1/cmtt/m/n/10 http : / / www . testingexcellence . 
+com /
  []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-Underfull \hbox (badness 4913) in paragraph at lines 25--29
-[]\OT1/cmr/m/n/10 M. Et-tus.  ``Li-cens-ing Is-sues Re-lated to
- []
-
-
-Underfull \hbox (badness 2302) in paragraph at lines 25--29
-\OT1/cmr/m/n/10 UHD.'', 2014.  URL [][]$\OT1/cmtt/m/n/10 http : / / lists . ett
-us .
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 25--29
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 46--50
 \OT1/cmtt/m/n/10 com / pipermail / usrp-[]users _ lists . ettus .
  []
 
 
-Underfull \hbox (badness 3260) in paragraph at lines 31--34
-[]\OT1/cmr/m/n/10 M. Frigo and S. G. John-son.  ``kissfft.'',
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 31--34
+Underfull \hbox (badness 10000) in paragraph at lines 52--55
 \OT1/cmr/m/n/10 2013.  URL [][]$\OT1/cmtt/m/n/10 http : / / www . fftw . org / 
 doc /
  []
 
-
-Underfull \hbox (badness 1048) in paragraph at lines 63--67
-[]\OT1/cmr/m/n/10 D. Sun-darara-jan.  \OT1/cmr/m/it/10 Dig-i-tal Sig-nal Pro-ce
-ss-ing:
- []
-
-) [3] [4 <./plot0-eps-converted-to.pdf>]
-<large.pdf, id=225, 830.10126pt x 1178.4025pt>
+) [4 <./plot0-eps-converted-to.pdf>]
+<large.pdf, id=223, 830.10126pt x 1178.4025pt>
 File: large.pdf Graphic file (type pdf)
  <use large.pdf>
-Package pdftex.def Info: large.pdf used on input line 190.
+Package pdftex.def Info: large.pdf used on input line 198.
 (pdftex.def)             Requested size: 386.95894pt x 270.78687pt.
-pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
-s been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.191 ...ature extraction process as a flow graph}
-                                                  
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [5
-
- <./large.pdf>]
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 198.
-[6]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 198.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 207.
+[5 <./large.pdf>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 207.
  (./prelim.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 198.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 198.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 207.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 207.
 Package rerunfilecheck Info: File `prelim.out' has not changed.
-(rerunfilecheck)             Checksum: 049E85C50FE3B5DA429900C1CB1A7563;1808.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 198.
+(rerunfilecheck)             Checksum: 16DD4C562DA273BE4432AFE5669E35CC;1481.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 207.
  )
-(\end occurred when \ifx on line 191 was incomplete)
-(\end occurred when \ifx on line 164 was incomplete)
-(\end occurred when \ifx on line 99 was incomplete) 
+(\end occurred when \ifx on line 199 was incomplete)
+(\end occurred when \ifx on line 171 was incomplete)
+(\end occurred when \ifx on line 106 was incomplete) 
 Here is how much of TeX's memory you used:
- 5904 strings out of 494961
- 86165 string characters out of 6180774
- 171122 words of memory out of 5000000
- 8999 multiletter control sequences out of 15000+600000
+ 6034 strings out of 494961
+ 88277 string characters out of 6180774
+ 184765 words of memory out of 5000000
+ 9123 multiletter control sequences out of 15000+600000
  27728 words of font info for 91 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 36i,7n,30p,666b,327s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-di
-st/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl8.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/urw/times/utmb8a.pfb>
-Output written on prelim.pdf (6 pages, 545818 bytes).
+ 36i,7n,30p,666b,561s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
+0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl8.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/font
+s/type1/urw/times/utmb8a.pfb>
+Output written on prelim.pdf (5 pages, 531430 bytes).
 PDF statistics:
- 293 PDF objects out of 1000 (max. 8388607)
- 264 compressed objects within 3 object streams
- 58 named destinations out of 1000 (max. 500000)
- 244 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 287 PDF objects out of 1000 (max. 8388607)
+ 259 compressed objects within 3 object streams
+ 57 named destinations out of 1000 (max. 500000)
+ 212 words of extra memory for PDF output out of 10000 (max. 10000000)
 
