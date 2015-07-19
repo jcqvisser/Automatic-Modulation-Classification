@@ -1,0 +1,89 @@
+\begin{thebibliography}{10}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\url}[1]{{\tt #1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{zhu2014automatic}
+Z.~Zhu and A.~K. Nandi.
+\newblock {\em Automatic Modulation Classification: Principles, Algorithms and
+  Applications\/}.
+\newblock John Wiley \& Sons, 2015.
+
+\bibitem{urriza2011computationally}
+P.~Urriza, E.~Rebeiz, P.~Pawelczak, and D.~{\v{C}}abri{\'c}.
+\newblock \enquote{Computationally efficient modulation level classification
+  based on probability distribution distance functions.}
+\newblock {\em Communications Letters, IEEE\/}, vol.~15, no.~5, pp. 476--478,
+  2011.
+
+\bibitem{azzouz2013automatic}
+E.~Azzouz and A.~Nandi.
+\newblock {\em Automatic modulation recognition of communication signals\/}.
+\newblock Springer Science \& Business Media, 2013.
+
+\bibitem{incremental_model}
+A.~Ghahrai.
+\newblock \enquote{Incremental Model.}, 2008.
+\newblock \urlprefix\url{http://www.testingexcellence.com/incremental-model/}.
+
+\bibitem{waterfall_model}
+Tutorialspoint.
+\newblock \enquote{Waterfall Model.}, 2015.
+\newblock
+  \urlprefix\url{http://www.tutorialspoint.com/sdlc/sdlc_waterfall_model.htm}.
+
+\bibitem{trello}
+Trello.
+\newblock \enquote{Trello.}, 2015.
+\newblock \urlprefix\url{http://trello.com/}.
+
+\bibitem{kanban_model}
+D.~Peterson.
+\newblock \enquote{What is Kanban?}, 2015.
+\newblock \urlprefix\url{http://kanbanblog.com/explained/}.
+
+\bibitem{uhd_license}
+M.~Ettus.
+\newblock \enquote{Licensing Issues Related to UHD.}, 2014.
+\newblock
+  \urlprefix\url{http://lists.ettus.com/pipermail/usrp-users_lists.ettus.com/2014-February/008711.html}.
+
+\bibitem{fftw3_license}
+M.~Frigo and S.~G. Johnson.
+\newblock \enquote{kissfft.}, 2013.
+\newblock \urlprefix\url{http://www.fftw.org/doc/License-and-Copyright.html}.
+
+\bibitem{qt_license}
+T.~Q. Company.
+\newblock \enquote{QT Licensing.}, 2015.
+\newblock \urlprefix\url{http://doc.qt.io/qt-5/licensing.html}.
+
+\bibitem{qcustomplot_license}
+\enquote{QCustomPlot License.}, 2015.
+\newblock \urlprefix\url{http://www.qcustomplot.com/}.
+
+\bibitem{cmake_license}
+Kitware.
+\newblock \enquote{CMake License.}, 2014.
+\newblock \urlprefix\url{http://www.cmake.org/licensing/}.
+
+\bibitem{picinbono1997instantaneous}
+B.~Picinbono.
+\newblock \enquote{On instantaneous amplitude and phase of signals.}
+\newblock {\em Signal Processing, IEEE Transactions on\/}, vol.~45, no.~3, pp.
+  552--560, 1997.
+
+\bibitem{park2009introduction}
+T.~Park.
+\newblock {\em Introduction to Digital Signal Processing: Computer Musically
+  Speaking\/}.
+\newblock World Scientific Publishing Company Pte Limited, 2009.
+\newblock \urlprefix\url{https://books.google.co.za/books?id=5LUuUglM5b8C}.
+
+\bibitem{sundararajan2003digital}
+D.~Sundararajan.
+\newblock {\em Digital Signal Processing: Theory and Practice\/}.
+\newblock World Scientific, 2003.
+\newblock \urlprefix\url{https://books.google.co.za/books?id=Ch5CtUOsAPkC}.
+
+\end{thebibliography}

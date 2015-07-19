@@ -1,6 +1,8 @@
-\documentclass[10pt,twocolumn]{witseiepaper}
+\documentclass[10pt,onecolumn]{witseiepaper}
 
 \usepackage{KJN}
+\usepackage{multicol}
+\usepackage{chngcntr}
 
 \ifpdf
 \pdfinfo{
@@ -25,14 +27,16 @@ Witwatersrand, Private Bag 3, 2050, Johannesburg, South Africa}
 
 \maketitle
 \thispagestyle{empty}\pagestyle{empty}
+\begin{multicols}{2}
 
-% TODO How does one even write an introduction?
 \section{INTRODUCTION}
+% TODO How does one even write an introduction?
 % mention USRP's and define the term
 % Also UHD
 
 \section{LITERATURE SURVEY}
-Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to automatic modulation classification; likelihood-based, distribution-test-based and feature-based. These are briefly detailed below.
+Zhu and Nandi identify three major approaches to automatic modulation classification in \textit{Automatic Modulation Classification: Principles, Algorithms and Applications} \cite{zhu2014automatic}; likelihood-based, distribution-test-based and feature-based. These are briefly detailed below.
+
 	\subsection{Likelihood Based Classification}
 	Likelihood based automatic modulation classification hinges on a Bayesian approach wherein various hypotheses regarding the likelihood of a signal conforming to a single modulation scheme are successively refined \cite{zhu2014automatic}. This approach is very popular as it results in optimal classification of modulation schemes \cite{zhu2014automatic}.
 
@@ -44,9 +48,9 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 
 	\subsection{Feature Based Classification}
 	\label{sec:features}
-	Feature based AMR has been shown to be non-ideal, but significantly less computationally intensive \cite{zhu2014automatic} than the aforementioned methods.
+	Feature based AMC has been shown to be non-ideal, but significantly less computationally intensive \cite{zhu2014automatic} than the aforementioned methods.
 
-	There are again three major approaches to feature-based AMC. These make use features derived from either the signal spectrum, the wavelet transform of the signal or high-order statistical representations of the signal \cite{zhu2014automatic}. 
+	There are again three major approaches to feature-based AMC. These make use of features derived from either the signal spectrum, the wavelet transform of the signal or high-order statistical representations of the signal \cite{zhu2014automatic}. 
 	
 	The classification of analog modulation schemes using spectral features is well documented by Zhu and Nandi \cite{zhu2014automatic} as well as Azzouz and Nandi \cite{azzouz2013automatic}. They make use of nine features, which are as follows:
 
@@ -64,30 +68,36 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 
 	The formulae for the computation of these features can be found in either \textit{Automatic Modulation Classification: Principles, Algorithms and Applications} by Zhu and Nandi \cite{zhu2014automatic} or \textit{Automatic modulation recognition of communication signals} by Azzouz and Nandi \cite{azzouz2013automatic}, and are omitted here for brevity.
 	
-\section{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}
-	\subsection{Military}
-		Military applications of 
+\section{EXISTING APPLICATIONS OF AMC}
+% TODO: Existing Applications
 		% jamming, listening in on communications
-	\subsection{Civilian}
 		% cognative radio, effective use of bandwith
 		% aircraft monitoring
+Automatic modulation classification finds it's use in a variety of both civilian and military applications. 
+
+In the sphere of signal jamming it is often useful to know the modulation scheme which is to be jammed. The jamming signal can be adapted to avoid non-offending broadcasts and use a minimum amount of power without compromising efficacy \cite{azzouz2013automatic}.
+
+Cognitive radio, although nebulous, involves
+
+
+
 
 \section{SOLUTION SELECTION}
-	The selection of a solution is motivated by the ease by which it can be practically implemented with the tools available and the time available for it's implementation. Likelihood based classifiers
+	The selection of one of the three major types of modulation classification is motivated by the ease by which it can be practically implemented with the tools available and the time available for it's implementation. 
+	This being the case, the spectral feature-based approach was chosen. It has a relatively low computational complexity and previous work has been done on the subject. This approach fulfills the requirements of being able to detect some digital- all major analog modulation schemes.
 
-\section{DESIGN PROCESS OVERVIEW}
-	\subsection{Development Methodology}
-		% Engineering oriented method
-		% make use of Trello
-		% Add screenshots to appendix
-	\subsection{Estimated Project Schedule}
-		% Design, Implementation, Simulated Testing, Iteration, Practical Testing and Evaluation
-		% Overview and Trello screenshots
+	However, if there is enough time available, the system could be extended, making use of some distribution test-based classification techniques in order to classify a larger range of digital modulation schemes.
 
+\section{DEVELOPMENT METHODOLOGY} 
+	For this project it has been deemed appropriate to make use of the incremental build-model of software development. This stresses small iterations of the analysis, design, code and test cycle- basically small waterfall development cycles \cite{incremental_model, waterfall_model}. The smaller segments make testing, debugging and risk management easier.
+
+	Tracking of tasks will be done with Trello \cite{trello}, in Kanban style, with each card representing a single cycle\cite{kanban_model}. Cards move between three lists: 'Pending', 'In Progress' and 'Completed'.
 
 \section{IMPLEMENTATION OVERVIEW}
 
 	\subsection{Software}
+		The software to be developed forms the core part of this system. It makes use of various libraries and frameworks to form a cohesive and efficient whole. 
+
 		\subsubsection{Basic Software Structure}
 			Due to the computationally intensive and time-dependent nature of the system, the software would have to be threaded, with each major component running on it's own thread.
 
@@ -117,7 +127,6 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 			Due to the open-source nature and wide availability of the libraries and API's used in this project the software produced will be able to run on various platforms. To fully support this the CMake build-system-generator will be used so that this project may easily be compiled on various platforms.
 
 			CMake is distributed under the BSD 3-Clause license \cite{cmake_license} and it can thus be distributed with and used in this project.
-			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
 
 	\subsection{Feature Extraction}
 		\label{sec:feat_fun}
@@ -132,58 +141,60 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		This results in a complex series of events. They are shown in sequence as a flow diagram in Appendix \ref{app:feature}, Figure \ref{fig:feature}.
 
 	\subsection{Signal Filtering}
-		Filtering of the input signal to isolate the bandwidth in which a single signal exists is a delicate process. 
-		Phase distortion may negatively affect the results as some of the features are dependant on the non-linear portion of the phase only. 
+		Filtering of the input signal to isolate the bandwidth in which a single signal exists will be done entirely digitally, independant of the USRP.
+
+		Filtering in this context is a delicate process; phase distortion will negatively affect the results as many of the features are dependant on the non-linear portion of the phase only. 
 		Thus it is important to implement zero-phase digital filtering.
 		This may be done by either performing forward and reverse filtering or by selecting an FIR filter with a vary flat phase response \cite{sundararajan2003digital}.
 
 		The former option would require buffering a large portion of the signal, but might yield better results than the latter. This trade-off, as well as selecting the bandwidth of the band-pass filter to be used is still under investigation.
 
-		Filtering will be implemented by convolution as the alternative, multiplication in the Fourier domain, would result in an extra step in feature extraction: finding the magnitude of the resulting signal after performing the IFFT. (See Appendix \cite{app:feature} for more information)
+		Filtering will be implemented by convolution as the alternative, multiplication in the Fourier domain, would result in an extra step in feature extraction: finding the magnitude of the resulting signal after performing the IFFT. (See Appendix \ref{app:feature} for more information)
 
 	\subsection{Classifier}
+	K-nearest neighbors
 
-	\subsection{Estimated Costs and Hardware Required}
+	\subsection{Hardware}
 		The practical implementation of this project will require at least two USRP devices. The first of which will be used for receiving radio signals, the modulation of which is to be classified. The second will be used to generate modulated signals in order to practically test the operation of the system. Seeing as Wits has these available, no charges would be incurred.
-
 
 		To avoid significant effort in compiling and installation of the USRP Hardware Driver (UHD) two computers running Linux natively will be required. The team-members' laptops will be used for this purpose.
 
 \section{PROPOSED TESTING PROCEDURE}
-	\subsection{Simulated Testing}
-		% Evaluate system with generated signals
-		% See how well it fares with different number of samples
-		% Signal to noise ratio
-	\subsection{Practical Testing}
-		% correlate real world results with simulation
-		% Don't make a new program, just use GNURadio companion to make signals to classify
+	Basic unit testing and incremental integration testing of the application is to be done with the QT framework's QTest. Functional testing will is to be implemented to train the classifier. System testing is to be done with practical signals to evaluate the effectiveness of the system.
+	\subsection{Functional Testing}
+		The functional testing will involve supplying signals to the system through a mocking framework, rather than the UHD driver. In so doing, the classifier can be trained on ideal signals. Noise may be introduced to signals of various lengths to evaluate the system's functioning under a variety of conditions.
 
-	\begin{figure*}[!h]
+	\subsection{Practical Testing}
+		Practical testing is to be done with signals generated using another USRP and GNURadio. This will allow for comparing the ideal functioning of the system, and thus spectral feature-based modulation classification in general, to it's real world operation.
+
+\end{multicols}
+	\begin{figure}[h]
 		\centering
-		\includegraphics[width=1.1\textwidth]{plot0.eps}
+		\includegraphics[width=1\textwidth]{plot0.eps}
 		\caption{Plot of $\sigma_{dp}$ vs. $\gamma_{max}$ vs. $P$ for various AM and FM signals}
 		\label{fig:plot0}
-	\end{figure*}
+	\end{figure}
+\begin{multicols}{2}
 
 \section{PRELIMINARY RESULTS}
 	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear separation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
 
-
 	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
 
+\section{CONCLUSION}
 
-\section{CONCLUSION AND RECOMMENDATIONS}
+% TODO conclusion
 
 \bibliographystyle{witseie}
 \bibliography{prelim} 
+\end{multicols}
 \newpage
 
-\onecolumn
 \appendix
-\setcounter{figure}{0}
+\counterwithin{figure}{section}
 \section{Feature Extraction Process}
 \label{app:feature}
-The process of feature extraction is fairly complex. It is presented as a flow graph in Figure. \ref{fig:feature} below. Because of the nature of the process it is amenable to parallelization. This will be performed using the C++ 11 Standard threading library.
+The process of feature extraction is fairly complex. It is presented as a flow graph in Figure \ref{fig:feature} below. Because of the nature of the process it is amenable to parallelization. This will be performed using the C++ 11 Standard threading library.
 
 \begin{figure}[h!]
 	\centering
@@ -194,6 +205,7 @@ The process of feature extraction is fairly complex. It is presented as a flow g
 
 Filtering of the signal prior to feature extraction is done by means of convolution. The alternative, filtering by multiplication in the Fourier domain, would imply that both the phase and magnitude of the output of the IFFT in Figure \ref{fig:feature} need to be found. The magnitude found here is equivalent to the input of the FFT. This approach would not only impact the accuracy of the instantaneous amplitude measure, but also introduce another unnecessary operation.
 
+% "It don't matter, Jacques, I live my life lo-fi and noisy." - Anthony
 
 \end{document}
 
