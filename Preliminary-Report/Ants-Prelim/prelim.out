@@ -1,0 +1,25 @@
+\BOOKMARK [1][-]{section.1}{INTRODUCTION}{}% 1
+\BOOKMARK [1][-]{section.2}{LITERATURE SURVEY}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Likelihood Based Classification}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Distribution Test Based Classification}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Feature Based Classification}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Military}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Civilian}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{SOLUTION SELECTION}{}% 9
+\BOOKMARK [1][-]{section.5}{DESIGN PROCESS OVERVIEW}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{Development Methodology}{section.5}% 11
+\BOOKMARK [1][-]{section.6}{IMPLEMENTATION OVERVIEW}{}% 12
+\BOOKMARK [2][-]{subsection.6.1}{Hardware}{section.6}% 13
+\BOOKMARK [2][-]{subsection.6.2}{Software}{section.6}% 14
+\BOOKMARK [3][-]{subsubsection.6.2.1}{Basic Software Structure}{subsection.6.2}% 15
+\BOOKMARK [3][-]{subsubsection.6.2.2}{Libraries and API's}{subsection.6.2}% 16
+\BOOKMARK [3][-]{subsubsection.6.2.3}{Build System}{subsection.6.2}% 17
+\BOOKMARK [2][-]{subsection.6.3}{Feature Extraction Functions}{section.6}% 18
+\BOOKMARK [2][-]{subsection.6.4}{Signal Filtering}{section.6}% 19
+\BOOKMARK [2][-]{subsection.6.5}{Classifier}{section.6}% 20
+\BOOKMARK [1][-]{section.7}{PROPOSED TESTING PROCEDURE}{}% 21
+\BOOKMARK [2][-]{subsection.7.1}{Functional Testing}{section.7}% 22
+\BOOKMARK [2][-]{subsection.7.2}{Practical Testing}{section.7}% 23
+\BOOKMARK [1][-]{section.8}{PRELIMINARY RESULTS}{}% 24
+\BOOKMARK [1][-]{section.9}{CONCLUSION AND RECOMMENDATIONS}{}% 25

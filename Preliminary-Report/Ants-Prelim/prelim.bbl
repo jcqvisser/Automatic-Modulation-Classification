@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\url}[1]{{\tt #1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{zhu2014automatic}
+Z.~Zhu and A.~K. Nandi.
+\newblock {\em Automatic Modulation Classification: Principles, Algorithms and
+  Applications\/}.
+\newblock John Wiley \& Sons, 2015.
+
+\bibitem{dobre2007survey}
+O.~A. Dobre, A.~Abdi, Y.~Bar-Ness, and W.~Su.
+\newblock \enquote{Survey of automatic modulation classification techniques:
+  classical approaches and new trends.}
+\newblock {\em Communications, IET\/}, vol.~1, no.~2, pp. 137--156, 2007.
+
+\bibitem{azzouz2013automatic}
+E.~Azzouz and A.~Nandi.
+\newblock {\em Automatic modulation recognition of communication signals\/}.
+\newblock Springer Science \& Business Media, 2013.
+
+\bibitem{incremental_model}
+A.~Ghahrai.
+\newblock \enquote{Incremental Model.}, 2008.
+\newblock \urlprefix\url{http://www.testingexcellence.com/incremental-model/}.
+
+\bibitem{kanban_model}
+D.~Peterson.
+\newblock \enquote{What is Kanban?}, 2015.
+\newblock \urlprefix\url{http://kanbanblog.com/explained/}.
+
+\bibitem{trello}
+Trello.
+\newblock \enquote{Trello.}, 2015.
+\newblock \urlprefix\url{http://trello.com/}.
+
+\bibitem{ettus}
+Ettus.
+\newblock \enquote{Ettus Research - A National Instruments Company.}, 2015.
+\newblock \urlprefix\url{http://www.ettus.com/}.
+
+\end{thebibliography}
