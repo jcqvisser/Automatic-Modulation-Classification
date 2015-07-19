@@ -29,11 +29,19 @@ Witwatersrand, Private Bag 3, 2050, Johannesburg, South Africa}
 % TODO How does one even write an introduction?
 \section{INTRODUCTION}
 % mention USRP's and define the term
+% Also UHD
 
 \section{LITERATURE SURVEY}
 Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to automatic modulation classification; likelihood-based, distribution-test-based and feature-based. These are briefly detailed below.
 	\subsection{Likelihood Based Classification}
+	Likelihood based automatic modulation classification hinges on a Bayesian approach wherein various hypotheses regarding the likelihood of a signal conforming to a single modulation scheme are successively refined \cite{zhu2014automatic}. This approach is very popular as it results in optimal classification of modulation schemes \cite{zhu2014automatic}.
+
+	This approach depends highly on knowledge of the channel and is characterized by a high computational complexity \cite{zhu2014automatic}. 
+
 	\subsection{Distribution Test Based Classification}
+	As the name suggests, distribution test-based modulation classifiers compare the statistical distribution of samples from a received distribution to known distributions to identify the modulation scheme \cite{zhu2014automatic}. Comparison to known distributions is generally done using a Kolmogorov-Smirnoff test which evaluates the goodness-of-fit between two distributions \cite{urriza2011computationally}.
+
+
 	\subsection{Feature Based Classification}
 	\label{sec:features}
 	Feature based AMR has been shown to be non-ideal, but significantly less computationally intensive \cite{zhu2014automatic} than the aforementioned methods.
@@ -58,12 +66,14 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 	
 \section{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}
 	\subsection{Military}
+		Military applications of 
 		% jamming, listening in on communications
 	\subsection{Civilian}
 		% cognative radio, effective use of bandwith
 		% aircraft monitoring
 
 \section{SOLUTION SELECTION}
+	The selection of a solution is motivated by the ease by which it can be practically implemented with the tools available and the time available for it's implementation. Likelihood based classifiers
 
 \section{DESIGN PROCESS OVERVIEW}
 	\subsection{Development Methodology}
@@ -98,6 +108,8 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 			In order to spectrally analyze the incoming signal the FFTW3 library is to be used. FFTW3 is an open-source C library developed by Matteo Frigo and Steven G. Johnson. It is available under the GPLv3 license \cite{fftw3_license}.
 
 			For displaying graphical information SFML (Simple and Fast Multimedia Library) will be used. This is distributed under the zlib/libpng License and may thus be freely used in a project such as this \cite{sfml_license}.
+
+			Creation of a gui and the display of information is to be done using the QT framework and QCustomPlot. These are distributed under the GTKv3 license \cite{qt_license, qcustomplot_license}. Furthermore, testing and QA will be done with QT Test simply due to convenience.
 
 			For threading and other miscellaneous functions the C++ 11 Standard library will be used. GNU libstdc++ which is used with GCC is distributed under the GPLv3 license.
 
@@ -146,15 +158,16 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		% correlate real world results with simulation
 		% Don't make a new program, just use GNURadio companion to make signals to classify
 
-\section{PRELIMINARY RESULTS}
-	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear separation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
-
 	\begin{figure*}[!h]
 		\centering
 		\includegraphics[width=1.1\textwidth]{plot0.eps}
 		\caption{Plot of $\sigma_{dp}$ vs. $\gamma_{max}$ vs. $P$ for various AM and FM signals}
 		\label{fig:plot0}
 	\end{figure*}
+
+\section{PRELIMINARY RESULTS}
+	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear separation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
+
 
 	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
 
@@ -163,6 +176,7 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 
 \bibliographystyle{witseie}
 \bibliography{prelim} 
+\newpage
 
 \onecolumn
 \appendix
@@ -171,9 +185,9 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 \label{app:feature}
 The process of feature extraction is fairly complex. It is presented as a flow graph in Figure. \ref{fig:feature} below. Because of the nature of the process it is amenable to parallelization. This will be performed using the C++ 11 Standard threading library.
 
-\begin{figure}[!h]
+\begin{figure}[h!]
 	\centering
-	\includegraphics[trim=0cm 10cm 0cm 12cm, clip=true,width=1\textwidth]{large.pdf}
+	\includegraphics[trim=0cm 10cm 0cm 11cm, clip=true,width=0.8\textwidth]{large.pdf}
 	\caption{Feature extraction process as a flow graph}
 	\label{fig:feature}
 \end{figure}
