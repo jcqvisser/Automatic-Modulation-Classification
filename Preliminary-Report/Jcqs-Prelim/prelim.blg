@@ -1,0 +1,59 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/dev/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: prelim.aux
+The style file: witseie.bst
+Database file #1: prelim.bib
+Warning--entry type for "uhd_license" isn't style-file defined
+--line 51 of file prelim.bib
+Warning--entry type for "fftw3_license" isn't style-file defined
+--line 67 of file prelim.bib
+Warning--entry type for "qcustomplot_license" isn't style-file defined
+--line 83 of file prelim.bib
+Warning--entry type for "qt_license" isn't style-file defined
+--line 95 of file prelim.bib
+Warning--entry type for "cmake_license" isn't style-file defined
+--line 111 of file prelim.bib
+Warning--I didn't find a database entry for "sfml_license"
+Warning--I didn't find a database entry for "app:feature"
+You've used 11 entries,
+            2282 wiz_defined-function locations,
+            567 strings with 5579 characters,
+and the built_in function-call counts, 2935 in all, are:
+= -- 189
+> -- 63
+< -- 6
++ -- 27
+- -- 16
+* -- 131
+:= -- 322
+add.period$ -- 41
+call.type$ -- 11
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 11
+duplicate$ -- 292
+empty$ -- 328
+format.name$ -- 20
+if$ -- 658
+int.to.chr$ -- 0
+int.to.str$ -- 11
+missing$ -- 80
+newline$ -- 62
+num.names$ -- 10
+pop$ -- 166
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 83
+stack$ -- 0
+substring$ -- 64
+swap$ -- 189
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 16
+width$ -- 13
+write$ -- 119
+(There were 7 warnings)
