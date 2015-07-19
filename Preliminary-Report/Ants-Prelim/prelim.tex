@@ -1,0 +1,101 @@
+\documentclass[10pt,twocolumn]{witseiepaper}
+
+\usepackage{KJN}
+
+\ifpdf
+\pdfinfo{
+/Title (ELEN4012 - Feature Based Automatic Modulation Classification)
+/Author (Jacques Visser and Anthony Farquharson)
+}
+\fi
+
+\begin{document}
+
+\title{ELEN4012 - Feature Based Automatic Modulation Classification}
+
+\author{Anthony Farquharson and Jacques Visser
+\thanks{School of Electrical \& Information Engineering, University of the
+Witwatersrand, Private Bag 3, 2050, Johannesburg, South Africa}
+}
+
+% TODO Rewrite abstract once the rest of the contents are figured out.
+\abstract{Abstract!}
+
+\keywords{modulation, classification, USRP, UHD}
+
+\maketitle
+\thispagestyle{empty}\pagestyle{empty}
+
+% TODO How does one even write an introduction?
+\section{INTRODUCTION}
+
+\section{LITERATURE SURVEY}
+
+\section{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}
+	\subsection{Military}
+		% jamming, listening in on communications
+	\subsection{Civilian}
+		% cognative radio, effective use of bandwith
+		% aircraft monitoring
+
+\section{SOLUTION SELECTION}
+
+\section{DESIGN PROCESS OVERVIEW}
+	\subsection{Development Methodology}
+		% Engineering oriented method
+		% make use of Trello
+		% Add screenshots to appendix
+	\subsection{Estimated Project Schedule}
+		% Design, Implementation, Simulated Testing, Iteration, Practical Testing and Evaluation
+		% Overview and Trello screenshots
+	\subsection{Estimated Costs and Hardware Required}
+
+\section{IMPLEMENTATION OVERVIEW}
+	\subsection{Hardware}
+		% USRP
+		% Antenna?
+		% Runs on a Linux pc, not win cos of UHD
+
+	\subsection{Software}
+		\subsubsection{Basic Software Structure}
+			% fundamentally threaded
+			% UHD on one thread
+			% each of the feature extraction functions on their own thread
+			% classifier on a final thread
+		\subsubsection{Libraries and API's}
+
+		\subsubsection{Build System}
+
+			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
+
+		\subsection{Feature Extraction Functions}
+
+
+		\subsection{Signal Filtering}
+
+		\subsection{Classifier}
+
+
+\section{PROPOSED TESTING PROCEDURE}
+	\subsection{Simulated Testing}
+		% Evaluate system with generated signals
+		% See how well it fares with different number of samples
+		% Signal to noise ratio
+	\subsection{Practical Testing}
+		% correlate real world results with simulation
+		% Don't make a new program, just use GNURadio companion to make signals to classify
+
+\section{PRELIMINARY RESULTS}
+	\begin{figure*}[!h]
+		\centering
+		\includegraphics[width=1.1\textwidth]{plot0.eps}
+		\caption{Plot of $\sigma_{dp}$ vs. $\gamma_{max}$ vs. $P$ for various AM and FM signals}
+		\label{fig:plot0}
+	\end{figure*}
+
+\section{CONCLUSION AND RECOMMENDATIONS}
+
+
+\bibliographystyle{witseie}
+\bibliography{prelim}
+\end{document}
