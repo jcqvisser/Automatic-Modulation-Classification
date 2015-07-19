@@ -22,45 +22,45 @@ Warning--entry type for "kanban_model" isn't style-file defined
 Warning--entry type for "trello" isn't style-file defined
 --line 237 of file prelim.bib
 Warning--I didn't find a database entry for "sfml_license"
-You've used 15 entries,
+You've used 16 entries,
             2282 wiz_defined-function locations,
-            582 strings with 5875 characters,
-and the built_in function-call counts, 3699 in all, are:
-= -- 233
-> -- 79
-< -- 6
-+ -- 35
-- -- 20
-* -- 155
-:= -- 410
-add.period$ -- 57
-call.type$ -- 15
-change.case$ -- 0
+            588 strings with 6214 characters,
+and the built_in function-call counts, 4302 in all, are:
+= -- 276
+> -- 102
+< -- 7
++ -- 43
+- -- 27
+* -- 190
+:= -- 477
+add.period$ -- 62
+call.type$ -- 16
+change.case$ -- 2
 chr.to.int$ -- 0
-cite$ -- 15
-duplicate$ -- 364
-empty$ -- 424
-format.name$ -- 24
-if$ -- 826
+cite$ -- 16
+duplicate$ -- 421
+empty$ -- 479
+format.name$ -- 32
+if$ -- 964
 int.to.chr$ -- 0
-int.to.str$ -- 15
-missing$ -- 100
-newline$ -- 82
-num.names$ -- 14
-pop$ -- 222
+int.to.str$ -- 16
+missing$ -- 115
+newline$ -- 87
+num.names$ -- 15
+pop$ -- 245
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 103
+skip$ -- 120
 stack$ -- 0
-substring$ -- 64
-swap$ -- 233
-text.length$ -- 6
+substring$ -- 96
+swap$ -- 273
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 20
-width$ -- 17
-write$ -- 159
+while$ -- 24
+width$ -- 18
+write$ -- 171
 (There were 10 warnings)

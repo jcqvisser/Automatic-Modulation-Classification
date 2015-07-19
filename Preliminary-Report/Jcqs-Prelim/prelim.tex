@@ -69,15 +69,11 @@ Zhu and Nandi identify three major approaches to automatic modulation classifica
 	The formulae for the computation of these features can be found in either \textit{Automatic Modulation Classification: Principles, Algorithms and Applications} by Zhu and Nandi \cite{zhu2014automatic} or \textit{Automatic modulation recognition of communication signals} by Azzouz and Nandi \cite{azzouz2013automatic}, and are omitted here for brevity.
 	
 \section{EXISTING APPLICATIONS OF AMC}
-% TODO: Existing Applications
-		% jamming, listening in on communications
-		% cognative radio, effective use of bandwith
-		% aircraft monitoring
 Automatic modulation classification finds it's use in a variety of both civilian and military applications. 
 
 In the sphere of signal jamming it is often useful to know the modulation scheme which is to be jammed. The jamming signal can be adapted to avoid non-offending broadcasts and use a minimum amount of power without compromising efficacy \cite{azzouz2013automatic}.
 
-Cognitive radio, although nebulous, involves
+Cognitive radio involves a degree of spectrum awareness so as to most efficient use the available bandwidth\cite{kim2007cyclostationary}. This generally incorporates AMC by looking at the cyclostationary features of digitally modulated signals \cite{kim2007cyclostationary}.
 
 
 
@@ -152,6 +148,7 @@ Cognitive radio, although nebulous, involves
 		Filtering will be implemented by convolution as the alternative, multiplication in the Fourier domain, would result in an extra step in feature extraction: finding the magnitude of the resulting signal after performing the IFFT. (See Appendix \ref{app:feature} for more information)
 
 	\subsection{Classifier}
+	% TODO Classifier
 	K-nearest neighbors
 
 	\subsection{Hardware}
@@ -161,6 +158,11 @@ Cognitive radio, although nebulous, involves
 
 \section{PROPOSED TESTING PROCEDURE}
 	Basic unit testing and incremental integration testing of the application is to be done with the QT framework's QTest. Functional testing will is to be implemented to train the classifier. System testing is to be done with practical signals to evaluate the effectiveness of the system.
+
+	\subsection{Preliminary Testing}
+	Preliminary testing will be performed on the UHD API
+
+
 	\subsection{Functional Testing}
 		The functional testing will involve supplying signals to the system through a mocking framework, rather than the UHD driver. In so doing, the classifier can be trained on ideal signals. Noise may be introduced to signals of various lengths to evaluate the system's functioning under a variety of conditions.
 
