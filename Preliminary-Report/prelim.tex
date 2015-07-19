@@ -34,11 +34,24 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 	\subsection{Likelihood Based Classification}
 	\subsection{Distribution Test Based Classification}
 	\subsection{Feature Based Classification}
+	\label{sec:features}
 	Feature based AMR has been shown to be non-ideal, but significantly less computationally intensive \cite{zhu2014automatic} than the aforementioned methods.
 
 	There are again three major approaches to feature-based AMC. These make use features derived from either the signal spectrum, the wavelet transform of the signal or high-order statistical representations of the signal \cite{zhu2014automatic}. 
 	
-	The classification of analog modulation schemes using spectral features is well documented by Zhu and Nandi \cite{zhu2014automatic} as well as Azzouz and Nandi \cite{azzouz2013automatic}.
+	The classification of analog modulation schemes using spectral features is well documented by Zhu and Nandi \cite{zhu2014automatic} as well as Azzouz and Nandi \cite{azzouz2013automatic}. They make use of nine features, which are as follows:
+
+	\begin{enumerate}
+		\item $\gamma_{max}$: Maximum value of Power Spectral Density 
+		\item $\sigma_{ap}$: Standard deviation of the absolute value of the non-linear component of the instantaneous phase.
+		\item $\sigma_{dp}$: Standard deviation of the non-linear component of the direct instantaenous phase.
+		\item $P$: Spectrum symmetry
+		\item $\sigma_{aa}$: Standard deviation of the absolute value of the normalized and centered instantaneous amplitude
+		\item $\sigma_{af}$: Standard deviation of the absolute value of the normalized and centered instantaneous frequency
+		\item $\sigma_{a}$: Standard deviation of the normalized and centered instantaneous amplitude
+		\item $\mu_{42}^{a}$: Kurtosis of the normalized and centered instantaneous amplitude
+		\item $\mu_{42}^{f}$: Kurtosis of the normalized and centered instantaneous frequency
+	\end{enumerate}
 	
 
 \section{EXISTING SOLUTIONS AND APPLICATIONS OF AMC}
@@ -46,6 +59,7 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		% jamming, listening in on communications
 	\subsection{Civilian}
 		% cognative radio, effective use of bandwith
+		% aircraft monitoring
 
 \section{SOLUTION SELECTION}
 
@@ -58,7 +72,6 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		% Design, Implementation, Simulated Testing, Iteration, Practical Testing and Evaluation
 		% Overview and Trello screenshots
 	\subsection{Estimated Costs and Hardware Required}
-		% Two USRP's and two antennas
 		The practical implementation of this project will require at least two USRP devices. The first of which will be used for receiving radio signals, the modulation of which is to be classified. The second will be used to generate modulated signals in order to practically test the operation of the system. Seeing as Wits has these available, no charges would be incurred.
 
 		Furthermore, at least two computers running Linux will be required. The team-members' labptops will be used for this purpose.
@@ -97,15 +110,15 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 			% Cmake because easy, also can be compiled on windows (probably UHD issue, though)
 
 		\subsection{Feature Extraction Functions}
-			Individual functions will have to be developed for the extraction of each of the 10 features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
+			Individual functions will have to be developed for the extraction of each of the nine features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
 
-			A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT. 
+			A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT using the KissFFT library. 
 			
 			To obtain the instantaneous phase of the signal, the negative portion of the spectral representation of the signal is to be removed and an IFFT is to be performed \cite{picinbono1997instantaneous}. Following this, phase unwrapping must be performed \cite{park2009introduction, picinbono1997instantaneous}.
 
-			The Instantaneous frequency of the signal may then be obtained from the instantaneous phase by differentiation \cite{park2009introduction}
+			The Instantaneous frequency of the signal may then be obtained from the instantaneous phase by differentiation \cite{park2009introduction}.
 
-			This results in a complex series of events that must be performed. They are shown as a flow diagram in Figure \ref{fig:feature_flow}.
+			This results in a complex series of events. They are shown in sequence as a flow diagram in Figure \ref{fig:feature_flow}.
 
 		\subsection{Signal Filtering}
 			Filtering of the input signal to isolate the bandwidth in which a single signal exists is a delicate process. 
@@ -128,16 +141,16 @@ Zhu and Nandi \cite{zhu2014automatic} identifies three major approaches to autom
 		% Don't make a new program, just use GNURadio companion to make signals to classify
 
 \section{PRELIMINARY RESULTS}
-	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear seperation between different modulation schemes. This can be seen in Figures \ref{fig:0, fig:1}. 
+	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear seperation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
 
 	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
 
-	\begin{figure}[!h]
+	\begin{figure*}[!h]
 		\centering
 		\includegraphics[width=1.1\textwidth]{plot0.eps}
-		\caption{Awesome Image}
-		\label{fig:awesome_image}
-	\end{figure}
+		\caption{Plot of $\sigma_{dp}$ vs. $\gamma_{max}$ vs. $P$ for various AM and FM signals}
+		\label{fig:plot0}
+	\end{figure*}
 
 \section{CONCLUSION AND RECOMMENDATIONS}
 
