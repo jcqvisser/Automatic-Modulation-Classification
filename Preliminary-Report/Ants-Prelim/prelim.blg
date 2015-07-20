@@ -1,12 +1,20 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: prelim.aux
 The style file: witseie.bst
 Database file #1: prelim.bib
+Warning--entry type for "uhd_license" isn't style-file defined
+--line 26 of file prelim.bib
 Warning--entry type for "ettus" isn't style-file defined
 --line 34 of file prelim.bib
 Warning--entry type for "incremental_model" isn't style-file defined
---line 44 of file prelim.bib
+--line 42 of file prelim.bib
 Warning--entry type for "trello" isn't style-file defined
---line 52 of file prelim.bib
+--line 50 of file prelim.bib
 Warning--entry type for "kanban_model" isn't style-file defined
---line 60 of file prelim.bib
-(There were 4 warnings)
+--line 58 of file prelim.bib
+Warning--entry type for "fftw3_license" isn't style-file defined
+--line 66 of file prelim.bib
+Warning--entry type for "uhd_tutorial" isn't style-file defined
+--line 74 of file prelim.bib
+Warning--entry type for "cmake_license" isn't style-file defined
+--line 82 of file prelim.bib
+(There were 8 warnings)

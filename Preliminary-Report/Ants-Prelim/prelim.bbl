@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\url}[1]{{\tt #1}}
 \providecommand{\urlprefix}{URL }
@@ -39,5 +39,27 @@ Trello.
 Ettus.
 \newblock \enquote{Ettus Research - A National Instruments Company.}, 2015.
 \newblock \urlprefix\url{http://www.ettus.com/}.
+
+\bibitem{uhd_license}
+M.~Ettus.
+\newblock \enquote{Licensing Issues Related to UHD.}, 2014.
+\newblock
+  \urlprefix\url{http://lists.ettus.com/pipermail/usrp-users_lists.ettus.com/2014-February/008711.html}.
+
+\bibitem{fftw3_license}
+M.~Frigo and S.~G. Johnson.
+\newblock \enquote{FFTW3 License.}, 2013.
+\newblock \urlprefix\url{http://www.fftw.org/doc/License-and-Copyright.html}.
+
+\bibitem{cmake_license}
+Kitware.
+\newblock \enquote{CMake License.}, 2014.
+\newblock \urlprefix\url{http://www.cmake.org/licensing/}.
+
+\bibitem{uhd_tutorial}
+Ettus.
+\newblock \enquote{UHD.}, 2015.
+\newblock
+  \urlprefix\url{https://github.com/EttusResearch/uhd/tree/master/host/examples}.
 
 \end{thebibliography}
