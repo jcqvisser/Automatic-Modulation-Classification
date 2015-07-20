@@ -1,44 +1,58 @@
-\documentclass[10pt,onecolumn]{witseiepaper}
+\documentclass[10pt,twocolumn]{witseiepaper}
 
 \usepackage{KJN}
-\usepackage{multicol}
 \usepackage{chngcntr}
+
+\usepackage[utf8]{inputenc}
+\usepackage[TS1,T1]{fontenc}
+\usepackage{array, booktabs}
+\usepackage{graphicx}
+\usepackage[x11names]{xcolor}
+\usepackage{colortbl}
+\usepackage{caption}
+
+
+\newcommand{\foo}{\makebox[0pt]{\textbullet}\hskip-0.5pt\vrule width 1pt\hspace{\labelsep}}
 
 \ifpdf
 \pdfinfo{
-/Title (ELEN4012 - Feature Based Automatic Modulation Classification)
-/Author (Jacques Visser and Anthony Farquharson)
+/Title (ELEN4002/ELEN4012 - Automatic Detection, Classification and Demodulation of Radio Signals)
+/Author (Jacques Daniel Visser)
 }
 \fi
 
 \begin{document}
 
-\title{ELEN4012 - Feature Based Automatic Modulation Classification}
+\title{ELEN4002/ELEN4012 - Automatic Detection, Classification and Demodulation of Radio Signals}
 
-\author{Jacques Visser and Anthony Farquharson
+\author{Jacques Daniel Visser (457817) \textnormal{\newline With: Anthony Farquharson (563648)\newline Supervisor: Dr. Jaco Versfeld}
 \thanks{School of Electrical \& Information Engineering, University of the
 Witwatersrand, Private Bag 3, 2050, Johannesburg, South Africa}
 }
 
-% TODO Rewrite abstract once the rest of the contents are figured out.
-\abstract{Automatic modulation classification involves identifying the modulation scheme used in a signal without the decision being guided by an operator. This report covers a preliminary investigation into the design and implementation of such a system. An overview of the relevant literature is presented and proposals are made regarding the details of the implementation and testing of such a system using and Ettus USRP.}
+\abstract{Automatic modulation classification involves identifying the modulation scheme used in a signal without the decision being guided by an operator. This report covers a preliminary investigation into the design and implementation of such a system. An overview of the relevant literature is presented and proposals are made regarding the details of the implementation and testing of such a system using and Ettus USRP. Suggestions are made regarding the implementation of spectral feature-based classification coupled with a K-Nearest Neighbor clustering algorithm. An incremental project management style is proposed and hardware and software requirements are discussed.}
 
-\keywords{modulation, classification, USRP, UHD}
+\keywords{Modulation, Classification, USRP, UHD, KNN, C++, FFT}
 
 \maketitle
 \thispagestyle{empty}\pagestyle{empty}
-\begin{multicols}{2}
 
 \section{INTRODUCTION}
-% TODO How does one even write an introduction?
-% mention USRP's and define the term
-% Also UHD
+This preliminary report details the preparation to develop an automatic modulation classifier (AMC) program using an Ettus Universal Software Radio Peripheral (USRP) and the USRP Hardware Driver (UHD) C++ API. This classifier makes use of a K-Nearest Neighbor (KNN) classifier.
+
+The approach taken involves a spectral feature-based AMC algorithm to classify all major analog- and some digital modulation schemes. If time permits, doing an exploratory implementation of distribution test-based AMC is also considered.
+
+An incremental build-model for the management of this project, using Trello, is suggested.
+
+Extensive testing and evaluation of the feature-based AMC algorithm will be performed with both simulated and real-life signals.
+
+Some preliminary results making use of a reduced set of features to classify AM and FM signals are presented. They seem promising and amenable to a KNN classifier.
 
 \section{LITERATURE SURVEY}
 Zhu and Nandi identify three major approaches to automatic modulation classification in \textit{Automatic Modulation Classification: Principles, Algorithms and Applications} \cite{zhu2014automatic}; likelihood-based, distribution-test-based and feature-based. These are briefly detailed below.
 
 	\subsection{Likelihood Based Classification}
-	Likelihood based automatic modulation classification hinges on a Bayesian approach wherein various hypotheses regarding the likelihood of a signal conforming to a single modulation scheme are successively refined \cite{zhu2014automatic}. This approach is very popular as it results in optimal classification of modulation schemes \cite{zhu2014automatic}.
+	Likelihood based automatic modulation classification hinges on a Bayesian approach wherein various hypotheses regarding the likelihood of a signal conforming to a single modulation scheme are successively refined \cite{zhu2014automatic}. This approach is very popular as it results in the optimal classification of modulation schemes \cite{zhu2014automatic}.
 
 	This approach depends highly on knowledge of the channel and is characterized by a high computational complexity \cite{zhu2014automatic}. 
 
@@ -56,8 +70,8 @@ Zhu and Nandi identify three major approaches to automatic modulation classifica
 
 	\begin{enumerate}
 		\item $\gamma_{max}$: Maximum value of Power Spectral Density 
-		\item $\sigma_{ap}$: Standard deviation of the absolute value of the non-linear component of the instantaneous phase.
-		\item $\sigma_{dp}$: Standard deviation of the non-linear component of the direct instantaneous phase.
+		\item $\sigma_{ap}$: Standard deviation of the absolute value of the non-linear component of the instantaneous phase
+		\item $\sigma_{dp}$: Standard deviation of the non-linear component of the direct instantaneous phase
 		\item $P$: Spectrum symmetry
 		\item $\sigma_{aa}$: Standard deviation of the absolute value of the normalized and centered instantaneous amplitude
 		\item $\sigma_{af}$: Standard deviation of the absolute value of the normalized and centered instantaneous frequency
@@ -73,21 +87,41 @@ Automatic modulation classification finds it's use in a variety of both civilian
 
 In the sphere of signal jamming it is often useful to know the modulation scheme which is to be jammed. The jamming signal can be adapted to avoid non-offending broadcasts and use a minimum amount of power without compromising efficacy \cite{azzouz2013automatic}.
 
-Cognitive radio involves a degree of spectrum awareness so as to most efficient use the available bandwidth\cite{kim2007cyclostationary}. This generally incorporates AMC by looking at the cyclostationary features of digitally modulated signals \cite{kim2007cyclostationary}.
-
-
-
+Cognitive radio involves a degree of spectrum awareness so as to most efficiently use the available bandwidth\cite{kim2007cyclostationary}. This generally incorporates AMC by looking at the cyclostationary features of digitally modulated signals \cite{kim2007cyclostationary}.
 
 \section{SOLUTION SELECTION}
 	The selection of one of the three major types of modulation classification is motivated by the ease by which it can be practically implemented with the tools available and the time available for it's implementation. 
-	This being the case, the spectral feature-based approach was chosen. It has a relatively low computational complexity and previous work has been done on the subject. This approach fulfills the requirements of being able to detect some digital- all major analog modulation schemes.
+	This being the case, the spectral feature-based approach was chosen. It has a relatively low computational complexity and previous work has been done on the subject. This approach fulfills the requirements of being able to detect some digital- and all major analog modulation schemes.
 
-	However, if there is enough time available, the system could be extended, making use of some distribution test-based classification techniques in order to classify a larger range of digital modulation schemes.
+	However, if there is enough time available, the system could be extended, making use of some distribution test-based classification techniques in order to classify a larger range of digital modulation schemes. This can be done by treating the goodness-of-fit value produced by a Kolmogorov-Smirnov test as another feature, in addition to the spectral-features already obtained.
 
 \section{DEVELOPMENT METHODOLOGY} 
-	For this project it has been deemed appropriate to make use of the incremental build-model of software development. This stresses small iterations of the analysis, design, code and test cycle- basically small waterfall development cycles \cite{incremental_model, waterfall_model}. The smaller segments make testing, debugging and risk management easier.
+	For this project it has been deemed appropriate to make use of the incremental build-model of software development. This stresses small iterations of the analysis, design, code and test cycle: basically small waterfall development cycles \cite{incremental_model, waterfall_model}. The smaller segments make testing, debugging and risk management easier.
 
 	Tracking of tasks will be done with Trello \cite{trello}, in Kanban style, with each card representing a single cycle\cite{kanban_model}. Cards move between three lists: 'Pending', 'In Progress' and 'Completed'.
+
+\section{PROJECT TIMELINE}
+	The structure of the system to be developed is amenable to different development phases; development of the software framework, testing of the framework and training of the classifier, testing the framework with real signals and documentation of the work done.
+
+	These phases will be spread out over roughly seven weeks. The first two weeks will be used for development of the software framework. The third week is concerned with testing of the framework and training the classifier. The fourth and fifth weeks will be used for testing the framework with real world signals and starting the documentation. This leads to the sixth week in which the project will be presented. The final week is reserved to complete the documentation. This sequence of events is detailed in Figure \ref{tab:time}.
+
+	\begin{table}[h]
+	\renewcommand\arraystretch{1.4}
+	\captionsetup{singlelinecheck=false, labelsep=quad}
+	\caption{Timeline of Major Events in the Project Development}\vskip -1.5ex
+	\begin{tabular}{@{\,}r <{\hskip 2pt} !{\foo} >{\raggedright\arraybackslash}p{6cm}}
+	\toprule
+	\addlinespace[1.5ex]
+	09-07 & Project Begins, Development of Software Framework Starts\\
+	09-21 & Framework Development Complete, Framework Testing and Classifier Training Starts\\
+	09-28 & Real-World Testing and Documentation\\
+	10-14 & Project inspection\\
+	10-19 & Documentation\\
+	10-23 & Submission of final report\\
+	\end{tabular}
+	\label{tab:time}
+	\end{table}
+
 
 \section{IMPLEMENTATION OVERVIEW}
 
@@ -113,20 +147,18 @@ Cognitive radio involves a degree of spectrum awareness so as to most efficient 
 
 			In order to spectrally analyze the incoming signal the FFTW3 library is to be used. FFTW3 is an open-source C library developed by Matteo Frigo and Steven G. Johnson. It is available under the GPLv3 license \cite{fftw3_license}.
 
-			For displaying graphical information SFML (Simple and Fast Multimedia Library) will be used. This is distributed under the zlib/libpng License and may thus be freely used in a project such as this \cite{sfml_license}.
-
 			Creation of a gui and the display of information is to be done using the QT framework and QCustomPlot. These are distributed under the GTKv3 license \cite{qt_license, qcustomplot_license}. Furthermore, testing and QA will be done with QT Test simply due to convenience.
 
 			For threading and other miscellaneous functions the C++ 11 Standard library will be used. GNU libstdc++ which is used with GCC is distributed under the GPLv3 license.
 
 		\subsubsection{Build System}
-			Due to the open-source nature and wide availability of the libraries and API's used in this project the software produced will be able to run on various platforms. To fully support this the CMake build-system-generator will be used so that this project may easily be compiled on various platforms.
+			Due to the open-source nature and wide availability of the libraries and API's used in this project the software produced will be able to run on various platforms. To fully support this the CMake build-system-generator will be used so that this project may easily be compiled on many platforms.
 
 			CMake is distributed under the BSD 3-Clause license \cite{cmake_license} and it can thus be distributed with and used in this project.
 
 	\subsection{Feature Extraction}
 		\label{sec:feat_fun}
-		Individual functions will have to be developed for the extraction of each of the nine features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by doing the computation thereof only once.
+		Individual functions will have to be developed for the extraction of each of the nine features mentioned in section \ref{sec:features}. Some of these features incorporate common data, thus the process of feature extraction may be accelerated by making sure the constituent functions are run as few times as possible.
 
 		A spectral representation of the signal is used in the process of obtaining most of the features. This is computed with an FFT using the FFTW3 library. 
 		
@@ -134,10 +166,10 @@ Cognitive radio involves a degree of spectrum awareness so as to most efficient 
 
 		The Instantaneous frequency of the signal may then be obtained from the instantaneous phase by differentiation \cite{park2009introduction}.
 
-		This results in a complex series of events. They are shown in sequence as a flow diagram in Appendix \ref{app:feature}, Figure \ref{fig:feature}.
+		This results in a complex series of events. They are shown in sequence as a flow diagram in Appendix \ref{app:feature}, Figure \ref{fig:feature}. See Section \ref{sec:features} for a reference of symbols.
 
 	\subsection{Signal Filtering}
-		Filtering of the input signal to isolate the bandwidth in which a single signal exists will be done entirely digitally, independant of the USRP.
+		Filtering of the input signal to isolate the spectrum in which a single signal exists will be done entirely digitally, independent of the USRP.
 
 		Filtering in this context is a delicate process; phase distortion will negatively affect the results as many of the features are dependant on the non-linear portion of the phase only. 
 		Thus it is important to implement zero-phase digital filtering.
@@ -145,11 +177,16 @@ Cognitive radio involves a degree of spectrum awareness so as to most efficient 
 
 		The former option would require buffering a large portion of the signal, but might yield better results than the latter. This trade-off, as well as selecting the bandwidth of the band-pass filter to be used is still under investigation.
 
-		Filtering will be implemented by convolution as the alternative, multiplication in the Fourier domain, would result in an extra step in feature extraction: finding the magnitude of the resulting signal after performing the IFFT. (See Appendix \ref{app:feature} for more information)
+		Filtering will be implemented by convolution. The alternative: multiplication in the Fourier domain, would result in an extra step in feature extraction: finding the magnitude of the resulting signal after performing the IFFT. (See Appendix \ref{app:feature} for more information)
 
 	\subsection{Classifier}
-	% TODO Classifier
-	K-nearest neighbors
+	The spectral feature-based AMC algorithm detailed in \textit{Automatic modulation recognition of communication signals} \cite{azzouz2013automatic} makes use of a decision-tree classifier. 
+	This is tedious to implement due to the manual selection of decision thresholds. 
+	Given the situation, it was deemed appropriate to implement a K-Nearest Neighbor (KNN) classifier as suggested in \textit{Automatic Modulation Classification: Principles, Algorithms and Applications} \cite{zhu2014automatic}. 
+
+	The KNN algorithm involves finding the euclidean distance between the signal to be classified and other reference signals in the high dimensional signal feature-space \cite{zhu2014automatic}. A large amount of reference signals is necessary for this classifier to work effectively. These will be provided by the mocking framework discussed in Section \ref{sec:mock}
+
+	Concerns have been raised regarding the high dimensionality of the feature space. The negative effects of this may be mitigated by assigning different weights to the various features or making use of dimensionality reduction techniques \cite{zhu2014automatic}.
 
 	\subsection{Hardware}
 		The practical implementation of this project will require at least two USRP devices. The first of which will be used for receiving radio signals, the modulation of which is to be classified. The second will be used to generate modulated signals in order to practically test the operation of the system. Seeing as Wits has these available, no charges would be incurred.
@@ -160,23 +197,16 @@ Cognitive radio involves a degree of spectrum awareness so as to most efficient 
 	Basic unit testing and incremental integration testing of the application is to be done with the QT framework's QTest. Functional testing will is to be implemented to train the classifier. System testing is to be done with practical signals to evaluate the effectiveness of the system.
 
 	\subsection{Preliminary Testing}
-	Preliminary testing will be performed on the UHD API
-
+		Preliminary testing will be performed on the UHD API. The Github repository for UHD contains a variety of example code \cite{uhdexample} which may serve as an introductory guide.
 
 	\subsection{Functional Testing}
+	\label{sec:mock}
 		The functional testing will involve supplying signals to the system through a mocking framework, rather than the UHD driver. In so doing, the classifier can be trained on ideal signals. Noise may be introduced to signals of various lengths to evaluate the system's functioning under a variety of conditions.
 
 	\subsection{Practical Testing}
 		Practical testing is to be done with signals generated using another USRP and GNURadio. This will allow for comparing the ideal functioning of the system, and thus spectral feature-based modulation classification in general, to it's real world operation.
 
-\end{multicols}
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=1\textwidth]{plot0.eps}
-		\caption{Plot of $\sigma_{dp}$ vs. $\gamma_{max}$ vs. $P$ for various AM and FM signals}
-		\label{fig:plot0}
-	\end{figure}
-\begin{multicols}{2}
+
 
 \section{PRELIMINARY RESULTS}
 	Simple testing of the feature-based AMC algorithm was performed in MATLAB with a limited number of features. The results are promising, showing a clear separation between different modulation schemes. This can be seen in Figure \ref{fig:plot0}. 
@@ -184,19 +214,34 @@ Cognitive radio involves a degree of spectrum awareness so as to most efficient 
 	The marked clustering of the results show that it is indeed possible to make use of a simple threshold-based decision-tree classifier. Making use of such a classifier, however, would require intense interaction with the application to set the appropriate thresholds. Thus it has been deemed appropriate to make use of a K-Nearest-Neighbor clustering algorithm so as to maximise the application's autonomy and extensibility.
 
 \section{CONCLUSION}
+This preliminary report proposed the use of an incremental development model to produce a spectral feature-based automatic modulation classification system that makes use of an Ettus USRP accessed through the UHD API and a KNN-clustering algorithm. It is expected that this system would be able to successfully identify all major analog- and some digital modulation schemes. Suggestions are made on the extension of this system using distribution test-based AMC methods in order to classify a wider variety of digital modulation schemes.
 
-% TODO conclusion
+Extensive training of the clustering algorithm and testing of the system is proposed. This is expected to give some indication as to the effectiveness of spectral feature-based AMC in real world conditions.
 
+\newpage
 \bibliographystyle{witseie}
 \bibliography{prelim} 
-\end{multicols}
-\newpage
 
+\newpage
+\onecolumn
 \appendix
 \counterwithin{figure}{section}
-\section{Feature Extraction Process}
+
+\section{FEATURE EXTRACTION PROCESS}
 \label{app:feature}
 The process of feature extraction is fairly complex. It is presented as a flow graph in Figure \ref{fig:feature} below. Because of the nature of the process it is amenable to parallelization. This will be performed using the C++ 11 Standard threading library.
+
+\begin{itemize}
+	\item $\gamma_{max}$: Maximum value of Power Spectral Density 
+	\item $\sigma_{ap}$: Standard deviation of the absolute value of the non-linear component of the instantaneous phase
+	\item $\sigma_{dp}$: Standard deviation of the non-linear component of the direct instantaneous phase
+	\item $P$: Spectrum symmetry
+	\item $\sigma_{aa}$: Standard deviation of the absolute value of the normalized and centered instantaneous amplitude
+	\item $\sigma_{af}$: Standard deviation of the absolute value of the normalized and centered instantaneous frequency
+	\item $\sigma_{a}$: Standard deviation of the normalized and centered instantaneous amplitude
+	\item $\mu_{42}^{a}$: Kurtosis of the normalized and centered instantaneous amplitude
+	\item $\mu_{42}^{f}$: Kurtosis of the normalized and centered instantaneous frequency
+\end{itemize}
 
 \begin{figure}[h!]
 	\centering
@@ -205,7 +250,19 @@ The process of feature extraction is fairly complex. It is presented as a flow g
 	\label{fig:feature}
 \end{figure}
 
-Filtering of the signal prior to feature extraction is done by means of convolution. The alternative, filtering by multiplication in the Fourier domain, would imply that both the phase and magnitude of the output of the IFFT in Figure \ref{fig:feature} need to be found. The magnitude found here is equivalent to the input of the FFT. This approach would not only impact the accuracy of the instantaneous amplitude measure, but also introduce another unnecessary operation.
+Filtering of the signal prior to feature extraction is done by means of convolution. The alternative, filtering by multiplication in the Fourier domain, would imply that both the phase and magnitude of the output of the IFFT in Figure \ref{fig:feature} need to be found. The magnitude found here is equivalent to the filtered input of the FFT. This approach would not only impact the accuracy of the instantaneous amplitude measure, but also introduce another unnecessary operation.
+
+\newpage
+\section{PRELIMINARY RESULTS}
+Figure \ref{fig:plot0} shows the signal feature-space for a limited set of features. It shows marked clustering of the features for AM and FM signals, this can be seen as partial verification that a KNN-clustering algorithm will be appropriate for this classifier.
+
+\label{app:prelim}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=1\textwidth]{plot0.eps}
+		\caption{Plot of $\sigma_{dp}$ vs. $\gamma_{max}$ vs. $P$ for various AM and FM signals}
+		\label{fig:plot0}
+	\end{figure}
 
 % "It don't matter, Jacques, I live my life lo-fi and noisy." - Anthony
 
