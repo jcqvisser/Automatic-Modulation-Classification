@@ -15,8 +15,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    double* fft(double* x, int N);
-    uhd::usrp::multi_usrp::sptr usrpSetup();
+    std::vector<double> fft(std::vector<double> x, int N);
+    uhd::usrp::multi_usrp::sptr usrpSetup(double fs);
     std::vector<double> usrpReceive(uhd::usrp::multi_usrp::sptr usrp, int N);
 private:
     Ui::MainWindow *ui;

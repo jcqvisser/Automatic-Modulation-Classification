@@ -16,7 +16,7 @@ LIBS += -lfftw3 \
         -lboost_thread \
         -luhd
 
-
+CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \

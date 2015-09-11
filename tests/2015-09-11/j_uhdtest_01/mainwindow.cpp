@@ -20,10 +20,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     int N = 1024;
+    double fs = 10e3;
 
-    uhd::usrp::multi_usrp::sptr usrp = usrpSetup();
+    uhd::usrp::multi_usrp::sptr usrp = usrpSetup(fs);
     std::vector<double> x = usrpReceive(usrp, N);
-    std::vector<double> X = fft(x);
+    std::vector<double> X = MainWindow::fft(x, N);
+
+    QVector<double> xQ = QVector<double>::fromStdVector(x);
+    QVector<double> tQ(N);
+    for (int n = 0; n < N; ++n)
+    {
+        tQ[n] = n/fs;
+    }
 
     ui->qcp0->addGraph();
     ui->qcp0->graph(0)->addData(xQ, tQ);
@@ -35,10 +43,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-double* MainWindow::fft(double *x, int N)
+std::vector<double> MainWindow::fft(std::vector<double> x, int N)
 {
+    double* xArr = &x[0];
+
     fftw_complex *out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex)*N);
-    fftw_plan plan = fftw_plan_dft_r2c_1d(N, x, out, FFTW_ESTIMATE);
+    fftw_plan plan = fftw_plan_dft_r2c_1d(N, xArr, out, FFTW_ESTIMATE);
     fftw_execute(plan);
 
     std::vector<double> mag(N);
@@ -51,10 +61,9 @@ double* MainWindow::fft(double *x, int N)
 
 }
 
-uhd::usrp::multi_usrp::sptr MainWindow::usrpSetup()
+uhd::usrp::multi_usrp::sptr MainWindow::usrpSetup(double fs)
 {
-    double rate = 1e6;
-    double freq = 0.0;
+    double freq = 1.5e6;
     double gain = 0;
     double bw = 2e6;
     std::string ref = "internal";
@@ -62,7 +71,7 @@ uhd::usrp::multi_usrp::sptr MainWindow::usrpSetup()
 
     uhd::usrp::multi_usrp::sptr usrp = uhd::usrp::multi_usrp::make((uhd::device_addr_t) "");
     usrp->set_clock_source(ref);
-    usrp->set_rx_rate(rate);
+    usrp->set_rx_rate(fs);
     uhd::tune_request_t tune_request(freq);
     usrp->set_rx_freq(tune_request);
     usrp->set_rx_gain(gain);
@@ -90,7 +99,7 @@ std::vector<double> MainWindow::usrpReceive(uhd::usrp::multi_usrp::sptr usrp, in
     stream_cmd.time_spec = uhd::time_spec_t();
     rx_stream->issue_stream_cmd(stream_cmd);
 
-    uhd::rx_metadata_t md = uhd::rx_metadata_t::rx_metadata_t();
+    uhd::rx_metadata_t md;
 
     size_t num_rx_samps = rx_stream->recv(&buffer.front(), N, md, 3.0, false);
 

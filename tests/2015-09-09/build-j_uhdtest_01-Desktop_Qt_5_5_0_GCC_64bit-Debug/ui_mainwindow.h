@@ -15,38 +15,54 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
+#include "qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
 class Ui_MainWindow
 {
 public:
-    QMenuBar *menuBar;
-    QToolBar *mainToolBar;
     QWidget *centralWidget;
+    QCustomPlot *qcp0;
+    QCustomPlot *qcp1;
+    QMenuBar *menuBar;
+    QMenu *menuJ_uhdtest_01;
+    QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(400, 300);
+        MainWindow->resize(1029, 361);
+        centralWidget = new QWidget(MainWindow);
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        qcp0 = new QCustomPlot(centralWidget);
+        qcp0->setObjectName(QStringLiteral("qcp0"));
+        qcp0->setGeometry(QRect(10, 10, 501, 281));
+        qcp1 = new QCustomPlot(centralWidget);
+        qcp1->setObjectName(QStringLiteral("qcp1"));
+        qcp1->setGeometry(QRect(520, 10, 501, 281));
+        MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 1029, 24));
+        menuJ_uhdtest_01 = new QMenu(menuBar);
+        menuJ_uhdtest_01->setObjectName(QStringLiteral("menuJ_uhdtest_01"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        MainWindow->addToolBar(mainToolBar);
-        centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        MainWindow->setCentralWidget(centralWidget);
+        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
+
+        menuBar->addAction(menuJ_uhdtest_01->menuAction());
 
         retranslateUi(MainWindow);
 
@@ -56,6 +72,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        menuJ_uhdtest_01->setTitle(QApplication::translate("MainWindow", "j_uhdtest_01", 0));
     } // retranslateUi
 
 };
