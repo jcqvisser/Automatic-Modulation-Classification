@@ -50,11 +50,13 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../../2015-09-11/j_uhdtest_01/main.cpp \
 		../../2015-09-11/j_uhdtest_01/mainwindow.cpp \
-		../../2015-09-11/j_uhdtest_01/qcustomplot.cpp moc_mainwindow.cpp \
+		../../2015-09-11/j_uhdtest_01/qcustomplot.cpp \
+		../../2015-09-11/j_uhdtest_01/usrpstuff.cpp moc_mainwindow.cpp \
 		moc_qcustomplot.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		qcustomplot.o \
+		usrpstuff.o \
 		moc_mainwindow.o \
 		moc_qcustomplot.o
 DIST          = /home/jcq/Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
@@ -189,9 +191,11 @@ DIST          = /home/jcq/Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/jcq/Qt/5.5/gcc_64/mkspecs/features/yacc.prf \
 		/home/jcq/Qt/5.5/gcc_64/mkspecs/features/lex.prf \
 		../../2015-09-11/j_uhdtest_01/j_uhdtest_01.pro ../../2015-09-11/j_uhdtest_01/mainwindow.h \
-		../../2015-09-11/j_uhdtest_01/qcustomplot.h ../../2015-09-11/j_uhdtest_01/main.cpp \
+		../../2015-09-11/j_uhdtest_01/qcustomplot.h \
+		../../2015-09-11/j_uhdtest_01/usrpstuff.h ../../2015-09-11/j_uhdtest_01/main.cpp \
 		../../2015-09-11/j_uhdtest_01/mainwindow.cpp \
-		../../2015-09-11/j_uhdtest_01/qcustomplot.cpp
+		../../2015-09-11/j_uhdtest_01/qcustomplot.cpp \
+		../../2015-09-11/j_uhdtest_01/usrpstuff.cpp
 QMAKE_TARGET  = j_uhdtest_01
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = j_uhdtest_01
@@ -509,8 +513,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../../2015-09-11/j_uhdtest_01/mainwindow.h ../../2015-09-11/j_uhdtest_01/qcustomplot.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../../2015-09-11/j_uhdtest_01/main.cpp ../../2015-09-11/j_uhdtest_01/mainwindow.cpp ../../2015-09-11/j_uhdtest_01/qcustomplot.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../../2015-09-11/j_uhdtest_01/mainwindow.h ../../2015-09-11/j_uhdtest_01/qcustomplot.h ../../2015-09-11/j_uhdtest_01/usrpstuff.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../../2015-09-11/j_uhdtest_01/main.cpp ../../2015-09-11/j_uhdtest_01/mainwindow.cpp ../../2015-09-11/j_uhdtest_01/qcustomplot.cpp ../../2015-09-11/j_uhdtest_01/usrpstuff.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../../2015-09-11/j_uhdtest_01/mainwindow.ui $(DISTDIR)/
 
 
@@ -2710,6 +2714,9 @@ qcustomplot.o: ../../2015-09-11/j_uhdtest_01/qcustomplot.cpp ../../2015-09-11/j_
 		/home/jcq/Qt/5.5/gcc_64/include/QtPrintSupport/qprintpreviewwidget.h \
 		/home/jcq/Qt/5.5/gcc_64/include/QtPrintSupport/qtprintsupportversion.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qcustomplot.o ../../2015-09-11/j_uhdtest_01/qcustomplot.cpp
+
+usrpstuff.o: ../../2015-09-11/j_uhdtest_01/usrpstuff.cpp ../../2015-09-11/j_uhdtest_01/usrpstuff.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o usrpstuff.o ../../2015-09-11/j_uhdtest_01/usrpstuff.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
