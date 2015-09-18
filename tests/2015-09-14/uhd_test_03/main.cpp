@@ -51,11 +51,6 @@ int main(int argc, char *argv[])
     usrp->set_rx_gain(gain);
     std::cout << boost::format("Actual RX Gain: %f dB...") % usrp->get_rx_gain() << std::endl << std::endl;
 
-    // Set sample sizex
-    std::cout << boost::format("Setting RX Gain: %f dB...") % gain << std::endl;
-    usrp->set_rx_gain(gain);
-    std::cout << boost::format("Actual RX Gain: %f dB...") % usrp->get_rx_gain() << std::endl << std::endl;
-
     // Configure stream
     uhd::stream_args_t stream_args("fc64"); //complex floats
     uhd::rx_streamer::sptr rx_stream = usrp->get_rx_stream(stream_args);
@@ -106,4 +101,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
