@@ -2,6 +2,51 @@
 #include <amc.h>
 #include <complex>
 
+// Singleton junk
+AMC::FeatureExtractor* AMC::FeatureExtractor::_instance = NULL;
+
+AMC::FeatureExtractor* AMC::FeatureExtractor::Instance()
+{
+    if (!_instance)
+    {
+        _instance = new FeatureExtractor;
+    }
+    return _instance;
+}
+
+void AMC::FeatureExtractor::setData(
+        const std::vector<std::complex<double> > &x,
+        const double &fc,
+        const double &fs)
+{
+    _x = new std::vector<std::complex<double> >(x);
+    _fs = new double(fs);
+    _fc = new double(fc);
+
+    delete _sigmaAP;
+    _sigmaAP = NULL;
+     delete _sigmaDP;
+    _sigmaDP = NULL;
+     delete _p;
+    _p = NULL;
+     delete _gammaMax;
+    _gammaMax = NULL;
+     delete _sigmaAA;
+    _sigmaAA = NULL;
+     delete _sigmaA;
+    _sigmaA = NULL;
+     delete _sigmaAF;
+    _sigmaAF = NULL;
+     delete _mu42A;
+    _mu42A = NULL;
+     delete _mu42F;
+    _mu42F = NULL;
+}
+
+
+
+
+// Internal methods
 std::vector<std::complex<double> > AMC::FeatureExtractor::fft(
         std::vector<std::complex<double> > &x)
 {
@@ -83,7 +128,7 @@ std::vector<double> AMC::FeatureExtractor::instantaneousPhase(
 }
 
 
-static std::vector<double> AMC::FeatureExtractor::unwrapPhase(
+std::vector<double> AMC::FeatureExtractor::unwrapPhase(
         std::vector<double> x_i_phase)
 {
     size_t N = x_i_phase.size();
@@ -177,6 +222,9 @@ double AMC::FeatureExtractor::stdDev(const std::vector<double> &x)
     return sqrt(sqSum/x.size());
 }
 
+
+
+// Feature Extraction Methods
 double AMC::FeatureExtractor::sigmaDP(
         std::vector<std::complex<double> > &x,
         const double &fc,

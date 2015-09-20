@@ -16,6 +16,19 @@ namespace AMC
         FeatureExtractor(const FeatureExtractor &){}
         FeatureExtractor& operator=(const FeatureExtractor &){}
         static FeatureExtractor* _instance;
+        std::vector<std::complex<double > >* _x = NULL;
+        double* _fs = NULL;
+        double* _fc = NULL;
+
+
+        // internal data
+        std::vector<std::complex<double > >* xFft = NULL;
+        std::vector<std::complex<double > >* xInstantaneous = NULL;
+        std::vector<double>* xInstantaneousAmplitude = NULL;
+        std::vector<double>* xInstantaneousPhase = NULL;
+        std::vector<double>* xPowerSpectralDensity = NULL;
+        std::vector<double>* xNonLinearInstantaneousPhase = NULL;
+
 
         // internal methods
         std::vector<std::complex<double> > fft(
@@ -42,16 +55,22 @@ namespace AMC
         double mean(const std::vector<double> &x);
         double stdDev(const std::vector<double> &x);
         //TODO implement
-        double kurtosis(std::vector<std::complex<double> > x);
-        double normalize(std::vector<std::complex<double> > x);
-        double normalize(std::vector<double> x);
-        double center(std::vector<std::complex<double> > x);
-        double center(std::vector<double> x);
-        double differentiate(std::vector<double> x);
+        double kurtosis(std::vector<std::complex<double> > &x);
+        double normalize(std::vector<std::complex<double> > &x);
+        double normalize(std::vector<double> &x);
+        double center(std::vector<std::complex<double> > &x);
+        double center(std::vector<double> &x);
+        double differentiate(std::vector<double> &x);
 
     public:
+        // singleton junk
         static FeatureExtractor* Instance();
+        void setData(
+                const std::vector<std::complex<double> > &x,
+                const double &fc,
+                const double &fs);
 
+        // features
         double sigmaDP(
                 std::vector<std::complex<double> > &x,
                 const double &fc,
@@ -60,7 +79,7 @@ namespace AMC
                 std::vector<std::complex<double> > &x,
                 const double &fc,
                 const double &fs);
-    }
+    };
 }
 
 #endif
