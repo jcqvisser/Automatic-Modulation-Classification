@@ -2,7 +2,7 @@
 #include <amc.h>
 #include <complex>
 
-std::vector<std::complex<double> > AMC::FeatureExtractor::fft(
+std::vector<std::complex<double> > AMC::fft(
         std::vector<std::complex<double> > &x)
 {
     size_t N = x.size();
@@ -21,7 +21,7 @@ std::vector<std::complex<double> > AMC::FeatureExtractor::fft(
 	return X;
 }
 
-std::vector<std::complex<double> > AMC::FeatureExtractor::ifft(
+std::vector<std::complex<double> > AMC::ifft(
         std::vector<std::complex<double> > &X)
 {
     size_t N = X.size();
@@ -35,7 +35,7 @@ std::vector<std::complex<double> > AMC::FeatureExtractor::ifft(
     return x;
 }
 
-std::vector<std::complex<double> > AMC::FeatureExtractor::instantaneousSignal(
+std::vector<std::complex<double> > AMC::instantaneousSignal(
         std::vector<std::complex<double> > &x)
 {
     size_t N = x.size();
@@ -44,7 +44,7 @@ std::vector<std::complex<double> > AMC::FeatureExtractor::instantaneousSignal(
 		// TODO throw exception
 	}
     std::vector<std::complex<double> > X(N);
-    X = AMC::FeatureExtractor::fft(x);
+    X = AMC::fft(x);
     for (size_t n = N/2; n < N; ++n)
 	{
 		X[n] = std::complex<double>(0,0);
@@ -52,12 +52,12 @@ std::vector<std::complex<double> > AMC::FeatureExtractor::instantaneousSignal(
     return ifft(X);
 }
 
-std::vector<double> AMC::FeatureExtractor::instantaneousAmplitude(
+std::vector<double> AMC::instantaneousAmplitude(
         std::vector<std::complex<double> > &x)
 {
     size_t N = x.size();
 	std::vector<std::complex<double> > x_i(N);
-    x_i = AMC::FeatureExtractor::instantaneousSignal(x);
+    x_i = AMC::instantaneousSignal(x);
 
     std::vector<double> x_i_abs(N);
     for (size_t n = 0; n < N; ++n)
@@ -67,12 +67,12 @@ std::vector<double> AMC::FeatureExtractor::instantaneousAmplitude(
 	return x_i_abs;
 }
 
-std::vector<double> AMC::FeatureExtractor::instantaneousPhase(
+std::vector<double> AMC::instantaneousPhase(
         std::vector<std::complex<double> > &x)
 {
     size_t N = x.size();
 	std::vector<std::complex<double> > x_i(N);
-    x_i = AMC::FeatureExtractor::instantaneousSignal(x);
+    x_i = AMC::instantaneousSignal(x);
 
     std::vector<double> x_i_phase(N);
     for (size_t n = 0; n < N; ++n)
@@ -83,7 +83,7 @@ std::vector<double> AMC::FeatureExtractor::instantaneousPhase(
 }
 
 
-static std::vector<double> AMC::FeatureExtractor::unwrapPhase(
+static std::vector<double> AMC::unwrapPhase(
         std::vector<double> x_i_phase)
 {
     size_t N = x_i_phase.size();
@@ -108,22 +108,22 @@ static std::vector<double> AMC::FeatureExtractor::unwrapPhase(
 	return x_i_phase;
 }
 
-std::vector<double> AMC::FeatureExtractor::unwrappedInstantaneousPhase(
+std::vector<double> AMC::unwrappedInstantaneousPhase(
         std::vector<std::complex<double> > &x)
 {
     size_t N = x.size();
     std::vector<double> x_i_phase(N);
-    x_i_phase = AMC::FeatureExtractor::instantaneousPhase(x);
+    x_i_phase = AMC::instantaneousPhase(x);
 
-    return AMC::FeatureExtractor::unwrapPhase(x_i_phase);
+    return AMC::unwrapPhase(x_i_phase);
 }
 
-std::vector<double> AMC::FeatureExtractor::nonLinearUnwrappedInstantaneousPhase(std::vector<std::complex<double> > &x,
+std::vector<double> AMC::nonLinearUnwrappedInstantaneousPhase(std::vector<std::complex<double> > &x,
         const double &fc,
         const double &fs)
 {
     size_t N = x.size();
-    std::vector<double> x_i_unwr_phase = AMC::FeatureExtractor::unwrappedInstantaneousPhase(x);
+    std::vector<double> x_i_unwr_phase = AMC::unwrappedInstantaneousPhase(x);
     for (size_t n = 0; n < N; ++n)
     {
         x_i_unwr_phase[n] -= 2*PI*fc*n/fs;
@@ -132,7 +132,7 @@ std::vector<double> AMC::FeatureExtractor::nonLinearUnwrappedInstantaneousPhase(
     return x_i_unwr_phase;
 }
 
-std::vector<double> AMC::FeatureExtractor::abs(std::vector<double> x)
+std::vector<double> AMC::abs(std::vector<double> x)
 {
     for (double &xi: x)
     {
@@ -144,7 +144,7 @@ std::vector<double> AMC::FeatureExtractor::abs(std::vector<double> x)
     return x;
 }
 
-std::vector<double> AMC::FeatureExtractor::abs(std::vector<std::complex<double> > x)
+std::vector<double> AMC::abs(std::vector<std::complex<double> > x)
 {
     std::vector<double> a(x.size());
     for (size_t n = 0; n < x.size(); ++n)
@@ -154,7 +154,7 @@ std::vector<double> AMC::FeatureExtractor::abs(std::vector<std::complex<double> 
     return a;
 }
 
-double AMC::FeatureExtractor::mean(const std::vector<double> &x)
+double AMC::mean(const std::vector<double> &x)
 {
     double sum = 0;
     for(double a:x)
@@ -165,9 +165,19 @@ double AMC::FeatureExtractor::mean(const std::vector<double> &x)
     return sum/x.size();
 }
 
-double AMC::FeatureExtractor::stdDev(const std::vector<double> &x)
+double AMC::mean(const std::vector<std::complex<double> > &x)
 {
-    double m = AMC::FeatureExtractor::mean(x);
+	std::complex<double> sum(0,0);
+	for(atd::complex<double> xi:x)
+	{
+		sum += xi;
+	}
+	return sum/x.size();
+}
+
+double AMC::stdDev(const std::vector<double> &x)
+{
+    double m = AMC::mean(x);
     double sqSum = 0;
     for(double xi:x)
     {
@@ -177,24 +187,109 @@ double AMC::FeatureExtractor::stdDev(const std::vector<double> &x)
     return sqrt(sqSum/x.size());
 }
 
-double AMC::FeatureExtractor::sigmaDP(
-        std::vector<std::complex<double> > &x,
-        const double &fc,
-        const double &fs)
+void AMC::stdDevKurtosis(
+		const std::vector<double> &x,
+		double &stdDev,
+		double &kurt)
 {
-    size_t N = x.size();
-    std::vector<double> a(N);
-    a = AMC::FeatureExtractor::nonLinearUnwrappedInstantaneousPhase(x,fc,fs);
-    return stdDev(a);
+	double AMC::mean(x);
+	double sigma4 = 0;
+	double mu4 = 0;
+	for (double xi:x)
+	{
+		double e = xi - mean;
+		mu4 += std::pow(e, 4);
+		sigma4 += std::pow(e, 2);
+	}
+	double N = (double) x.size();
+	sigma4 = sigma4/N;
+	mu4 = mu4/N;
+
+	stdDev = sigma4;
+
+	sigma4 = pow(sigma4,2);
+	kurt = mu4/sigma4;
 }
 
-double AMC::FeatureExtractor::sigmaAP(
-        std::vector<std::complex<double> > &x,
-        const double &fc,
-        const double &fs)
+void AMC::stdDevKurtosis(
+		const std::vector<std::complex<double> > &x,
+		const double mean,
+		double &stdDev,
+		double &kurt)
 {
-    size_t N = x.size();
-    std::vector<double> a(N);
-    a = AMC::FeatureExtractor::abs(AMC::FeatureExtractor::nonLinearUnwrappedInstantaneousPhase(x,fc,fs));
-    return stdDev(a);
+	// total standard deviation and total kurtosis
+	double sigma4r = 0;
+	double sigma4i = 0;
+	double mu4r = 0;
+	double mu4i = 0;
+	for (std::complex<double> xi: x)
+	{
+		double er = std::real(xi) - mean;
+		double ei = std::complex(xi) - mean;
+		mu4r += std::pow(er, 4);
+		mu4i += std::pow(ei,4);
+		sigma4r += std::pow(er,2);
+		sigma4i += std::pow(ei,2);
+	}
+	double N = (double) x.size();
+	mu4r = mu4r/N;
+	mu4i = mu4i/N;
+	sigma4r = sigma4r/N;
+	sigma4i = sigma4i/N;
+
+	stdDev = std::sqrt(std::pow(sigma4r,2) + std::pow(sigma4i,2));
+	sigma4r = std::pow(sigma4r,2);
+	sigma4i = std::pow(sigma4i,2);
+	double kurtr = mu4r/sigma4r;
+	double kurti = mu4i/sigma4i;
+
+	kurt = std::sqrt(std::pow(kurtr,2) + std::pow(kurti,2));
 }
+
+std::vector<double> AMC::differentiate(const std::vector<double> &x)
+{
+	size_t N = x.size();
+	std::vector<double> dxds(N-1); // dx/dsample
+
+	for (size_t n = 0; n < N-1; ++n)
+	{
+		dxds[n] = x[n+1] - x[n];
+	}
+
+	return dxds;
+}
+
+double AMC::absMax(const std::vector<double> &x)
+{
+	double max = 0;
+	for (double xi:x)
+	{
+		if (std::abs(xi) > max)
+		{
+			max = xi;
+		}
+	}
+	return max;
+}
+
+double AMC::absMax(const std::vector<std::complex<double> &x)
+{
+	double max = 0;
+	for (std::complex<double> xi:x)
+	{
+		if (std::abs(xi) > max)
+		{
+			max = xi;
+		}
+	}
+	return max;
+}
+
+
+
+
+
+
+
+
+
