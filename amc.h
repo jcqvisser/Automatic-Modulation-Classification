@@ -29,28 +29,27 @@ namespace AMC
     std::vector<double> abs(std::vector<double> x);
     std::vector<double> abs(std::vector<std::complex<double> > x);
     double mean(const std::vector<double> &x);
-	double mean(const std::vector<std::complex<double> &x);
+	std::complex<double> mean(const std::vector<std::complex<double> &x);
     double stdDev(const std::vector<double> &x);
 	void stdDevKurtosis(
 			const std::vector<double> &x,
-			const double mean,
 			double &stdDev,
 			double &kurt);
 	void stdDevKurtosis(
 			const std::vector<std::complex<double> > &x,
-			const double mean,
 			double &stdDev,
 			double &kurt);
 	std::vector<double> differentiate(const std::vector<double> &x);
 	double absMax(const std::vector<double> &x);
 	double absMax(const std::vector<std::complex<double> > &x);
+	std::complex<double> max(const std::vector<std::complex<double> &x);
+	std::vector<double> center(std::vector<double> x);
+	std::vector<std::complex<double> center(std::vector<std::complex<double> > x);
+	std::vector<double> normalize(std::vector<double> x);
+	std::vector<std::complex<double> > normalize(std::vector<std::complex<double> > x);
 	
     //TODO implement
 	// ????? std::vector<std::complex<double> > mag
-    double normalize(std::vector<double> x);
-    double normalize(std::vector<std::complex<double> > x);
-    double center(std::vector<std::complex<double> > x);
-    double center(std::vector<double> x);
 }
 
 #endif

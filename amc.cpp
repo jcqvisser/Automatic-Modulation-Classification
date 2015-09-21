@@ -161,11 +161,10 @@ double AMC::mean(const std::vector<double> &x)
     {
         sum += a;
     }
-
     return sum/x.size();
 }
 
-double AMC::mean(const std::vector<std::complex<double> > &x)
+std::complex<double> AMC::mean(const std::vector<std::complex<double> > &x)
 {
 	std::complex<double> sum(0,0);
 	for(atd::complex<double> xi:x)
@@ -213,11 +212,11 @@ void AMC::stdDevKurtosis(
 
 void AMC::stdDevKurtosis(
 		const std::vector<std::complex<double> > &x,
-		const double mean,
 		double &stdDev,
 		double &kurt)
 {
 	// total standard deviation and total kurtosis
+	double mean = std::abs(AMC::mean(x))
 	double sigma4r = 0;
 	double sigma4i = 0;
 	double mu4r = 0;
@@ -284,6 +283,72 @@ double AMC::absMax(const std::vector<std::complex<double> &x)
 	}
 	return max;
 }
+
+std::complex<double> max(const std::vector<std::complex<double> > &x)
+{
+	std::complex<double> cMax(0,0);
+	for (std::complex<double> xi:x)
+	{
+		if (std::abs(xi) > std:abs(cMax))
+		{
+			cMax = xi;
+		}
+	}
+	return cMax;
+}
+
+std::vector<double> AMC::center(const std::vector<double> &x)
+{
+	double mu = AMC::mean(x);
+	std::vector<double> xCentered(x.size());
+	size_t N = x.size();
+	for (size_t n = 0; n < N; ++n)
+	{
+		xCentered[n] = x[n] - mu;
+	}
+	reutrn xCentered;
+}
+
+std::vector<std:complex<double> > AMC::center(const std::vector<std::complex<double> > &x)
+{
+	size_t N = x.size();
+	std::complex<double> mu = AMC::mean(x);
+	std::vector<std::complex<double> > xCentered(N);
+	for (size_t n = 0; n<N, ++n)
+	{
+		xCentered[n] = x[n] - mu;
+	}
+	return xCentered;
+}
+
+std::vector<double> AMC::normalize(const std::vector<double> &x)
+{
+	size_t N = x.size();
+	double max = AMC::absMax(x);
+	std::vector<std::complex<double> > xNormed(N);
+	for (size_t n = 0; n<N, ++n)
+	{
+		xNormed[n] = xNormed[n] / max;
+	}
+	return xNormed;
+}
+
+std::vector<std::complex<double> > AMC::normalize(std::vector<std::complex<double> > x)
+{
+	size_t N = x.size();
+	std::complex<double> max = AMC::absMax(x);
+	std::vector<std::complex<double> > xNormed(N);
+	for (size_t n = 0; n<N, ++n)
+	{
+		xNormed[n] = xNormed[n] / max;
+	}
+	return xNormed;
+}
+
+
+
+
+
 
 
 
