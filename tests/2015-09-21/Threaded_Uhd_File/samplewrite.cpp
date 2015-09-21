@@ -24,7 +24,7 @@ void SampleWrite::run()
     std::vector<std::complex<double> > tempBuff;
     while(_isWriting)
     {
-        tempBuff.empty();
+        tempBuff.clear();
         getTempBuffer(tempBuff);
 
         for(std::complex<double> sample : tempBuff)

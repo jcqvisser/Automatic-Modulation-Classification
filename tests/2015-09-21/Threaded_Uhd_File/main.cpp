@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     _sampleWrite.startWrite();
 
-    boost::this_thread::sleep(boost::posix_time::seconds(10));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(2));
 
     _uhdRead.stopStream();
     _sampleWrite.stopWrite();
