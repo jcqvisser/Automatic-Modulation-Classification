@@ -9,11 +9,18 @@ QT       += testlib
 QT       -= gui
 
 TARGET = tst_amctest
-CONFIG   += console
+CONFIG   += console\
+            c++11
 CONFIG   -= app_bundle
+
+LIBS += -lfftw3
 
 TEMPLATE = app
 
 
-SOURCES += tst_amctest.cpp
+SOURCES += tst_amctest.cpp \
+    amc.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+HEADERS += \
+    amc.h
