@@ -1,11 +1,6 @@
 #include "amc.h"
 
 
-AMC::AMC()
-{
-
-}
-
 std::vector<std::complex<double> > AMC::fft(
         std::vector<std::complex<double> > &x)
 {
@@ -134,7 +129,7 @@ std::vector<double> AMC::nonLinearUnwrappedInstantaneousPhase(std::vector<std::c
     return x_i_unwr_phase;
 }
 
-std::vector<double> AMC::abs(std::vector<double> x)
+ auto AMC::abs(std::vector<double> x) -> std::vector<double>
 {
     for (double &xi: x)
     {
@@ -179,14 +174,39 @@ std::complex<double> AMC::mean(const std::vector<std::complex<double> > &x)
 
 double AMC::stdDev(const std::vector<double> &x)
 {
-    double m = AMC::mean(x);
-    double sqSum = 0;
+    double N = (double) x.size();
+    double a = 0;
+    double b = 0;
     for(double xi:x)
     {
-        sqSum += (xi - m)*(xi - m);
+        a += std::pow(xi,2);
+        b += xi;
     }
 
-    return sqrt(sqSum/x.size());
+
+    return std::sqrt(a/N - std::pow(b/N,2));
+}
+
+double AMC::stdDev(const std::vector<std::complex<double> > &x)
+{
+    double N = (double) x.size();
+    double ai = 0;
+    double ar = 0;
+    double bi = 0;
+    double br = 0;
+    for (auto xi:x)
+    {
+        double i = (std::imag(xi));
+        double r = (std::real(xi));
+        ai += std::pow(i,2);
+        ar += std::pow(r,2);
+        bi += i;
+        br += r;
+    }
+    double sigmaI = ai/N - std::pow(bi/N,2);
+    double sigmaR = ar/N - std::pow(br/N,2);
+
+    return std::pow(std::pow(sigmaI,2) + std::pow(sigmaR,2),0.25);
 }
 
 void AMC::stdDevKurtosis(
@@ -207,7 +227,7 @@ void AMC::stdDevKurtosis(
     sigma4 = sigma4/N;
     mu4 = mu4/N;
 
-    stdDev = sigma4;
+    stdDev = std::sqrt(sigma4);
 
     sigma4 = pow(sigma4,2);
     kurt = mu4/sigma4;
@@ -219,15 +239,15 @@ void AMC::stdDevKurtosis(
         double &kurt)
 {
     // total standard deviation and total kurtosis
-    double m = std::abs(AMC::mean(x));
+    std::complex<double> m = AMC::mean(x);
     double sigma4r = 0;
     double sigma4i = 0;
     double mu4r = 0;
     double mu4i = 0;
     for (std::complex<double> xi: x)
     {
-        double er = std::real(xi) - m;
-        double ei = std::imag(xi) - m;
+        double er = std::real(xi) - std::real(m);
+        double ei = std::imag(xi) - std::imag(m);
         mu4r += std::pow(er, 4);
         mu4i += std::pow(ei,4);
         sigma4r += std::pow(er,2);
@@ -239,23 +259,26 @@ void AMC::stdDevKurtosis(
     sigma4r = sigma4r/N;
     sigma4i = sigma4i/N;
 
-    stdDev = std::sqrt(std::pow(sigma4r,2) + std::pow(sigma4i,2));
+    stdDev = std::sqrt(std::sqrt(std::pow(sigma4r,2) + std::pow(sigma4i,2)));
     sigma4r = std::pow(sigma4r,2);
     sigma4i = std::pow(sigma4i,2);
     double kurtr = mu4r/sigma4r;
     double kurti = mu4i/sigma4i;
 
+    kurtr = std::isnan(kurtr) ? 0.0 : kurtr;
+    kurti = std::isnan(kurti) ? 0.0 : kurti;
+
     kurt = std::sqrt(std::pow(kurtr,2) + std::pow(kurti,2));
 }
 
-std::vector<double> AMC::differentiate(const std::vector<double> &x)
+std::vector<double> AMC::differentiate(const std::vector<double> &x, const double &fs)
 {
     size_t N = x.size();
     std::vector<double> dxds(N-1); // dx/dsample
 
     for (size_t n = 0; n < N-1; ++n)
     {
-        dxds[n] = x[n+1] - x[n];
+        dxds[n] = (x[n+1] - x[n])*fs;
     }
 
     return dxds;
@@ -266,10 +289,7 @@ double AMC::absMax(const std::vector<double> &x)
     double max = 0;
     for (double xi:x)
     {
-        if (std::abs(xi) > max)
-        {
-            max = xi;
-        }
+        max = (std::abs(xi) > max) ? xi : max;
     }
     return max;
 }
@@ -279,10 +299,8 @@ double AMC::absMax(const std::vector<std::complex<double> > &x)
     double max = 0;
     for (std::complex<double> xi:x)
     {
-        if (std::abs(xi) > max)
-        {
-            max = std::abs(xi);
-        }
+        max = (std::abs(xi) > max) ? std::abs(xi) : max;
+
     }
     return max;
 }

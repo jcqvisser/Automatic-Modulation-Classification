@@ -19,7 +19,7 @@ namespace AMC
             std::vector<std::complex<double> > &x);
     std::vector<double> instantaneousPhase(
             std::vector<std::complex<double> > &x);
-    static std::vector<double> unwrapPhase(
+    std::vector<double> unwrapPhase(
             std::vector<double> x_i_phase);
     std::vector<double> unwrappedInstantaneousPhase(
             std::vector<std::complex<double> > &x);
@@ -28,12 +28,12 @@ namespace AMC
             const double &fc,
             const double &fs);
 
-    //TODO Test
-    std::vector<double> abs(std::vector<double> x);
-    std::vector<double> abs(std::vector<std::complex<double> > x);
-    double mean(const std::vector<double> &x);
-    std::complex<double> mean(const std::vector<std::complex<double> > &x);
-    double stdDev(const std::vector<double> &x);
+    auto abs(std::vector<double> x) -> std::vector<double>;
+    auto abs(std::vector<std::complex<double> > x) -> std::vector<double>;
+    auto mean(const std::vector<std::complex<double> > &x) -> std::complex<double>;
+    auto mean(const std::vector<double> &x) -> double;
+    auto stdDev(const std::vector<double> &x) -> double;
+    auto stdDev(const std::vector<std::complex<double> > &x) -> double;
     void stdDevKurtosis(
             const std::vector<double> &x,
             double &stdDev,
@@ -42,16 +42,15 @@ namespace AMC
             const std::vector<std::complex<double> > &x,
             double &stdDev,
             double &kurt);
-    std::vector<double> differentiate(const std::vector<double> &x);
-    double absMax(const std::vector<double> &x);
-    double absMax(const std::vector<std::complex<double> > &x);
-    std::complex<double> max(const std::vector<std::complex<double> > &x);
-    std::vector<double> center(std::vector<double> x);
-    std::vector<std::complex<double> > center(std::vector<std::complex<double> > x);
-    std::vector<double> normalize(std::vector<double> x);
-    std::vector<std::complex<double> > normalize(std::vector<std::complex<double> > x);
-
-};
+    //TODO Test
+    auto differentiate(const std::vector<double> &x, const double &fs) -> std::vector<double>;
+    auto absMax(const std::vector<double> &x) -> double;
+    auto absMax(const std::vector<std::complex<double> > &x) -> double;
+    auto max(const std::vector<std::complex<double> > &x) -> std::complex<double>;
+    auto center(std::vector<double> x) -> std::vector<double>;
+    auto center(std::vector<std::complex<double> > x) -> std::vector<std::complex<double> >;
+    auto normalize(std::vector<double> x) -> std::vector<double>;
+    auto normalize(std::vector<std::complex<double> > x) -> std::vector<std::complex<double> >;
 
 }
 
