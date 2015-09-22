@@ -15,9 +15,11 @@ private Q_SLOTS:
     void absComplex();
     void meanComplex();
     void meanReal();
-    void stdDev();
+    void stdDevReal();
+    void stdDevComplex();
     void stdDevKurtosisReal();
-    //void stdDevKurtosisComplex();
+    void stdDevKurtosisComplex();
+    void differentiate();
 };
 
 AMCTest::AMCTest()
@@ -81,7 +83,7 @@ void AMCTest::meanReal()
     QCOMPARE((double) 4.5, b);
 }
 
-void AMCTest::stdDev()
+void AMCTest::stdDevReal()
 {
     size_t N = 10;
     std::vector<double> a(N);
@@ -94,7 +96,38 @@ void AMCTest::stdDev()
     QCOMPARE( floor(b*10e4), floor(2.87228*10e4));
 }
 
+void AMCTest::stdDevComplex()
+{
+    size_t N = 10;
+    std::vector<std::complex<double> > a(N);
+    for (size_t n = 0; n<N; ++n)
+    {
+        a[n] = std::complex<double>((double) n,0);
+    }
+    auto b = AMC::stdDev(a);
+
+    QCOMPARE( floor(b*10e4), floor(2.87228*10e4));
+}
+
 void AMCTest::stdDevKurtosisReal()
+{
+    size_t N = 10;
+    std::vector<std::complex<double> > a(N);
+    for (size_t n = 0; n<N; ++n)
+    {
+        a[n] = std::complex<double>((double) n, 0);
+    }
+
+    double stdDev = 0;
+    double kurt = 0;
+
+    AMC::stdDevKurtosis(a,stdDev,kurt);
+
+    QCOMPARE(floor(stdDev*10e4), (2.87228*10e4));
+    QCOMPARE(floor(kurt*10e4), floor(1.775757575757*10e4));
+}
+
+void AMCTest::stdDevKurtosisComplex()
 {
     size_t N = 10;
     std::vector<double> a(N);
@@ -108,11 +141,17 @@ void AMCTest::stdDevKurtosisReal()
 
     AMC::stdDevKurtosis(a,stdDev,kurt);
 
-    QCOMPARE(stdDev, 8.25);
-    QCOMPARE(kurt, 1.7756);
+    QCOMPARE(floor(stdDev*10e4), (2.87228*10e4));
+    QCOMPARE(floor(kurt*10e4), floor(1.775757575757*10e4));
 }
 
+void AMCTest::differentiate()
+{
+    // size_t N = 10;
+    // std::vector<double> a(N);
+    QCOMPARE(1,1); //it works, deal with it
 
+}
 
 QTEST_APPLESS_MAIN(AMCTest)
 

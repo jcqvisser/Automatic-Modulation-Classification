@@ -19,7 +19,7 @@ namespace AMC
             std::vector<std::complex<double> > &x);
     std::vector<double> instantaneousPhase(
             std::vector<std::complex<double> > &x);
-    static std::vector<double> unwrapPhase(
+    std::vector<double> unwrapPhase(
             std::vector<double> x_i_phase);
     std::vector<double> unwrappedInstantaneousPhase(
             std::vector<std::complex<double> > &x);
@@ -32,8 +32,8 @@ namespace AMC
     auto abs(std::vector<std::complex<double> > x) -> std::vector<double>;
     auto mean(const std::vector<std::complex<double> > &x) -> std::complex<double>;
     auto mean(const std::vector<double> &x) -> double;
-    //TODO Test
     auto stdDev(const std::vector<double> &x) -> double;
+    auto stdDev(const std::vector<std::complex<double> > &x) -> double;
     void stdDevKurtosis(
             const std::vector<double> &x,
             double &stdDev,
@@ -42,7 +42,8 @@ namespace AMC
             const std::vector<std::complex<double> > &x,
             double &stdDev,
             double &kurt);
-    auto differentiate(const std::vector<double> &x) -> std::vector<double>;
+    //TODO Test
+    auto differentiate(const std::vector<double> &x, const double &fs) -> std::vector<double>;
     auto absMax(const std::vector<double> &x) -> double;
     auto absMax(const std::vector<std::complex<double> > &x) -> double;
     auto max(const std::vector<std::complex<double> > &x) -> std::complex<double>;
