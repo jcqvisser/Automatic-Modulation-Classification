@@ -1,6 +1,8 @@
 #include "featureextractor.h"
 
-AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBuffer> buffer, size_t windowSize) :
+AMC::FeatureExtractor::FeatureExtractor(
+        boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
+        size_t windowSize) :
     _buffer(buffer), _windowSize(windowSize)
 {
 }

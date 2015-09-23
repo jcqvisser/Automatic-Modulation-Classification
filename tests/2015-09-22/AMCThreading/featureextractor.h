@@ -10,10 +10,12 @@ namespace AMC
     {
     public:
         FeatureExtractor(){};
-        FeatureExtractor(boost::shared_ptr<SharedBuffer> buffer, size_t windowSize);
+        FeatureExtractor(
+                boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
+                size_t windowSize);
         void run();
     private:
-        boost::shared_ptr<SharedBuffer> _buffer;
+        boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;
         std::vector<std::complex<double> > data;
         size_t _windowSize;
         static void findMu42FSigmaAF();

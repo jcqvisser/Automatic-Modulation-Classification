@@ -17,14 +17,24 @@
  *
  */
 
-class SharedBuffer : public std::deque < std::complex < double > >
+template <class T>
+class SharedBuffer
 {
 public:
+
     /**
      * @brief SharedBuffer
      * Default constructor, initializing data entries to 0.
      */
     SharedBuffer();
+
+
+    SharedBuffer();
+    SharedBuffer(std::deque<T> & copyVec);
+    SharedBuffer(unsigned short N);
+    SharedBuffer(unsigned int N);
+    SharedBuffer(unsigned long N);
+
     /**
      * @brief getMutex
      * A function that gets the mutex object for this object.
@@ -33,12 +43,76 @@ public:
      */
     boost::shared_ptr < boost::shared_mutex > getMutex();
 
+    std::deque < T > & getBuffer();
+
 private:
     /**
      * @brief _bufferMutex
      * Boost shared pointer to mutex object.
      */
     boost::shared_ptr < boost::shared_mutex > _bufferMutex;
+
+    std::deque < T > _buffer;
 };
+
+/*
+ **********************************************************************************************
+ * Placed the implementation in the header file, to avoid templating issues with the compiler *
+ **********************************************************************************************
+ */
+
+
+template <class T>
+SharedBuffer<T>::SharedBuffer() :
+    _buffer(),
+    _bufferMutex(new boost::shared_mutex())
+{
+
+}
+
+template <class T>
+SharedBuffer<T>::SharedBuffer(unsigned short N) :
+    _buffer(N),
+    _bufferMutex(new boost::shared_mutex())
+{
+
+}
+
+
+template <class T>
+SharedBuffer<T>::SharedBuffer(unsigned int N) :
+    _buffer(N),
+    _bufferMutex(new boost::shared_mutex())
+{
+
+}
+
+template <class T>
+SharedBuffer<T>::SharedBuffer(unsigned long N) :
+    _buffer(N),
+    _bufferMutex(new boost::shared_mutex())
+{
+
+}
+
+template <class T>
+SharedBuffer<T>::SharedBuffer(std::deque<T> & copyDeque) :
+    _buffer(copyDeque),
+    _bufferMutex(new boost::shared_mutex())
+{
+
+}
+
+std::deque < T > & SharedBuffer<T>::getBuffer()
+{
+    return _buffer;
+}
+
+template <class T>
+boost::shared_ptr < boost::shared_mutex > SharedBuffer<T>::getMutex()
+{
+    return _bufferMutex;
+}
+
 
 #endif // SHAREDBUFFER_H
