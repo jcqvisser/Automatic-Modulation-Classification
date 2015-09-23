@@ -11,6 +11,7 @@
 #include <boost/format.hpp>
 #include <boost/smart_ptr.hpp>
 #include "sharedbuffer.h"
+#include "streamer.h"
 
 /**
  * @brief The UhdRead class
@@ -25,7 +26,7 @@
  * @author Jacques Visser - 457817
  */
 
-class UhdRead
+class UhdRead : public Streamer
 {
 public:
     /**
@@ -53,12 +54,14 @@ public:
      * @brief The getBuffer function will return a boost shared pointer to the buffer object.
      * @return This function returns the pointer to the buffer object.
      */
-    boost::shared_ptr< SharedBuffer > getBuffer();
+    boost::shared_ptr< SharedBuffer<std::complex<double> > > getBuffer();
 
     /**
      * @brief The setThreadPrioritySafe function is static, used for setting USRP thread priority.
      */
     static void setThreadPrioritySafe();
+
+    void setMaxBuffer(size_t maxBuffSize);
 
 private:
     /**
@@ -74,11 +77,12 @@ private:
      */
     void run();
 
+    size_t _maxBuffSize;
     uhd::usrp::multi_usrp::sptr _usrp;
     uhd::rx_streamer::sptr _rxStream;
     uhd::rx_metadata_t _rxMetadata;
     size_t _frameSize;
-    boost::shared_ptr< SharedBuffer > _buffer;
+    boost::shared_ptr< SharedBuffer<std::complex<double> > > _buffer;
     boost::thread _uhdThread;
     volatile bool _isReading;
     boost::shared_mutex _bufferMutex;

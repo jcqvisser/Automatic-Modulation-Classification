@@ -1,11 +1,13 @@
 #include "uhdread.h"
 
 UhdRead::UhdRead(double rate, double freq, double gain, size_t frameSize, std::string args) :
+    Streamer(),
+    _maxBuffSize(16384),
     _usrp(uhd::usrp::multi_usrp::make(args)),
     _rxStream(nullptr),
     _rxMetadata(),
     _frameSize(frameSize),
-    _buffer(new SharedBuffer() ),
+    _buffer(new SharedBuffer<std::complex<double> >() ),
     _uhdThread(),
     _isReading(false)
 {
@@ -15,6 +17,11 @@ UhdRead::UhdRead(double rate, double freq, double gain, size_t frameSize, std::s
 void UhdRead::setThreadPrioritySafe()
 {
     uhd::set_thread_priority_safe();
+}
+
+void UhdRead::setMaxBuffer(size_t maxBuffSize)
+{
+    _maxBuffSize = maxBuffSize;
 }
 
 void UhdRead::init(double rate, double freq, double gain)
@@ -104,14 +111,20 @@ void UhdRead::run()
         boost::unique_lock < boost::shared_mutex > lock (*mutex.get());
         for(std::complex<double> & tempSample : tempBuffer)
         {
-            _buffer->push_back(tempSample);
+            _buffer->getBuffer().push_back(tempSample);
             tempSample = 0;
+
+            // Stop buffer from getting too large.
+            if(_buffer->getBuffer().size() > _maxBuffSize)
+            {
+                _buffer->getBuffer().pop_front();
+            }
         }
     }
     std::cout << std::endl << "UHD Reader thread closing... " << std::endl;
 }
 
-boost::shared_ptr< SharedBuffer > UhdRead::getBuffer()
+boost::shared_ptr< SharedBuffer<std::complex<double> > > UhdRead::getBuffer()
 {
     return _buffer;
 }
