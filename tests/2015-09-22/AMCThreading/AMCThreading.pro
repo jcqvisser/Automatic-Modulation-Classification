@@ -29,4 +29,5 @@ SOURCES += main.cpp \
 HEADERS += \
     amc.h \
     featureextractor.h \
-    sharedbuffer.h
+    sharedbuffer.h \
+    sharedvector.h

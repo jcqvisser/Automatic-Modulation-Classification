@@ -3,6 +3,7 @@
 #include <amc.h>
 #include <boost/smart_ptr.hpp>
 #include <sharedbuffer.h>
+#include <sharedvector.h>
 
 namespace AMC
 {
@@ -17,14 +18,20 @@ namespace AMC
     private:
         boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;
 
+        SharedVector<std::complex<double> > _x;
+        SharedVector<double> _xFft;
+        SharedVector<double> _xPhase;
+        SharedVector<double> _xPhaseNL;
+        SharedVector<double> _xNormCenter;
+
         size_t _frameSize;
-        static void findMu42FSigmaAF();
-        static void findSigmaDP();
-        static void findSigmaAP();
-        static void findGammaMax();
-        static void findP();
-        static void findSigmaAMu42A();
-        static void findSigmaAA();
+        void findMu42FSigmaAF();
+        void findSigmaDP();
+        void findSigmaAP();
+        void findGammaMax();
+        void findP();
+        void findSigmaAMu42A();
+        void findSigmaAA();
         double _mu42F, _sigmaAF, _sigmaDP, _sigmaAP, _gammaMax, _P, _sigmaA, _mu42A, _sigmaAA;
     };
 }
