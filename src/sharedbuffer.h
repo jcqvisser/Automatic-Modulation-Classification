@@ -27,9 +27,6 @@ public:
      * Default constructor, initializing data entries to 0.
      */
     SharedBuffer();
-
-
-    SharedBuffer();
     SharedBuffer(std::deque<T> & copyVec);
     SharedBuffer(unsigned short N);
     SharedBuffer(unsigned int N);
@@ -46,13 +43,13 @@ public:
     std::deque < T > & getBuffer();
 
 private:
+    std::deque < T > _buffer;
+
     /**
      * @brief _bufferMutex
      * Boost shared pointer to mutex object.
      */
     boost::shared_ptr < boost::shared_mutex > _bufferMutex;
-
-    std::deque < T > _buffer;
 };
 
 /*
@@ -103,6 +100,7 @@ SharedBuffer<T>::SharedBuffer(std::deque<T> & copyDeque) :
 
 }
 
+template <class T>
 std::deque < T > & SharedBuffer<T>::getBuffer()
 {
     return _buffer;
