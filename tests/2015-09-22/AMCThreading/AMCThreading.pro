@@ -24,8 +24,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     amc.cpp \
-    featureextractor.cpp \
-    sharedbuffer.cpp
+    featureextractor.cpp
 
 HEADERS += \
     amc.h \

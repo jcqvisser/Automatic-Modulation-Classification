@@ -16,8 +16,8 @@ namespace AMC
         void run();
     private:
         boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;
-        std::vector<std::complex<double> > data;
-        size_t _windowSize;
+
+        size_t _frameSize;
         static void findMu42FSigmaAF();
         static void findSigmaDP();
         static void findSigmaAP();
