@@ -10,6 +10,11 @@
 
 namespace AMC
 {
+/* \brief Computes the FFT of a complex-valued signal
+ *
+ * This function is a wrapper for fftw3. It computes the Fast Fourier Transform of a vector of complex doubles
+ *
+ */
     std::vector<std::complex<double> > fft(
             std::vector<std::complex<double> > &x);
     std::vector<std::complex<double> > ifft(
@@ -43,7 +48,6 @@ namespace AMC
             const std::vector<std::complex<double> > &x,
             double &stdDev,
             double &kurt);
-    //TODO Test
     auto differentiate(const std::vector<double> &x, const double &fs) -> std::vector<double>;
     auto absMax(const std::vector<double> &x) -> double;
     auto absMax(const std::vector<std::complex<double> > &x) -> double;
@@ -52,26 +56,6 @@ namespace AMC
     auto center(std::vector<std::complex<double> > x) -> std::vector<std::complex<double> >;
     auto normalize(std::vector<double> x) -> std::vector<double>;
     auto normalize(std::vector<std::complex<double> > x) -> std::vector<std::complex<double> >;
-
-    class FeatureExtractor
-    {
-    public:
-        FeatureExtractor(){};
-        void setData();
-        void run();
-    private:
-        static void findMu42FSigmaAF();
-        static void findSigmaDP();
-        static void findSigmaAP();
-        static void findGammaMax();
-        static void findP();
-        static void findSigmaAMu42A();
-        static void findSigmaAA();
-        bool dataSupplied = false;
-        bool featuresComputed = false;
-        double _mu42F, _sigmaAF, _sigmaDP, _sigmaAP, _gammaMax, _P, _sigmaA, _mu42A, _sigmaAA;
-    };
-
 }
 
 #endif
