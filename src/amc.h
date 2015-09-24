@@ -56,6 +56,10 @@ namespace AMC
     auto center(std::vector<std::complex<double> > x) -> std::vector<std::complex<double> >;
     auto normalize(std::vector<double> x) -> std::vector<double>;
     auto normalize(std::vector<std::complex<double> > x) -> std::vector<std::complex<double> >;
+
+    auto symmetry(const std::vector<std::complex<double> > &x, const double &fc, const double &fs) -> double;
+    auto maxPower(const std::vector<double> &x) -> double;
+    auto maxPower(const std::vector<std::complex<double> > &x) -> double;
 }
 
 #endif

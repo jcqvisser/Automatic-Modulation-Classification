@@ -304,3 +304,37 @@ double AMC::absMax(const std::vector<std::complex<double> > &x)
     }
     return max;
 }
+
+double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &fs, const double &fc)
+{
+    // make sure the center frequency of the usrp isn't the same as the carrier frequency of the signal, else this measure is useless.
+    // notes: 09/24
+    double pU = 0;
+    double pL = 0;
+
+    size_t N = x.size();
+    size_t fcn = floor(N*fc/fs-1);
+    for (size_t n = 0; n < fcn; ++n)
+    {
+        pL = std::pow(std::abs(x[n]),2);
+        pU = std::pow(std::abs(x[n+fcn+1]),2);
+    }
+
+    return (pL - pU)/(pL + pU);
+}
+
+double AMC::maxPower(const std::vector<double> &x)
+{
+    double max = 0;
+    for(auto xi:x)
+        max = (std::pow(xi,2) > max) ? std::pow(xi,2) : max;
+    return max;
+}
+
+double AMC::maxPower(const std::vector<std::complex<double> > &x)
+{
+    double max = 0;
+    for (auto xi:x)
+        max = (std::pow(std::abs(xi),2));
+    return max;
+}
