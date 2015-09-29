@@ -31,3 +31,8 @@ std::string AmDsbDemod::modType()
     }
     return strModType;
 }
+
+void AmDsbDemod::reset()
+{
+    ampmodem_reset(_demod);
+}

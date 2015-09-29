@@ -32,6 +32,12 @@ public:
     double demod(const std::complex<double> &sampleData);
 
     /**
+     * @brief Reset the state information for the AmDsbDemod class, incase the state information needs to be reset
+     * for any particular reason.
+     */
+    void reset();
+
+    /**
      * @brief Defines the modulation type of this class, returning a string of that modulation type.
      * @return The modulation type of this class.
      */

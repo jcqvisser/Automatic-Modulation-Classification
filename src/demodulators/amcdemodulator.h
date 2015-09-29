@@ -31,6 +31,15 @@ public:
     }
 
     /**
+     * @brief Function for reseting the state information stored by a particular demodulater, incase the
+     * state needs to be changed for any particular reason.
+     */
+    virtual void reset()
+    {
+
+    }
+
+    /**
      * @brief Return the modulation type of the relevent class.
      * @return
      */
