@@ -20,17 +20,17 @@ int main(int argc, char *argv[])
     MainWindow _mainWindow;
     _mainWindow.show();
 
-    double rate = 1e6;
-    double freq = 10e3;
-    double fc = 150e3;
-    size_t N = 2048;
-    size_t frameSize = 384;
+//    double rate = 1e6;
+//    double freq = 10e3;
+//    double fc = 150e3;
+//    size_t N = 2048;
+//    size_t frameSize = 384;
 
-//    double rate = 1e3;
-//    double freq = 2e0;
-//    double fc = 150e0;
-//    size_t N = 64;
-//    size_t frameSize = 16;
+    double rate = 1e3;
+    double freq = 2e0;
+    double fc = 150e0;
+    size_t N = 64;
+    size_t frameSize = 16;
 
     double gain = 1;
     int supp_carrier = 1;
