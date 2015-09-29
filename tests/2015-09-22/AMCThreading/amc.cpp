@@ -271,14 +271,14 @@ void AMC::stdDevKurtosis(
     kurt = std::sqrt(std::pow(kurtr,2) + std::pow(kurti,2));
 }
 
-std::vector<double> AMC::differentiate(const std::vector<double> &x, const double &fs)
+std::vector<double> AMC::differentiate(const std::vector<double> &x)
 {
     size_t N = x.size();
     std::vector<double> dxds(N-1); // dx/dsample
 
     for (size_t n = 0; n < N-1; ++n)
     {
-        dxds[n] = (x[n+1] - x[n])*fs;
+        dxds[n] = (x[n+1] - x[n]);
     }
 
     return dxds;
@@ -305,7 +305,7 @@ double AMC::absMax(const std::vector<std::complex<double> > &x)
     return max;
 }
 
-double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &fs, const double &fc)
+double AMC::symmetry(const std::vector<std::complex<double> > &x, const size_t &fcn)
 {
     // make sure the center frequency of the usrp isn't the same as the carrier frequency of the signal, else this measure is useless.
     // notes: 09/24
@@ -313,28 +313,139 @@ double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &
     double pL = 0;
 
     size_t N = x.size();
-    size_t fcn = floor(N*fc/fs-1);
+    if (2*fcn > N)
+    {
+        throw std::runtime_error("2*fcn > N. Use a larger window");
+    }
     for (size_t n = 0; n < fcn; ++n)
     {
-        pL = std::pow(std::abs(x[n]),2);
-        pU = std::pow(std::abs(x[n+fcn+1]),2);
+        pL += std::pow(std::abs(x[n]),2);
+        pU += std::pow(std::abs(x[n+fcn+1]),2);
     }
 
     return (pL - pU)/(pL + pU);
 }
 
-double AMC::maxPower(const std::vector<double> &x)
+double AMC::maxPower(const std::vector<std::complex<double> > &x, size_t &k)
 {
     double max = 0;
-    for(auto xi:x)
-        max = (std::pow(xi,2) > max) ? std::pow(xi,2) : max;
-    return max;
+    size_t N = x.size();
+    for (size_t n = 0; n < N; ++n)
+    {
+        auto power = std::pow(std::abs(x[n]),2);
+        if (power > max)
+        {
+            max = power;
+            k = n;
+        }
+    }
 }
 
-double AMC::maxPower(const std::vector<std::complex<double> > &x)
+
+std::vector<std::complex<double> > AMC::center(const std::vector<std::complex<double> > &x)
 {
+    size_t N = x.size();
+    std::complex<double> mu = AMC::mean(x);
+    std::vector<std::complex<double>> xCenter(N);
+    for (size_t n = 0; n < N; ++n)
+    {
+        xCenter[n] = x[n] - mu;
+    }
+    return xCenter;
+}
+
+std::vector<double> AMC::center(const std::vector<double> &x)
+{
+    size_t N = x.size();
+    double mu = AMC::mean(x);
+    std::vector<double> xCenter(N);
+    for (size_t n = 0; n < N; ++n)
+    {
+        xCenter[n] = x[n] - mu;
+    }
+    return xCenter;
+}
+
+std::vector<std::complex<double> > AMC::normalize(const std::vector<std::complex<double> > &x)
+{
+    size_t N = x.size();
+    double max = AMC::absMax(x);
+    std::vector<std::complex<double> > xNorm(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        xNorm[n] = x[n]/max;
+    }
+    return xNorm;
+}
+
+std::vector<double> AMC::normalize(const std::vector<double> &x)
+{
+    size_t N = x.size();
+    double max = AMC::absMax(x);
+    std::vector<double> xNorm(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        xNorm[n] = x[n]/max;
+    }
+    return xNorm;
+}
+
+
+std::vector<std::complex<double> > AMC::removeNegFreq(const std::vector<std::complex<double> > &x)
+{
+    size_t N = x.size();
+    size_t Nhalf = floor(N/2);
+    std::vector<std::complex<double> > xAnal(N);
+    for (size_t n = 0; n < Nhalf; ++n)
+    {
+        xAnal[n] = x[n];
+    }
+
+    for (size_t n = Nhalf; n < N; ++n)
+    {
+        xAnal[n] = std::complex<double>(0,0);
+    }
+
+    return xAnal;
+}
+
+std::vector<double> AMC::phase(const std::vector<std::complex<double> > &x)
+{
+    size_t N = x.size();
+    std::vector<double> x_phase(N);
+    for (size_t n = 0; n < N; ++n)
+    {
+        x_phase[n] = std::arg(x[n]);
+    }
+    return x_phase;
+}
+
+std::vector<double> removeLinearPhase(const std::vector<double> &x, size_t fnc)
+{
+    size_t N = x.size();
+    std::vector<double> xNL(N);
+    for (size_t n = 0; n < N; ++n)
+    {
+        xNL[n] = x[n] - 2*PI*n*fnc/N; // because fcn = fc*N/fs
+    }
+
+    return xNL;
+}
+
+
+double AMC::maxPower(const std::vector<double> &x, size_t &k)
+{
+    size_t N = x.size();
     double max = 0;
-    for (auto xi:x)
-        max = (std::pow(std::abs(xi),2));
+    for (size_t n = 0; n < N; ++n)
+    {
+        if (std::abs(std::pow(x[n],2)) > max)
+        {
+            k = n;
+            max = std::abs(std::pow(x[n],2));
+        }
+    }
     return max;
 }

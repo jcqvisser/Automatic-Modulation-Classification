@@ -2,8 +2,8 @@
 
 AMC::FeatureExtractor::FeatureExtractor(
         boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-        size_t frameSize) :
-    _buffer(buffer), _frameSize(frameSize)
+        size_t frameSize, double fs) :
+    _buffer(buffer), _frameSize(frameSize), _fs(fs)
 {
 }
 
@@ -39,14 +39,19 @@ void AMC::FeatureExtractor::findSigmaAMu42A()
 {
     boost::shared_lock<boost::shared_mutex> xLock(*_x.getMutex());
     boost::unique_lock<boost::shared_mutex> xNormCenterWriteLock(*_xNormCenter.getMutex());
-    // make normed and centered copy
+
+    _xNormCenter.getData() = AMC::center(_x.getData());
+
     xLock.release();
+
+    _xNormCenter.getData() = AMC::normalize(_xNormCenter.getData());
+
     xNormCenterWriteLock.release();
     boost::shared_lock<boost::shared_mutex> xNormCenterReadLock(*_xNormCenter.getMutex());
     boost::thread sigmaAA(&AMC::FeatureExtractor::findSigmaAA, this);
-    // find std dev and kurt
+
+    AMC::stdDevKurtosis( _xNormCenter.getData(), _sigmaA, _mu42A);
     xNormCenterReadLock.release();
-    // save sigmaA and mu43A
     sigmaAA.join();
 }
 
@@ -54,54 +59,54 @@ void AMC::FeatureExtractor::findMu42FSigmaAF()
 {
     boost::shared_lock<boost::shared_mutex> xLock(*_x.getMutex());
     boost::unique_lock<boost::shared_mutex> xFftWriteLock(*_xFft.getMutex());
-    // do fft
+
+    _xFft.getData() = AMC::fft(_x.getData());
+
     xLock.release();
     xFftWriteLock.release();
     boost::shared_lock<boost::shared_mutex> xFftReadLock(*_xFft.getMutex());
+    boost::thread gammaMaxP(&AMC::FeatureExtractor::findGammaMaxP, this);
 
-    boost::thread gammaMax(&AMC::FeatureExtractor::findGammaMax, this);
-    boost::thread p(&AMC::FeatureExtractor::findP, this);
-    // rmove - component
+    auto xAnalFreq = AMC::removeNegFreq(_xFft.getData());
+
     xFftReadLock.release();
-    // do ifft
-    // find phase
-    // phase unwrap
+
+    auto xAnal = AMC::ifft(xAnalFreq);
+    auto xWrappedPhase = AMC::phase(xAnal); //TODO
+    _xPhase.getData() = AMC::unwrapPhase(xWrappedPhase);
+
     boost::shared_lock<boost::shared_mutex> xPhaseLock(*_xPhase.getMutex());
     boost::thread sigmaDP(&AMC::FeatureExtractor::findSigmaDP, this);
-    //differentiate
+
+    std::vector<double> xRelativeInstFreq = AMC::differentiate(_xPhase.getData()); //linear shift when finding actual freq
+
     xPhaseLock.release();
-    //norm and center
-    //kurt and stddev
-    //save mu42f and sigmaaf
-    gammaMax.join();
-    p.join();
+    auto xRelativeInstFreqN = AMC::normalize(xRelativeInstFreq);
+    std::vector<double> xRelativeInstFreqNormCenter = AMC::center(xRelativeInstFreqN);
+    AMC::stdDevKurtosis(xRelativeInstFreqNormCenter, _mu42F, _sigmaAF);
+
+    gammaMaxP.join();
     sigmaDP.join();
 }
 
 void AMC::FeatureExtractor::findSigmaAA()
 {
     boost::shared_lock<boost::shared_mutex> xNormCenter(*_xNormCenter.getMutex());
-    // abs
+    auto xNormCenterAbs = AMC::abs(_xNormCenter.getData());
+
     xNormCenter.release();
-    // stdDev (combine abs with stdDev?)
-    // save sigmaAA
+
+    _sigmaAA = AMC::stdDev(_xNormCenter.getData());
 }
 
-void AMC::FeatureExtractor::findGammaMax()
+void AMC::FeatureExtractor::findGammaMaxP()
 {
     boost::shared_lock<boost::shared_mutex> xFftLock(*_xFft.getMutex());
-    // power
-    xFftLock.release();
-    // max
-    // save gammaMax
-}
 
-void AMC::FeatureExtractor::findP()
-{
-    boost::shared_lock<boost::shared_mutex> xFftLock(*_xFft.getMutex());
-    // compute spectral symmetry
+    _gammaMax = AMC::maxPower(_xFft.getData(),_fnc);
+    _P = AMC::symmetry(_xFft.getData(), _fnc);
+
     xFftLock.release();
-    // save p
 }
 
 void AMC::FeatureExtractor::findSigmaDP()
@@ -109,7 +114,7 @@ void AMC::FeatureExtractor::findSigmaDP()
     boost::shared_lock<boost::shared_mutex> xPhaseLock(*_xPhase.getMutex());
     boost::unique_lock<boost::shared_mutex> xPhaseNLWriteLock(*_xPhaseNL.getMutex());
 
-    // remove linear phase
+    _xPhaseNL.getData() = AMC::removeLinearPhase(_xPhase.getData(), _fnc);
 
     xPhaseLock.release();
     xPhaseNLWriteLock.release();
@@ -117,11 +122,9 @@ void AMC::FeatureExtractor::findSigmaDP()
 
     boost::thread sigmaAP(&AMC::FeatureExtractor::findSigmaAP, this);
 
-    // std dev
+    _sigmaDP = AMC::stdDev(_xPhaseNL.getData());
 
     xPhaseNLReadLock.release();
-
-    // save sigmadp
 
     sigmaAP.join();
 }
@@ -129,8 +132,10 @@ void AMC::FeatureExtractor::findSigmaDP()
 void AMC::FeatureExtractor::findSigmaAP()
 {
     boost::shared_lock<boost::shared_mutex> xPhaseNLLock(*_xPhaseNL.getMutex());
-    // take abs
+
+    std::vector<double> xAbsPhase = AMC::abs(_xPhaseNL.getData());
+
     xPhaseNLLock.release();
-    // std dev
-    // save sigmaAP
+
+    _sigmaAP = AMC::stdDev(xAbsPhase);
 }
