@@ -31,16 +31,16 @@ class UhdRead : public Streamer
 public:
     /**
      * @brief The overloaded constructor takes in the variables required for the set up of the USRP.
-     * @param rate The sample rate of the USRP.
-     * @param freq The center frequency of the USRP
-     * @param gain The gain of the USRP.
-     * @param frameSize The size of the frame requested.
-     * @param args Any additional arguments for the USRP.
+     * @param The sample rate of the USRP.
+     * @param The center frequency of the USRP
+     * @param The gain of the USRP.
+     * @param Size The size of the frame requested.
+     * @param Any additional arguments for the USRP.
      */
     explicit UhdRead(double rate, double freq, double gain, size_t frameSize = 384, std::string args = "");
 
     /**
-     * @brief startStream The start stream function will launch the thread for the run loop.
+     * @brief Stream The start stream function will launch the thread for the run loop.
      */
     void startStream();
 
@@ -66,9 +66,9 @@ public:
 private:
     /**
      * @brief The init function performs the initialization of the USRP, called by the constructor.
-     * @param rate The sample rate of the USRP.
-     * @param freq The center frequency of the USRP
-     * @param gain The gain of the USRP.
+     * @param The sample rate of the USRP.
+     * @param The center frequency of the USRP
+     * @param The gain of the USRP.
      */
     void init(double rate, double freq, double gain);
 
@@ -77,6 +77,9 @@ private:
      */
     void run();
 
+    /*
+     * Private variables.
+     */
     size_t _maxBuffSize;
     uhd::usrp::multi_usrp::sptr _usrp;
     uhd::rx_streamer::sptr _rxStream;

@@ -46,7 +46,7 @@ void UhdMock::runStream()
 
     while(_isStreaming)
     {
-        boost::this_thread::sleep(boost::posix_time::microseconds(period * 1e6 * _frameSize));
+        boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _frameSize)));
 
         // Get unique access.
         boost::shared_ptr < boost::shared_mutex > mutex = _buffer->getMutex();
@@ -56,7 +56,7 @@ void UhdMock::runStream()
         // Generate a frame of data.
         for(unsigned int n = 0; n < _frameSize; ++n)
         {
-            _buffer->getBuffer().push_back(_func->calc(t));
+            _buffer->getBuffer().push_back(_func->calc(t) * _gain);
 
             // Prohibit data buffer from getting too large.
             if(_buffer->getBuffer().size() > _maxBuffSize)

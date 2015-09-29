@@ -1,15 +1,16 @@
-#ifndef AMDSBFUNCTION_H
-#define AMDSBFUNCTION_H
+#ifndef AMFUNCTION_H
+#define AMFUNCTION_H
 
 #include <liquid/liquid.h>
 #include <boost/smart_ptr.hpp>
+#include "amdemod.h"
 #include "streamfunction.h"
 #include "realstreamfunction.h"
 
-class AmDsbFunction : public StreamFunction
+class AmFunction : public StreamFunction
 {
 public:
-    AmDsbFunction(RealStreamFunction * func, double modIndex, double fc, int suppressed_carrier);
+    AmFunction(RealStreamFunction * func, double modIndex, double fc, AmDemod::SideBand sideband, int suppressed_carrier);
     std::complex < double > calc (const double &inpt);
 
 private:
@@ -17,4 +18,4 @@ private:
     ampmodem _mod;
 };
 
-#endif // AMDSBFUNCTION_H
+#endif // AMFUNCTION_H

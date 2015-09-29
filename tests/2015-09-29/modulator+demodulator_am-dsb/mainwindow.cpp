@@ -86,10 +86,10 @@ void MainWindow::plotData()
     boost::shared_ptr < boost::shared_mutex > mutexY = _yData->getMutex();
     boost::shared_lock < boost::shared_mutex > lockY (*mutexY.get());
 
-//    _xMin = std::numeric_limits<double>::max();
-//    _yMin = std::numeric_limits<double>::max();
-//    _xMax = std::numeric_limits<double>::min();
-//    _yMax = std::numeric_limits<double>::min();
+    _xMin = std::numeric_limits<double>::max();
+    _yMin = std::numeric_limits<double>::max();
+    _xMax = std::numeric_limits<double>::min();
+    _yMax = std::numeric_limits<double>::min();
 
     for(int n = 0; n < _xData->getData().size(); ++n)
     {
@@ -98,6 +98,8 @@ void MainWindow::plotData()
         _yMin = qMin(_yMin, _yData->getData()[n]);
         _yMax = qMax(_yMax, _yData->getData()[n]);
     }
+
+    _yMax = pow(10, ceil(log10(_yMax)));
 
     // give the axes some labels:
     ui->customPlot->graph(0)->setData(_xData->getData(), _yData->getData());

@@ -30,9 +30,9 @@ SOURCES += main.cpp\
     uhdmock.cpp \
     uhdread.cpp \
     amcrecv.cpp \
-    amdsbdemod.cpp \
-    amdsbfunction.cpp \
-    cosfunction.cpp
+    cosfunction.cpp \
+    amdemod.cpp \
+    amfunction.cpp
 
 HEADERS  += mainwindow.h \
     amc.h \
@@ -48,9 +48,12 @@ HEADERS  += mainwindow.h \
     uhdread.h \
     amcdemodulator.h \
     amcrecv.h \
-    amdsbdemod.h \
-    amdsbfunction.h \
     realstreamfunction.h \
-    cosfunction.h
+    cosfunction.h \
+    amdemod.h \
+    amfunction.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES += \
+    mod_demod_02.pro.user
