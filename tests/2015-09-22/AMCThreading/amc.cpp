@@ -34,53 +34,6 @@ std::vector<std::complex<double> > AMC::ifft(
     return x;
 }
 
-std::vector<std::complex<double> > AMC::instantaneousSignal(
-        std::vector<std::complex<double> > &x)
-{
-    size_t N = x.size();
-    if (N%1 != 1)
-    {
-        // TODO throw exception
-    }
-    std::vector<std::complex<double> > X(N);
-    X = AMC::fft(x);
-    for (size_t n = N/2; n < N; ++n)
-    {
-        X[n] = std::complex<double>(0,0);
-    }
-    return ifft(X);
-}
-
-std::vector<double> AMC::instantaneousAmplitude(
-        std::vector<std::complex<double> > &x)
-{
-    size_t N = x.size();
-    std::vector<std::complex<double> > x_i(N);
-    x_i = AMC::instantaneousSignal(x);
-
-    std::vector<double> x_i_abs(N);
-    for (size_t n = 0; n < N; ++n)
-    {
-        x_i_abs[n] = std::abs(x_i[n]);
-    }
-    return x_i_abs;
-}
-
-std::vector<double> AMC::instantaneousPhase(
-        std::vector<std::complex<double> > &x)
-{
-    size_t N = x.size();
-    std::vector<std::complex<double> > x_i(N);
-    x_i = AMC::instantaneousSignal(x);
-
-    std::vector<double> x_i_phase(N);
-    for (size_t n = 0; n < N; ++n)
-    {
-        x_i_phase[n] = std::arg(x_i[n]);
-    }
-    return x_i_phase;
-}
-
 std::vector<double> AMC::unwrapPhase(
         std::vector<double> x_i_phase)
 {
@@ -103,30 +56,6 @@ std::vector<double> AMC::unwrapPhase(
         }
     }
     return x_i_phase;
-}
-
-std::vector<double> AMC::unwrappedInstantaneousPhase(
-        std::vector<std::complex<double> > &x)
-{
-    size_t N = x.size();
-    std::vector<double> x_i_phase(N);
-    x_i_phase = AMC::instantaneousPhase(x);
-
-    return AMC::unwrapPhase(x_i_phase);
-}
-
-std::vector<double> AMC::nonLinearUnwrappedInstantaneousPhase(std::vector<std::complex<double> > &x,
-        const double &fc,
-        const double &fs)
-{
-    size_t N = x.size();
-    std::vector<double> x_i_unwr_phase = AMC::unwrappedInstantaneousPhase(x);
-    for (size_t n = 0; n < N; ++n)
-    {
-        x_i_unwr_phase[n] -= 2*PI*fc*n/fs;
-    }
-
-    return x_i_unwr_phase;
 }
 
  auto AMC::abs(std::vector<double> x) -> std::vector<double>
@@ -339,6 +268,7 @@ double AMC::maxPower(const std::vector<std::complex<double> > &x, size_t &k)
             k = n;
         }
     }
+    return max;
 }
 
 

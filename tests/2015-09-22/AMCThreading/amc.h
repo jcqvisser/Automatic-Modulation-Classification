@@ -19,28 +19,21 @@ namespace AMC
             std::vector<std::complex<double> > &x);
     std::vector<std::complex<double> > ifft(
             std::vector<std::complex<double> > &X);
-    std::vector<std::complex<double> > instantaneousSignal(
-            std::vector<std::complex<double> > &x);
-    std::vector<double> instantaneousAmplitude(
-            std::vector<std::complex<double> > &x);
-    std::vector<double> instantaneousPhase(
-            std::vector<std::complex<double> > &x);
+
     std::vector<double> unwrapPhase(
             std::vector<double> x_i_phase);
-    std::vector<double> unwrappedInstantaneousPhase(
-            std::vector<std::complex<double> > &x);
-    std::vector<double> nonLinearUnwrappedInstantaneousPhase(
-            std::vector<std::complex<double> > &x,
-            const double &fc,
-            const double &fs);
+
 
     auto phase(const std::vector<std::complex<double> > &x) -> std::vector<double>;
     auto removeLinearPhase(const std::vector<double> &x, size_t fcn) -> std::vector<double>;
 
+
     auto abs(std::vector<double> x) -> std::vector<double>;
     auto abs(std::vector<std::complex<double> > x) -> std::vector<double>;
+
     auto mean(const std::vector<std::complex<double> > &x) -> std::complex<double>;
     auto mean(const std::vector<double> &x) -> double;
+
     auto stdDev(const std::vector<double> &x) -> double;
     auto stdDev(const std::vector<std::complex<double> > &x) -> double;
     void stdDevKurtosis(
@@ -52,6 +45,8 @@ namespace AMC
             double &stdDev,
             double &kurt);
     auto differentiate(const std::vector<double> &x) -> std::vector<double>;
+
+    //remove
     auto absMax(const std::vector<double> &x) -> double;
     auto absMax(const std::vector<std::complex<double> > &x) -> double;
 
