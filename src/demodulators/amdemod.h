@@ -1,5 +1,5 @@
-#ifndef AMSSBDEMOD_H
-#define AMSSBDEMOD_H
+#ifndef AMDEMOD_H
+#define AMDEMOD_H
 
 #include <liquid/liquid.h>
 #include "amcdemodulator.h"
@@ -47,4 +47,4 @@ private:
 
 };
 
-#endif // AMSSBDEMOD_H
+#endif // AMDEMOD_H
