@@ -20,20 +20,20 @@ int main(int argc, char *argv[])
     MainWindow _mainWindow;
     _mainWindow.show();
 
-//    double rate = 1e6;
-//    double freq = 10e3;
-//    double fc = 150e3;
-//    size_t N = 2048;
-//    size_t frameSize = 384;
+    double rate = 1e6;
+    double freq = 10e3;
+    double fc = 150e3;
+    size_t N = 2048;
+    size_t frameSize = 384;
 
-    double rate = 1e3;
-    double freq = 2e0;
-    double fc = 150e0;
-    size_t N = 64;
-    size_t frameSize = 16;
+//    double rate = 1e3;
+//    double freq = 2e0;
+//    double fc = 150e0;
+//    size_t N = 64;
+//    size_t frameSize = 16;
 
     double gain = 1;
-    int supp_carrier = 0;
+    int supp_carrier = 1;
     double mod_index = 0.5;
 
     // Create data stream object.
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
     // Create demodulator object.
     AmcRecv _amcRecv(_buffer, rate, N);
-    _amcRecv.setDemod(new AmDsbDemod(mod_index, fc, supp_carrier));
+    _amcRecv.setDemod(new AmDsbDemod(mod_index, (fc/rate), supp_carrier));
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
