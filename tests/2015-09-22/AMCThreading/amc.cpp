@@ -352,7 +352,7 @@ std::vector<double> AMC::phase(const std::vector<std::complex<double> > &x)
     return x_phase;
 }
 
-std::vector<double> removeLinearPhase(const std::vector<double> &x, size_t fnc)
+std::vector<double> AMC::removeLinearPhase(const std::vector<double> &x, size_t fnc)
 {
     size_t N = x.size();
     std::vector<double> xNL(N);
