@@ -29,10 +29,16 @@ public:
 
 
     // For displaying other plots in testing.
-    void setInputData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y)
+    void setInputRealData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y)
     {
-        _inXData.swap(X);
-        _inYData.swap(Y);
+        _realXData.swap(X);
+        _realYData.swap(Y);
+    }
+
+    void setInputImagData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y)
+    {
+        _imagXData.swap(X);
+        _imagYData.swap(Y);
     }
 
     void setOutputData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y)
@@ -67,8 +73,10 @@ private:
 
     std::string _infoText;
 
-    boost::shared_ptr<SharedQVector<double> > _inXData;
-    boost::shared_ptr<SharedQVector<double> > _inYData;
+    boost::shared_ptr<SharedQVector<double> > _realXData;
+    boost::shared_ptr<SharedQVector<double> > _realYData;
+    boost::shared_ptr<SharedQVector<double> > _imagXData;
+    boost::shared_ptr<SharedQVector<double> > _imagYData;
     boost::shared_ptr<SharedQVector<double> > _outXData;
     boost::shared_ptr<SharedQVector<double> > _outYData;
 };

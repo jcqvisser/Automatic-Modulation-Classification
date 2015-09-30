@@ -32,7 +32,13 @@ SOURCES += main.cpp\
     amcrecv.cpp \
     cosfunction.cpp \
     amdemod.cpp \
-    amfunction.cpp
+    amfunction.cpp \
+    fmdemod.cpp \
+    fmfunction.cpp \
+    mpskdemod.cpp \
+    mpskfunction.cpp \
+    digitalfunction.cpp \
+    digitaldemod.cpp
 
 HEADERS  += mainwindow.h \
     amc.h \
@@ -51,7 +57,13 @@ HEADERS  += mainwindow.h \
     realstreamfunction.h \
     cosfunction.h \
     amdemod.h \
-    amfunction.h
+    amfunction.h \
+    fmdemod.h \
+    fmfunction.h \
+    mpskdemod.h \
+    mpskfunction.h \
+    digitalfunction.h \
+    digitaldemod.h
 
 FORMS    += mainwindow.ui
 

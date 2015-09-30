@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     _timer(),
     _buffTimer(),
     _infoText(""),
-    _inXData(new SharedQVector<double>()),
-    _inYData(new SharedQVector<double>()),
+    _realXData(new SharedQVector<double>()),
+    _realYData(new SharedQVector<double>()),
+    _imagXData(new SharedQVector<double>()),
+    _imagYData(new SharedQVector<double>()),
     _outXData(new SharedQVector<double>()),
     _outYData(new SharedQVector<double>())
 {
@@ -25,9 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fftCustomPlot->xAxis->setLabel("Frequency (Hz)");
     ui->fftCustomPlot->yAxis->setLabel("Magnitude");
 
-    ui->inputCustomPlot->addGraph();
-    ui->inputCustomPlot->xAxis->setLabel("Time (s)");
-    ui->inputCustomPlot->yAxis->setLabel("Amplitude");
+    ui->inputRealPlot->addGraph();
+    ui->inputRealPlot->xAxis->setLabel("Time (s)");
+    ui->inputRealPlot->yAxis->setLabel("Amplitude");
+
+    ui->inputImagPlot->addGraph();
+    ui->inputImagPlot->xAxis->setLabel("Time (s)");
+    ui->inputImagPlot->yAxis->setLabel("Amplitude");
 
     ui->outputCustomPlot->addGraph();
     ui->outputCustomPlot->xAxis->setLabel("Time (s)");
@@ -131,33 +137,58 @@ void MainWindow::plotData()
 void MainWindow::plotInputData()
 {
     // Get shared access (read only).
-    boost::shared_ptr < boost::shared_mutex > mutexX = _inXData->getMutex();
+    boost::shared_ptr < boost::shared_mutex > mutexX = _realXData->getMutex();
     boost::shared_lock < boost::shared_mutex > lockX (*mutexX.get());
-    boost::shared_ptr < boost::shared_mutex > mutexY = _inYData->getMutex();
+    boost::shared_ptr < boost::shared_mutex > mutexY = _realYData->getMutex();
     boost::shared_lock < boost::shared_mutex > lockY (*mutexY.get());
 
+    boost::shared_ptr < boost::shared_mutex > imagMutexX = _imagXData->getMutex();
+    boost::shared_lock < boost::shared_mutex > imagLockX (*imagMutexX.get());
+    boost::shared_ptr < boost::shared_mutex > imagMutexY = _imagYData->getMutex();
+    boost::shared_lock < boost::shared_mutex > imagLockY (*imagMutexY.get());
 
-    double xMin = std::numeric_limits<double>::max();
-    double yMin = std::numeric_limits<double>::max();
-    double xMax = std::numeric_limits<double>::min();
-    double yMax = std::numeric_limits<double>::min();
 
-    for(int n = 0; n < _inXData->getData().size(); ++n)
+    double real_xMin = std::numeric_limits<double>::max();
+    double real_yMin = std::numeric_limits<double>::max();
+    double real_xMax = std::numeric_limits<double>::min();
+    double real_yMax = std::numeric_limits<double>::min();
+    double imag_xMin = std::numeric_limits<double>::max();
+    double imag_yMin = std::numeric_limits<double>::max();
+    double imag_xMax = std::numeric_limits<double>::min();
+    double imag_yMax = std::numeric_limits<double>::min();
+
+    for(int n = 0; n < _realXData->getData().size(); ++n)
     {
-        xMin = qMin(xMin, _inXData->getData()[n]);
-        xMax = qMax(xMax, _inXData->getData()[n]);
-        yMin = qMin(yMin, _inYData->getData()[n]);
-        yMax = qMax(yMax, _inYData->getData()[n]);
+        real_xMin = qMin(real_xMin, _realXData->getData()[n]);
+        real_xMax = qMax(real_xMax, _realXData->getData()[n]);
+        real_yMin = qMin(real_yMin, _realYData->getData()[n]);
+        real_yMax = qMax(real_yMax, _realYData->getData()[n]);
+        imag_xMin = qMin(imag_xMin, _imagXData->getData()[n]);
+        imag_xMax = qMax(imag_xMax, _imagXData->getData()[n]);
+        imag_yMin = qMin(imag_yMin, _imagYData->getData()[n]);
+        imag_yMax = qMax(imag_yMax, _imagYData->getData()[n]);
     }
 
+    real_yMin = -3;
+    real_yMax = 3;
+    imag_yMin = -3;
+    imag_yMax = 3;
 
-    ui->inputCustomPlot->graph(0)->setData(_inXData->getData(), _inYData->getData());
+    ui->inputRealPlot->graph(0)->setData(_realXData->getData(), _realYData->getData());
 
     // set axes ranges, so we see all data:
-    ui->inputCustomPlot->xAxis->setRange(xMin, xMax);
-    ui->inputCustomPlot->yAxis->setRange(yMin, yMax);
+    ui->inputRealPlot->xAxis->setRange(real_xMin, real_xMax);
+    ui->inputRealPlot->yAxis->setRange(real_yMin, real_yMax);
 
-    ui->inputCustomPlot->replot();
+    ui->inputRealPlot->replot();
+
+    ui->inputImagPlot->graph(0)->setData(_imagXData->getData(), _imagYData->getData());
+
+    // set axes ranges, so we see all data:
+    ui->inputImagPlot->xAxis->setRange(imag_xMin, imag_xMax);
+    ui->inputImagPlot->yAxis->setRange(imag_yMin, imag_yMax);
+
+    ui->inputImagPlot->replot();
 }
 
 void MainWindow::plotOutputData()
@@ -182,6 +213,8 @@ void MainWindow::plotOutputData()
         yMax = qMax(yMax, _outYData->getData()[n]);
     }
 
+    yMin = -1;
+    yMax = 4;
 
     ui->outputCustomPlot->graph(0)->setData(_outXData->getData(), _outYData->getData());
 

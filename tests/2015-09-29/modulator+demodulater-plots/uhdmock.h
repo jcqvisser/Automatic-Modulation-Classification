@@ -20,11 +20,17 @@ public:
 
 
     // For testing purposes, return the vectors for plots.
-    boost::shared_ptr < SharedQVector < double > > getTimeVec() {
-        return _timeVec;
+    boost::shared_ptr < SharedQVector < double > > getRealTimeVec() {
+        return _realTimeVec;
     }
-    boost::shared_ptr < SharedQVector < double > > getAmpVec() {
-        return _ampVec;
+    boost::shared_ptr < SharedQVector < double > > getRealAmpVec() {
+        return _realAmpVec;
+    }
+    boost::shared_ptr < SharedQVector < double > > getImagTimeVec() {
+        return _imagTimeVec;
+    }
+    boost::shared_ptr < SharedQVector < double > > getImagAmpVec() {
+        return _imagAmpVec;
     }
 
 private:
@@ -41,8 +47,10 @@ private:
     double _gain;
     size_t _frameSize;
 
-    boost::shared_ptr < SharedQVector < double > > _timeVec;
-    boost::shared_ptr < SharedQVector < double > > _ampVec;
+    boost::shared_ptr < SharedQVector < double > > _realTimeVec;
+    boost::shared_ptr < SharedQVector < double > > _realAmpVec;
+    boost::shared_ptr < SharedQVector < double > > _imagTimeVec;
+    boost::shared_ptr < SharedQVector < double > > _imagAmpVec;
 };
 
 #endif // UHDMOCK_H

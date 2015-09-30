@@ -100,7 +100,31 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QCustomPlot" name="inputCustomPlot" native="true"/>
+              <widget class="QWidget" name="inputCustomPlot" native="true">
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QCustomPlot" name="inputRealPlot" native="true"/>
+                </item>
+                <item>
+                 <widget class="QCustomPlot" name="inputImagPlot" native="true"/>
+                </item>
+               </layout>
+              </widget>
              </item>
              <item>
               <widget class="QCustomPlot" name="outputCustomPlot" native="true"/>

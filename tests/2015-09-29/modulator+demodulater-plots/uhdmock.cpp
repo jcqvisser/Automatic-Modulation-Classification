@@ -12,8 +12,10 @@ UhdMock::UhdMock(StreamFunction * func, double rate, double fc, double gain, siz
     _fc(fc),
     _gain(gain),
     _frameSize(frameSize),
-    _timeVec(new SharedQVector<double>()),
-    _ampVec(new SharedQVector<double>())
+    _realTimeVec(new SharedQVector<double>()),
+    _realAmpVec(new SharedQVector<double>()),
+    _imagTimeVec(new SharedQVector<double>()),
+    _imagAmpVec(new SharedQVector<double>())
 {
 
 }
@@ -56,10 +58,15 @@ void UhdMock::runStream()
         boost::unique_lock < boost::shared_mutex > lock (*mutex.get());
         boost::unique_lock < boost::mutex > funcLock(_funcMutex);
 
-        boost::shared_ptr < boost::shared_mutex > timeMutex = _timeVec->getMutex();
+        boost::shared_ptr < boost::shared_mutex > timeMutex = _realTimeVec->getMutex();
         boost::unique_lock < boost::shared_mutex > timeLock (*timeMutex.get());
-        boost::shared_ptr < boost::shared_mutex > ampMutex = _ampVec->getMutex();
+        boost::shared_ptr < boost::shared_mutex > ampMutex = _realAmpVec->getMutex();
         boost::unique_lock < boost::shared_mutex > ampLock (*ampMutex.get());
+
+        boost::shared_ptr < boost::shared_mutex > imag_timeMutex = _imagTimeVec->getMutex();
+        boost::unique_lock < boost::shared_mutex > imag_timeLock (*imag_timeMutex.get());
+        boost::shared_ptr < boost::shared_mutex > imag_ampMutex = _imagAmpVec->getMutex();
+        boost::unique_lock < boost::shared_mutex > imag_ampLock (*imag_ampMutex.get());
 
         // Generate a frame of data.
         for(unsigned int n = 0; n < _frameSize; ++n)
@@ -75,15 +82,26 @@ void UhdMock::runStream()
             }
 
             // Add Data to the vector.
-            _timeVec->getData().push_back(t);
-            _ampVec->getData().push_back(dataPoint.real());
-            if(_timeVec->getData().size() > 2048)
+            _realTimeVec->getData().push_back(t);
+            _realAmpVec->getData().push_back(dataPoint.real());
+            if(_realTimeVec->getData().size() > 2048)
             {
-                _timeVec->getData().pop_front();
+                _realTimeVec->getData().pop_front();
             }
-            if(_ampVec->getData().size() > 2048)
+            if(_realAmpVec->getData().size() > 2048)
             {
-                _ampVec->getData().pop_front();
+                _realAmpVec->getData().pop_front();
+            }
+
+            _imagTimeVec->getData().push_back(t);
+            _imagAmpVec->getData().push_back(dataPoint.imag());
+            if(_imagTimeVec->getData().size() > 2048)
+            {
+                _imagTimeVec->getData().pop_front();
+            }
+            if(_imagAmpVec->getData().size() > 2048)
+            {
+                _imagAmpVec->getData().pop_front();
             }
 
             t += period;
