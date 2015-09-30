@@ -1,6 +1,12 @@
+/*!
+ * \file amc.cpp
+ *
+ * \author Jacques Visser
+ * \author Anthony Farquharson
+ * \date 2015-09-30
+ */
+
 #include "amc.h"
-
-
 std::vector<std::complex<double> > AMC::fft(
         std::vector<std::complex<double> > &x)
 {
@@ -34,6 +40,37 @@ std::vector<std::complex<double> > AMC::ifft(
     return x;
 }
 
+
+
+std::vector<std::complex<double> > AMC::removeNegFreq(const std::vector<std::complex<double> > &x)
+{
+    size_t N = x.size();
+    size_t Nhalf = floor(N/2);
+    std::vector<std::complex<double> > xAnal(N);
+    for (size_t n = 0; n < Nhalf; ++n)
+    {
+        xAnal[n] = x[n];
+    }
+
+    for (size_t n = Nhalf; n < N; ++n)
+    {
+        xAnal[n] = std::complex<double>(0,0);
+    }
+
+    return xAnal;
+}
+
+std::vector<double> AMC::phase(const std::vector<std::complex<double> > &x)
+{
+    size_t N = x.size();
+    std::vector<double> x_phase(N);
+    for (size_t n = 0; n < N; ++n)
+    {
+        x_phase[n] = std::arg(x[n]);
+    }
+    return x_phase;
+}
+
 std::vector<double> AMC::unwrapPhase(
         std::vector<double> x_i_phase)
 {
@@ -58,27 +95,19 @@ std::vector<double> AMC::unwrapPhase(
     return x_i_phase;
 }
 
- auto AMC::abs(std::vector<double> x) -> std::vector<double>
+std::vector<double> AMC::removeLinearPhase(const std::vector<double> &x, const double &fnc)
 {
-    for (double &xi: x)
+    size_t N = x.size();
+    std::vector<double> xNL(N);
+    for (size_t n = 0; n < N; ++n)
     {
-        if (xi < 0)
-        {
-            xi = -xi;
-        }
+        xNL[n] = x[n] - 2*PI*n*fnc; // because fcn = fc*N/fs
     }
-    return x;
+
+    return xNL;
 }
 
-std::vector<double> AMC::abs(std::vector<std::complex<double> > x)
-{
-    std::vector<double> a(x.size());
-    for (size_t n = 0; n < x.size(); ++n)
-    {
-        a[n] = std::abs(x[n]);
-    }
-    return a;
-}
+
 
 double AMC::mean(const std::vector<double> &x)
 {
@@ -200,6 +229,8 @@ void AMC::stdDevKurtosis(
     kurt = std::sqrt(std::pow(kurtr,2) + std::pow(kurti,2));
 }
 
+
+
 std::vector<double> AMC::differentiate(const std::vector<double> &x)
 {
     size_t N = x.size();
@@ -211,27 +242,6 @@ std::vector<double> AMC::differentiate(const std::vector<double> &x)
     }
 
     return dxds;
-}
-
-double AMC::absMax(const std::vector<double> &x)
-{
-    double max = 0;
-    for (double xi:x)
-    {
-        max = (std::abs(xi) > max) ? std::abs(xi) : max;
-    }
-    return max;
-}
-
-double AMC::absMax(const std::vector<std::complex<double> > &x)
-{
-    double max = 0;
-    for (std::complex<double> xi:x)
-    {
-        max = (std::abs(xi) > max) ? std::abs(xi) : max;
-
-    }
-    return max;
 }
 
 double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &fcn)
@@ -272,6 +282,22 @@ double AMC::maxPower(const std::vector<std::complex<double> > &x, size_t &k)
     }
     return max;
 }
+
+double AMC::maxPower(const std::vector<double> &x, size_t &k)
+{
+    size_t N = x.size();
+    double max = 0;
+    for (size_t n = 0; n < N; ++n)
+    {
+        if (std::abs(std::pow(x[n],2)) > max)
+        {
+            k = n;
+            max = std::abs(std::pow(x[n],2));
+        }
+    }
+    return max;
+}
+
 
 
 std::vector<std::complex<double> > AMC::center(const std::vector<std::complex<double> > &x)
@@ -325,59 +351,46 @@ std::vector<double> AMC::normalize(const std::vector<double> &x)
 }
 
 
-std::vector<std::complex<double> > AMC::removeNegFreq(const std::vector<std::complex<double> > &x)
+
+ auto AMC::abs(std::vector<double> x) -> std::vector<double>
 {
-    size_t N = x.size();
-    size_t Nhalf = floor(N/2);
-    std::vector<std::complex<double> > xAnal(N);
-    for (size_t n = 0; n < Nhalf; ++n)
+    for (double &xi: x)
     {
-        xAnal[n] = x[n];
-    }
-
-    for (size_t n = Nhalf; n < N; ++n)
-    {
-        xAnal[n] = std::complex<double>(0,0);
-    }
-
-    return xAnal;
-}
-
-std::vector<double> AMC::phase(const std::vector<std::complex<double> > &x)
-{
-    size_t N = x.size();
-    std::vector<double> x_phase(N);
-    for (size_t n = 0; n < N; ++n)
-    {
-        x_phase[n] = std::arg(x[n]);
-    }
-    return x_phase;
-}
-
-std::vector<double> AMC::removeLinearPhase(const std::vector<double> &x, const double &fnc)
-{
-    size_t N = x.size();
-    std::vector<double> xNL(N);
-    for (size_t n = 0; n < N; ++n)
-    {
-        xNL[n] = x[n] - 2*PI*n*fnc; // because fcn = fc*N/fs
-    }
-
-    return xNL;
-}
-
-
-double AMC::maxPower(const std::vector<double> &x, size_t &k)
-{
-    size_t N = x.size();
-    double max = 0;
-    for (size_t n = 0; n < N; ++n)
-    {
-        if (std::abs(std::pow(x[n],2)) > max)
+        if (xi < 0)
         {
-            k = n;
-            max = std::abs(std::pow(x[n],2));
+            xi = -xi;
         }
+    }
+    return x;
+}
+
+std::vector<double> AMC::abs(std::vector<std::complex<double> > x)
+{
+    std::vector<double> a(x.size());
+    for (size_t n = 0; n < x.size(); ++n)
+    {
+        a[n] = std::abs(x[n]);
+    }
+    return a;
+}
+
+double AMC::absMax(const std::vector<double> &x)
+{
+    double max = 0;
+    for (double xi:x)
+    {
+        max = (std::abs(xi) > max) ? std::abs(xi) : max;
+    }
+    return max;
+}
+
+double AMC::absMax(const std::vector<std::complex<double> > &x)
+{
+    double max = 0;
+    for (std::complex<double> xi:x)
+    {
+        max = (std::abs(xi) > max) ? std::abs(xi) : max;
+
     }
     return max;
 }
