@@ -218,7 +218,7 @@ double AMC::absMax(const std::vector<double> &x)
     double max = 0;
     for (double xi:x)
     {
-        max = (std::abs(xi) > max) ? xi : max;
+        max = (std::abs(xi) > max) ? std::abs(xi) : max;
     }
     return max;
 }

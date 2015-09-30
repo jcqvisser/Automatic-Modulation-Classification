@@ -1,7 +1,6 @@
 #include <QString>
 #include <QtTest>
 #include <amc.h>
-#define pi 3.1415926536
 #include <math.h>
 #include <limits>
 
@@ -39,12 +38,12 @@ private Q_SLOTS:
     void maxPowerComplex();
     void centerReal();
     void centerComplex();
-    //void normalizeReal();
-    //void normlaizeComplex();
-    //void absReal();
-    //void absComplex();
-    //void absMaxReal();
-    //void absMaxComplex();
+    void normalizeReal();
+    void normalizeComplex();
+    void absReal();
+    void absComplex();
+    void absMaxReal();
+    void absMaxComplex();
 };
 
 AMCUnitTest::AMCUnitTest()
@@ -78,8 +77,8 @@ void AMCUnitTest::phase()
 
     for (size_t n = 0; n < N; ++n)
     {
-        x[n] = std::complex<double>(cos(2*pi*fnc*n), sin(2*pi*fnc*n));
-        xPhase[n] = std::fmod((2*pi*fnc*n),(pi));
+        x[n] = std::complex<double>(cos(2*PI*fnc*n), sin(2*PI*fnc*n));
+        xPhase[n] = std::fmod((2*PI*fnc*n),(PI));
     }
 
     xPhaseRecovered = AMC::phase(x);
@@ -105,8 +104,8 @@ void AMCUnitTest::unwrapPhase()
 
     for (size_t n = 0; n < N; ++n)
     {
-        x[n] = std::complex<double>(cos(2*pi*fnc*n), sin(2*pi*fnc*n));
-        xPhase[n] = (2*pi*fnc*n);
+        x[n] = std::complex<double>(cos(2*PI*fnc*n), sin(2*PI*fnc*n));
+        xPhase[n] = (2*PI*fnc*n);
     }
 
     xPhaseRecovered = AMC::unwrapPhase(AMC::phase(x));
@@ -131,7 +130,7 @@ void AMCUnitTest::removeLinearPhase()
 
     for (size_t n = 0; n < N; ++n)
     {
-        x[n] = std::complex<double>(cos(2*pi*fnc*n), sin(2*pi*fnc*n));
+        x[n] = std::complex<double>(cos(2*PI*fnc*n), sin(2*PI*fnc*n));
     }
 
     xNLPhaseRecovered = AMC::removeLinearPhase(AMC::unwrapPhase(AMC::phase(x)), fnc);
@@ -438,7 +437,7 @@ void AMCUnitTest::centerComplex()
 
     for (size_t n = 0; n < N; ++n)
     {
-        x[n] = std::complex<double>(pi, )
+        x[n] = std::complex<double>(PI,PI);
     }
 
     auto xc = AMC::center(x);
@@ -446,13 +445,142 @@ void AMCUnitTest::centerComplex()
     for (size_t n = 0; n < N; ++n)
     {
         auto cActual = accuracyRound(xc[n]);
-        auto cExpected = accuracyRound(0);
+        auto cExpected = accuracyRound(std::complex<double>(0,0));
 
         QCOMPARE(cActual.imag(), cExpected.imag());
         QCOMPARE(cActual.real(), cExpected.real());
     }
 }
 
+void AMCUnitTest::normalizeReal()
+{
+    size_t N = 10;
+    std::vector<double> x(N);
+    std::vector<double> xn(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        x[n] = (double) n;
+        xn[n] = (double) n/9;
+    }
+
+    x = AMC::normalize(x);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        auto xnActual = accuracyRound(x[n]);
+        auto xnExpected = accuracyRound(xn[n]);
+
+        QCOMPARE(xnActual, xnExpected);
+    }
+}
+
+void AMCUnitTest::normalizeComplex()
+{
+    size_t N = 10;
+    std::vector<std::complex<double> > x(N);
+    std::vector<std::complex<double> > xn(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        x[n] = std::complex<double>((double) n, (double) n);
+        xn[n] = std::complex<double>((double) n, (double) n) / std::abs(std::complex<double>(9,9));
+    }
+
+    x = AMC::normalize(x);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        auto xnActual = accuracyRound(x[n]);
+        auto xnExpected = accuracyRound(xn[n]);
+
+        QCOMPARE(xnActual.imag(), xnExpected.imag());
+        QCOMPARE(xnActual.real(), xnExpected.real());
+    }
+}
+
+void AMCUnitTest::absReal()
+{
+    size_t N = 10;
+    std::vector<double> x(N);
+    std::vector<double> xn(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        x[n] = double(n) * std::pow(-1, n);
+        xn[n] = (double) n;
+    }
+
+    x = AMC::abs(x);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        auto xnActual = accuracyRound(x[n]);
+        auto xnExpected = accuracyRound(xn[n]);
+
+        QCOMPARE(xnActual, xnExpected);
+    }
+}
+
+void AMCUnitTest::absComplex()
+{
+    size_t N = 10;
+    std::vector<std::complex<double> > x(N);
+    std::vector<double> xn(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        x[n] = std::complex<double>((double) n * std::pow(-1,n), (double) n * std::pow(-1,n+1));
+        xn[n] = std::sqrt(2*n*n);
+    }
+
+    auto x1 = AMC::abs(x);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        auto xActual = accuracyRound(x1[n]);
+        auto xExpected = accuracyRound(xn[n]);
+
+        QCOMPARE(xActual, xExpected);
+    }
+}
+
+
+void AMCUnitTest::absMaxReal()
+{
+    size_t N = 10;
+    std::vector<double> x(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        x[n] = double(n) * std::pow(-1, n);
+    }
+
+    auto am = AMC::absMax(x);
+
+    auto xnActual = accuracyRound(am);
+    auto xnExpected = accuracyRound(9);
+
+    QCOMPARE(xnActual, xnExpected);
+}
+
+void AMCUnitTest::absMaxComplex()
+{
+    size_t N = 10;
+    std::vector<std::complex<double> > x(N);
+
+    for (size_t n = 0; n < N; ++n)
+    {
+        x[n] = std::complex<double>((double) n * std::pow(-1,n), (double) n * std::pow(-1,n+1));
+    }
+
+    auto am = AMC::absMax(x);
+
+    auto xActual = accuracyRound(am);
+    auto xExpected = accuracyRound(std::sqrt(2*9*9));
+
+    QCOMPARE(xActual, xExpected);
+}
 
 QTEST_APPLESS_MAIN(AMCUnitTest)
 
