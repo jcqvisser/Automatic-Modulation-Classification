@@ -1,7 +1,7 @@
 #ifndef UHDREAD_H
 #define UHDREAD_H
 
-#include <uhd.h>
+//#include <uhd.h>
 #include <uhd/types/tune_request.hpp>
 #include <uhd/utils/thread_priority.hpp>
 #include <uhd/usrp/multi_usrp.hpp>
