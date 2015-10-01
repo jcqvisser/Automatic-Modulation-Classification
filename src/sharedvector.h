@@ -5,17 +5,63 @@
 #include <boost/thread.hpp>
 #include <QVector>
 
+/**
+ * @brief Utility class for a thread safe vector, the class stores a vector object
+ * as well as a mutex pointer, locks can be created from the lock here to enure that
+ * the vector is thread safe.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
+ */
+
 template <typename T> class SharedVector
 {
 public:
+    /**
+     * @brief SharedVector default constructor, initializes default vector object.
+     */
     SharedVector();
+
+    /**
+     * @brief SharedVector copy constructor, initializes a vector object from the given vector object
+     * @param The given vector object to be copied.
+     */
     SharedVector(std::vector<T> & copyVec);
+
+    /**
+     * @brief SharedVector size constructor, creates the vector of the size given (unsigned short).
+     * @param Size for the vector to be created.
+     */
     SharedVector(unsigned short N);
+
+    /**
+     * @brief SharedVector size constructor, creates the vector of the size given (unsigned int).
+     * @param Size for the vector to be created.
+     */
     SharedVector(unsigned int N);
+
+    /**
+     * @brief SharedVector size constructor, creates the vector of the size given (unsigned long).
+     * @param Size for the vector to be created.
+     */
     SharedVector(unsigned long N);
+
+    /**
+     * @brief SharedVector copy constructor for QVector, creates the vector from the given QVector.
+     * @param The input QVector that will be copied.
+     */
     SharedVector(QVector<T> & copyVec);
 
+    /**
+     * @brief Function to get the mutex object from this shared vector.
+     * @return Shared pointer to the mutex object.
+     */
     boost::shared_ptr<boost::shared_mutex> getMutex();
+
+    /**
+     * @brief getData function used to get the vector that stores the data, so that it can be modified, or read.
+     * @return A reference to the stored vector object.
+     */
     std::vector<T> & getData();
 
 private:
