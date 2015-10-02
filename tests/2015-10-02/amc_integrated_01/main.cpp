@@ -2,26 +2,26 @@
 #include <QMetaType>
 #include <boost/smart_ptr.hpp>
 
-#include "../../../src/interface/mainwindow.h"
+#include "interface/mainwindow.h"
 
-#include "../../../src/uhdmock.h"
-#include "../../../src/uhdread.h"
-#include "../../../src/streamer.h"
-#include "../../../src/fftgenerator.h"
-#include "../../../src/sharedvector.h"
-#include "../../../src/amcrecv.h"
+#include "uhdmock.h"
+#include "uhdread.h"
+#include "streamer.h"
+#include "fftgenerator.h"
+#include "sharedvector.h"
+#include "amcrecv.h"
 
-#include "../../../src/modulators/cosfunction.h"
-#include "../../../src/modulators/amfunction.h"
-#include "../../../src/modulators/fmfunction.h"
-#include "../../../src/modulators/digitalfunction.h"
-#include "../../../src/modulators/mpskfunction.h"
+#include "modulators/cosfunction.h"
+#include "modulators/amfunction.h"
+#include "modulators/fmfunction.h"
+#include "modulators/digitalfunction.h"
+#include "modulators/mpskfunction.h"
 
-#include "../../../src/demodulators/amcdemodulator.h"
-#include "../../../src/demodulators/amdemod.h"
-#include "../../../src/demodulators/fmdemod.h"
-#include "../../../src/demodulators/digitaldemod.h"
-#include "../../../src/demodulators/mpskdemod.h"
+#include "demodulators/amcdemodulator.h"
+#include "demodulators/amdemod.h"
+#include "demodulators/fmdemod.h"
+#include "demodulators/digitaldemod.h"
+#include "demodulators/mpskdemod.h"
 
 int main(int argc, char *argv[])
 {
@@ -50,13 +50,13 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     // AM Stream function.
-    //    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
+//    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
 
     // FM Stream Function
-    //    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), mod_index, rel_fc);
+    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), mod_index, rel_fc);
 
     // MPSK Stream Function
-    StreamFunction * _streamFunction = new DigitalFunction(new MPskFunction(constSize), rel_fs, rel_fc);
+//    StreamFunction * _streamFunction = new DigitalFunction(new MPskFunction(constSize), rel_fs, rel_fc);
 
     // ------------ Create Streamer Object ------------ //
     // UhdMock Object
@@ -85,10 +85,10 @@ int main(int argc, char *argv[])
     //    _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
 
     // Fm Demodulator.
-    //    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
+    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
 
     // MPSK Demodulator
-    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fs, rel_fc));
+//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fs, rel_fc));
 
 /***************************************************************************************************
  *                                      Initialize GUI Objects                                     *

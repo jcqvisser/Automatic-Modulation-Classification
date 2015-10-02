@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = amc_integrated_01
 TEMPLATE = app
 
+INCLUDEPATH += ../../../src/
+
 CONFIG += c++11
 
 LIBS += -luhd\
@@ -22,6 +24,7 @@ LIBS += -luhd\
         -lliquid
 
 SOURCES += main.cpp\
+    ../../../src/interface/qcustomplot.cpp \
     ../../../src/interface/mainwindow.cpp \
     ../../../src/demodulators/amdemod.cpp \
     ../../../src/demodulators/digitaldemod.cpp \
@@ -37,10 +40,10 @@ SOURCES += main.cpp\
     ../../../src/amcrecv.cpp \
     ../../../src/uhdmock.cpp \
     ../../../src/uhdread.cpp \
-    ../../../src/interface/qcustomplot.cpp \
     ../../../src/fftgenerator.cpp
 
-HEADERS  += ../../../src/interface/mainwindow.h \
+HEADERS  += ../../../src/interface/qcustomplot.h \
+    ../../../src/interface/mainwindow.h \
     ../../../src/demodulators/amcdemodulator.h \
     ../../../src/demodulators/amdemod.h \
     ../../../src/demodulators/digitaldemod.h \
@@ -62,7 +65,6 @@ HEADERS  += ../../../src/interface/mainwindow.h \
     ../../../src/streamer.h \
     ../../../src/uhdmock.h \
     ../../../src/uhdread.h \
-    ../../../src/interface/qcustomplot.h \
     ../../../src/fftgenerator.h
 
 FORMS    += ../../../src/interface/mainwindow.ui
