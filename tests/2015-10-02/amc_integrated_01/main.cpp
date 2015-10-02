@@ -11,6 +11,8 @@
 
 #include "interface/mainwindow.h"
 
+#include "classifier/amccvdecisiontree.h"
+
 #include "modulators/cosfunction.h"
 #include "modulators/amfunction.h"
 #include "modulators/fmfunction.h"

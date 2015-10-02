@@ -65,6 +65,8 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/streamer.h \
     ../../../src/uhdmock.h \
     ../../../src/uhdread.h \
-    ../../../src/fftgenerator.h
+    ../../../src/fftgenerator.h \
+    ../../../src/classifier/amcclassifier.h \
+    ../../../src/classifier/amccvdecisiontree.h
 
 FORMS    += ../../../src/interface/mainwindow.ui
