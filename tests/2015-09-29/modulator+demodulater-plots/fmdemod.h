@@ -34,8 +34,8 @@ public:
     void reset();
 
     /**
-     * @brief modType
-     * @return
+     * @brief Returns the modulation type of the class
+     * @return Modulation type being demodulated.
      */
     std::string modType();
 

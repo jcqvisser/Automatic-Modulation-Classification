@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     amcrecv.cpp \
     cosfunction.cpp \
     amdemod.cpp \
-    amfunction.cpp
+    amfunction.cpp \
+    fmdemod.cpp \
+    fmfunction.cpp
 
 HEADERS  += mainwindow.h \
     amc.h \
@@ -51,7 +53,9 @@ HEADERS  += mainwindow.h \
     realstreamfunction.h \
     cosfunction.h \
     amdemod.h \
-    amfunction.h
+    amfunction.h \
+    fmdemod.h \
+    fmfunction.h
 
 FORMS    += mainwindow.ui
 

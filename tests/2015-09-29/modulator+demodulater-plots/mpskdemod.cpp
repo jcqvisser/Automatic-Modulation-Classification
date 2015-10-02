@@ -3,6 +3,7 @@
 MPskDemod::MPskDemod(unsigned int const_size) :
     _constSize(const_size)
 {
+    // Configure the constellation size.
     if(const_size == 2)
     {
         _demod = modem_create(LIQUID_MODEM_PSK2);
@@ -46,6 +47,7 @@ MPskDemod::MPskDemod(unsigned int const_size) :
 
 double MPskDemod::demod(const std::complex<double> &sampleData)
 {
+    // Demodulate the given symbol.
     unsigned int res = 0.0f;
 
     modem_demodulate(_demod, {(float)sampleData.real(), (float)sampleData.imag()}, &res);
@@ -56,10 +58,12 @@ double MPskDemod::demod(const std::complex<double> &sampleData)
 
 void MPskDemod::reset()
 {
+    // Reset the modem state.
     modem_reset(_demod);
 }
 
 std::string MPskDemod::modType()
 {
+    // Return the constellation size and mod type.
     return std::to_string(_constSize) + "-PSK";
 }

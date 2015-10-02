@@ -4,6 +4,7 @@ MPskFunction::MPskFunction(unsigned int const_size) :
     _constSize(const_size),
     _counter(0)
 {
+    // Configure the constellation size.
     if(const_size == 2)
     {
         _mod = modem_create(LIQUID_MODEM_PSK2);
@@ -47,9 +48,15 @@ MPskFunction::MPskFunction(unsigned int const_size) :
 
 std::complex < double > MPskFunction::calc(const double &inpt)
 {
+    // Create result object, the result of mod will be placed in this.
     liquid_float_complex res{0.0f, 0.0f};
 
-    modem_modulate(_mod, modem_gen_rand_sym(_mod), &res);
+    // Modulate a random symbol.
+//    modem_modulate(_mod, modem_gen_rand_sym(_mod), &res);
+    modem_modulate(_mod, _counter, &res);
+    ++_counter;
+    if(_counter >= _constSize)
+        _counter = 0;
 
     return std::complex<double>((double)res.real, (double)res.imag);
 }

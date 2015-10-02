@@ -10,6 +10,8 @@ DigitalFunction::DigitalFunction(StreamFunction * func, double rel_fs, double re
     _t(- _rel_tau / 2),
     _pi(atan(1) * 4)
 {
+    // Give error if the symbol frame is not odd, as an even number of symbols must be available on either side of the
+    // current symbol, placed at ((_symbolFrame - 1) / 2)
     if(symbolFrame % 2 != 1)
     {
         std::cout << "DigitalFunction: Symbol Frame size must be symmetric (odd)." << std::endl;
@@ -19,7 +21,10 @@ DigitalFunction::DigitalFunction(StreamFunction * func, double rel_fs, double re
     }
     for(unsigned int n = 0; n < _symbolFrame; ++n)
     {
-        _frame[n] = std::complex < double > (0.0, 0.0);
+        if(n < (_symbolFrame - 1) /2)
+            _frame[n] = std::complex < double > (0.0, 0.0);
+        else
+            _frame[n] = _func->calc(0.0);
     }
 }
 
@@ -30,16 +35,20 @@ std::complex < double > DigitalFunction::calc(const double &inpt)
     double quadPhase = 0.0;
     double sinc_res = 0.0;
     long t_shift = 0;
-    for(int n = 0; n < _symbolFrame; ++n)
+    for(int n = 0; n < (long)_symbolFrame; ++n)
     {
+        // Calculate the sinc amplitude of the current symbols as well
+        // as the lingering tails of adjacent symbols.
         t_shift = (n - (((long)_symbolFrame - 1) / 2)) * _rel_tau;
         sinc_res = boost::math::sinc_pi(2 * _pi * _rel_fs * (_t - t_shift));
+
+        // Calculate the inphase and quadrature components.
         inPhase += _frame[n].real() * sinc_res;
         quadPhase += _frame[n].imag() * sinc_res;
     }
 
-//    res = std::complex<double>(inPhase * cos(2 * _pi * _rel_fc * _t), quadPhase * sin(2 * _pi * _rel_fc * _t));
-    res = std::complex<double>(inPhase, quadPhase);
+    // Modulate the generated data point onto the carrier.
+    res = std::complex<double>(inPhase * cos(2 * _pi * _rel_fc * _t), quadPhase * sin(2 * _pi * _rel_fc * _t));
 
     // Check the time state, whether the next symbol should start.
     if(_t >= _rel_tau / 2)

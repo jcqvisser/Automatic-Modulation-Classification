@@ -61,6 +61,11 @@ public:
      */
     static void setThreadPrioritySafe();
 
+    /**
+     * @brief setMaxBuffer will set the max size that the shared buffer can be, if it exceeds this size then the oldest
+     * received data point will be deleted.
+     * @param The new max buffer size.
+     */
     void setMaxBuffer(size_t maxBuffSize);
 
 private:

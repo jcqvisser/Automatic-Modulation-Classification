@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     double rel_fc = fc / rate;
     double rel_fs = freq / rate;
     AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
-    unsigned int constSize = 4;
+    unsigned int constSize = 16;
 
 /***************************************************************************************************
  *                                      Create stream object                                       *

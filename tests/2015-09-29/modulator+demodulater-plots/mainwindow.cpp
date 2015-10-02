@@ -169,11 +169,6 @@ void MainWindow::plotInputData()
         imag_yMax = qMax(imag_yMax, _imagYData->getData()[n]);
     }
 
-    real_yMin = -3;
-    real_yMax = 3;
-    imag_yMin = -3;
-    imag_yMax = 3;
-
     ui->inputRealPlot->graph(0)->setData(_realXData->getData(), _realYData->getData());
 
     // set axes ranges, so we see all data:
@@ -212,9 +207,6 @@ void MainWindow::plotOutputData()
         yMin = qMin(yMin, _outYData->getData()[n]);
         yMax = qMax(yMax, _outYData->getData()[n]);
     }
-
-    yMin = -1;
-    yMax = 4;
 
     ui->outputCustomPlot->graph(0)->setData(_outXData->getData(), _outYData->getData());
 

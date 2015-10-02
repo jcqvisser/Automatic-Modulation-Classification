@@ -10,6 +10,8 @@
 #include "amfunction.h"
 #include "amcrecv.h"
 #include "amcdemodulator.h"
+#include "fmdemod.h"
+#include "fmfunction.h"
 #include <QApplication>
 #include <QMetaType>
 #include <boost/smart_ptr.hpp>
@@ -24,7 +26,7 @@ int main(int argc, char *argv[])
 
     // Modulation settings
     int supp_carrier = 0;
-    double mod_index = 0.5;
+    double mod_index = 0.1;
     AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
 
     // Frame size and FFT size.
@@ -32,7 +34,8 @@ int main(int argc, char *argv[])
     size_t frameSize = 384;
 
     // Create data stream object.
-    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, (fc/rate), sideBand, supp_carrier);
+//    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, (fc/rate), sideBand, supp_carrier);
+    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), mod_index);
     boost::scoped_ptr < Streamer > _dataStream(new UhdMock(_streamFunction, rate, freq, gain, frameSize));
 //    boost::scoped_ptr < Streamer > _dataStream(new UhdRead(rate, freq, gain, frameSize));
 

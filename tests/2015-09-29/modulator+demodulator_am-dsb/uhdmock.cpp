@@ -18,23 +18,29 @@ UhdMock::UhdMock(StreamFunction * func, double rate, double fc, double gain, siz
 
 void UhdMock::setMaxBuffer(size_t maxBuffSize)
 {
+    // Change the max buffer size
     _maxBuffSize = maxBuffSize;
 }
 
 void UhdMock::startStream()
 {
+    // Initialize run loop conditional and start main loop.
     _isStreaming = true;
     _streamThread = boost::thread(&UhdMock::runStream, this);
 }
 
 void UhdMock::changeFunc(StreamFunction * func)
 {
+    // Change the function used for data generation, aquire a mutex
+    // before changing the function.
     boost::unique_lock < boost::mutex > funcLock(_funcMutex);
     _func.reset(func);
 }
 
 void UhdMock::stopStream()
 {
+    // Set the run loop conditional to false (stop the loop) and
+    // join the thread.
     _isStreaming = false;
     _streamThread.join();
 }
@@ -46,6 +52,7 @@ void UhdMock::runStream()
 
     while(_isStreaming)
     {
+        // Sleep for the duration relative to the data rate, so that the rate is approximately right.
         boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _frameSize)));
 
         // Get unique access.
