@@ -3,7 +3,7 @@
 
 #include <liquid/liquid.h>
 #include <boost/smart_ptr.hpp>
-#include "amdemod.h"
+#include "../demodulators/amdemod.h"
 #include "streamfunction.h"
 #include "realstreamfunction.h"
 

@@ -22,7 +22,7 @@ LIBS += -luhd\
         -lliquid
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    ../../../src/interface/mainwindow.cpp \
     ../../../src/demodulators/amdemod.cpp \
     ../../../src/demodulators/digitaldemod.cpp \
     ../../../src/demodulators/fmdemod.cpp \
@@ -36,9 +36,11 @@ SOURCES += main.cpp\
     ../../../src/amc.cpp \
     ../../../src/amcrecv.cpp \
     ../../../src/uhdmock.cpp \
-    ../../../src/uhdread.cpp
+    ../../../src/uhdread.cpp \
+    ../../../src/interface/qcustomplot.cpp \
+    ../../../src/fftgenerator.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += ../../../src/interface/mainwindow.h \
     ../../../src/demodulators/amcdemodulator.h \
     ../../../src/demodulators/amdemod.h \
     ../../../src/demodulators/digitaldemod.h \
@@ -59,6 +61,8 @@ HEADERS  += mainwindow.h \
     ../../../src/sharedvector.h \
     ../../../src/streamer.h \
     ../../../src/uhdmock.h \
-    ../../../src/uhdread.h
+    ../../../src/uhdread.h \
+    ../../../src/interface/qcustomplot.h \
+    ../../../src/fftgenerator.h
 
-FORMS    += mainwindow.ui
+FORMS    += ../../../src/interface/mainwindow.ui

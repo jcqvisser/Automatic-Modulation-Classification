@@ -5,7 +5,7 @@
 #include <boost/timer.hpp>
 #include <boost/chrono.hpp>
 #include "streamer.h"
-#include "streamfunction.h"
+#include "modulators/streamfunction.h"
 
 /**
  * @brief The UhdMock class is used to stream test data to the system, acting similarily to the UhdRead class.

@@ -7,9 +7,9 @@
 #include <cmath>
 #include <QBasicTimer>
 #include <stdlib.h>
-#include "sharedvector.h"
-#include "sharedbuffer.h"
-#include "sharedqvector.h"
+#include "../sharedvector.h"
+#include "../sharedbuffer.h"
+#include "../sharedqvector.h"
 
 namespace Ui {
 class MainWindow;

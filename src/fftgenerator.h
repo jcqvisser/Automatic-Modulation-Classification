@@ -7,7 +7,6 @@
 #include <cmath>
 #include "amc.h"
 #include "sharedbuffer.h"
-#include "mainwindow.h"
 #include "sharedvector.h"
 #include "sharedqvector.h"
 
@@ -62,8 +61,6 @@ private:
     double _rate;
     double _N;
     bool _isPerformFft;
-
-    MainWindow * _main;
 };
 
 #endif // FFTGENERATER_H

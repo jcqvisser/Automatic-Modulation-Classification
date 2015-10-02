@@ -3,7 +3,7 @@
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
-#include "amcdemodulator.h"
+#include "demodulators/amcdemodulator.h"
 #include "sharedbuffer.h"
 
 /**
