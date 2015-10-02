@@ -2,14 +2,14 @@
 #include <QMetaType>
 #include <boost/smart_ptr.hpp>
 
-#include "interface/mainwindow.h"
-
 #include "uhdmock.h"
 #include "uhdread.h"
 #include "streamer.h"
 #include "fftgenerator.h"
 #include "sharedvector.h"
 #include "amcrecv.h"
+
+#include "interface/mainwindow.h"
 
 #include "modulators/cosfunction.h"
 #include "modulators/amfunction.h"
