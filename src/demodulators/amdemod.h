@@ -4,9 +4,21 @@
 #include <liquid/liquid.h>
 #include "amcdemodulator.h"
 
+/**
+ * @brief The AmDemod class defines the functions for the demodulation of amplitude modulated signals,
+ * using the relative carrier frequency and information on which type of amplitude modulation it is.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
+ */
+
 class AmDemod : public AmcDemodulator
 {
 public:
+    /**
+     * @brief The SideBand enum defines the possible sidebands for Amplitude modulation, i.e. Upper, Lower or Double
+     * side band.
+     */
     enum SideBand { UPPER, LOWER, DOUBLE };
 
     /**

@@ -14,7 +14,6 @@
  *
  * @author Anthony Farquharson - 563648
  * @author Jacques Visser - 457817
- *
  */
 
 template <class T>

@@ -6,6 +6,9 @@
 /**
  * The AmcClassifier base class is designed for machine learning based classifiers to inherit from, giving an interface
  * that allows for classification of given information, as well as training data to train the classifier.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 template <class T>

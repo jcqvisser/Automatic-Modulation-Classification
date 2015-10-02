@@ -8,6 +8,9 @@
 /**
  * @brief The MPskDemod class is used to demodulate MPsk data points to
  * a their original symbols, should be used in conjunction with the DigitalDemod class.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class MPskDemod : public AmcDemodulator

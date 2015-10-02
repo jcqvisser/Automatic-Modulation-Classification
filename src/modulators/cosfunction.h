@@ -8,6 +8,9 @@
  * @brief The cosFunction class returns the result of cosine ( 2 * pi * fc * t),
  * the fc in this case is not relative. The input to the calc function is expected
  * to be time.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class cosFunction : public RealStreamFunction

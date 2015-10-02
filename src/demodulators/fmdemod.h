@@ -8,6 +8,9 @@
 /**
  * @brief The FmDemod class demodulates a received FM signal, at center frequency fc and a modulation index of modIndex
  * where modIndex is 0 < modIndex < 1. fc is the relative center frequency -> fc/Fs.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class FmDemod : public AmcDemodulator

@@ -7,6 +7,15 @@
 #include "streamfunction.h"
 #include "realstreamfunction.h"
 
+/**
+ * @brief The AmFunction class is designed for modulating a particular function (given in the constructor)
+ * using the amplitude modulation techinique, the type of AM used is defined in the constructor, using the
+ * enum defined in the AmDemod class.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
+ */
+
 class AmFunction : public StreamFunction
 {
 public:

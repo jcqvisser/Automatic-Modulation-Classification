@@ -8,6 +8,9 @@
  * @brief The AmcDemodulator abstract base class - This class is used to demodulate information that is modulated using AM-DSB-FC/SC.
  * This uses the Liquid-DSP library in order to demodulate the data. Classes that inherit from AmcDemodulator are expected
  * to keep their own state so that only single points are passed to this class.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 class AmcDemodulator
 {

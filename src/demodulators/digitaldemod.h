@@ -10,6 +10,9 @@
  * @brief The DigitalDemod class performs demodulation of digital signals, that have been
  * modulated using a particular scheme, the symbols are demodulated using the function passed
  * into this class.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class DigitalDemod : public AmcDemodulator

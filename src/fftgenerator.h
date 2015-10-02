@@ -14,6 +14,9 @@
  * @brief The FFTGenerator class reads off the shared buffer and generates an fft from the information read.
  * The information is placed into two shared QVectors, for display using Qt + QCustomPlot. The shared vectors
  * contain the frequencies and magnitude information from the fft.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class FFTGenerator

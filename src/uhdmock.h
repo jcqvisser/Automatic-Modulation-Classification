@@ -11,6 +11,9 @@
  * @brief The UhdMock class is used to stream test data to the system, acting similarily to the UhdRead class.
  * This inherits from the streamer type, so that it is threaded and places samples onto a shared buffer for
  * other classes to access.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class UhdMock : public Streamer

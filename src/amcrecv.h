@@ -10,6 +10,9 @@
  * @brief The AmcRecv class performs the actual receival of data from the USRP, it will do the demodulation of the
  * received data. The AmcRecv class will destructively read from the buffer, as it reads the data will be removed and
  * the demodulated data can be used/stored/analysed/etc.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class AmcRecv

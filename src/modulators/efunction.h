@@ -7,6 +7,9 @@
 /**
  * @brief The eFunction class generates a function of e^{2 * j * pi * fc * t), the fc in this instance
  * is not the relative fc but the actual fc, where the time is the expected input.
+ *
+ * @author Anthony Farquharson - 563648
+ * @author Jacques Visser - 457817
  */
 
 class eFunction : public StreamFunction
