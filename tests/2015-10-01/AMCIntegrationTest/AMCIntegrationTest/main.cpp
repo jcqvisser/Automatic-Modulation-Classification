@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     DataSink dataSink(buffer, N);
 
     dataStream->startStream();
-    //featureExtractor.writeToFile();
+    featureExtractor.start(AMC::FeatureExtractor::WRITE_TO_FILE);
     dataSink.start();
 
     return a.exec();

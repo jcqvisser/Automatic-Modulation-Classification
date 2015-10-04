@@ -7,32 +7,69 @@ AMC::FeatureExtractor::FeatureExtractor(
 {
 }
 
+void AMC::FeatureExtractor::start(ExtractionMode mode)
+{
+    _isExtracting = true;
+    _mode = mode;
+    _extractorThread = boost::thread(&FeatureExtractor::run, this);
+}
+
+void AMC::FeatureExtractor::start(ExtractionMode mode, AMC::ModType modType)
+{
+
+    if (_mode == WRITE_TO_FILE)
+    {
+       _fileWriter.openfile();
+    }
+
+}
+
+void AMC::FeatureExtractor::stop()
+{
+    _mode = AMC::FeatureExtractor::ExtractionMode::STOPPED;
+    _isExtracting = false;
+    _thread.join();
+}
+
 void AMC::FeatureExtractor::run()
 {
-    boost::shared_lock<boost::shared_mutex> bufferLock(*_buffer->getMutex());
-    while (_buffer->getBuffer().size() < _frameSize)
+    while (_isExtracting)
     {
-        //TODO: How long to sleep?
+        boost::shared_lock<boost::shared_mutex> bufferLock(*_buffer->getMutex());
+        while (_buffer->getBuffer().size() < _frameSize)
+        {
+            //TODO: How long to sleep?
+            bufferLock.release();
+            boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+            bufferLock.lock();
+        }
+
+        boost::unique_lock<boost::shared_mutex> xWriteLock(*_x.getMutex());
+        for (size_t n = 0; n < _frameSize; ++n)
+        {
+            _x.getData()[n] = _buffer->getBuffer()[n];
+        }
         bufferLock.release();
-        boost::this_thread::sleep(boost::posix_time::milliseconds(10));
-        bufferLock.lock();
+        xWriteLock.release();
+
+        boost::shared_lock<boost::shared_mutex> xReadLock(*_x.getMutex());
+
+        boost::thread sigmaAMu42A(&AMC::FeatureExtractor::findSigmaAMu42A, this);
+        boost::thread mu42FSigmaAF(&AMC::FeatureExtractor::findMu42FSigmaAF, this);
+
+        sigmaAMu42A.join();
+        mu42FSigmaAF.join();
+
+        switch(_mode)
+        {
+            case AMC::FeatureExtractor::CLASSIFY:
+                break;
+            case AMC::FeatureExtractor::WRITE_TO_FILE:
+                break;
+            default:
+                break;
+        }
     }
-
-    boost::unique_lock<boost::shared_mutex> xWriteLock(*_x.getMutex());
-    for (size_t n = 0; n < _frameSize; ++n)
-    {
-        _x.getData()[n] = _buffer->getBuffer()[n];
-    }
-    bufferLock.release();
-    xWriteLock.release();
-
-    boost::shared_lock<boost::shared_mutex> xReadLock(*_x.getMutex());
-
-    boost::thread sigmaAMu42A(&AMC::FeatureExtractor::findSigmaAMu42A, this);
-    boost::thread mu42FSigmaAF(&AMC::FeatureExtractor::findMu42FSigmaAF, this);
-
-    sigmaAMu42A.join();
-    mu42FSigmaAF.join();
 }
 
 void AMC::FeatureExtractor::findSigmaAMu42A()

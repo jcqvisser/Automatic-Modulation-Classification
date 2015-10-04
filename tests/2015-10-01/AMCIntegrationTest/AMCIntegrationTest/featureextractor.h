@@ -13,7 +13,25 @@ namespace AMC
         explicit FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
                 size_t windowSize, double fs);
         void run();
+        void writeToFile();
+        void stop();
+        void start(ExtractionMode mode);
+        void start(ExtractionMode mode, AMC::ModType);
+
+        enum ExtractionMode
+        {
+            WRITE_TO_FILE,
+            CLASSIFY,
+            STOPPED
+        };
+
     private:
+        bool _isExtracting;
+        boost::thread _extractorThread;
+        ExtractionMode _mode;
+
+        FileWriter _fileWriter;
+
         boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;
 
         SharedVector<std::complex<double> > _x;
@@ -29,7 +47,8 @@ namespace AMC
         void findGammaMaxP();
         void findSigmaAMu42A();
         void findSigmaAA();
-        double _mu42F, _sigmaAF, _sigmaDP, _sigmaAP, _gammaMax, _P, _sigmaA, _mu42A, _sigmaAA, _fmax, _fs;
+        double _mu42F, _sigmaAF, _sigmaDP, _sigmaAP, _gammaMax, _P, _sigmaA, _mu42A, _sigmaAA;
+        double _fmax, _fs;
         size_t _fnc;
     };
 }

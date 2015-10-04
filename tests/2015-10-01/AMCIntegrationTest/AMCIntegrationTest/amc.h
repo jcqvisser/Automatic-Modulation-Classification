@@ -15,6 +15,38 @@
  */
 namespace AMC
 {
+    enum Feature
+    {
+        MU_42_F = 0,
+        SIGMA_AF,
+        SIGMA_DP,
+        SIGMA_AP,
+        GAMMA_MAX,
+        P,
+        SIGMA_A,
+        MU_42_A,
+        SIGMA_AA,
+        NR_ITEMS
+    };
+    std::string toString(AMC::Feature f);
+
+    enum ModType
+    {
+        AM_DSB_FC = 0,
+        AM_USB_FC,
+        AM_LSB_FC,
+        AM_DSB_SC,
+        AM_USB_SC,
+        AM_LSB_SC,
+        FM,
+        PSK_2,
+        MPSK,
+        MQAM,
+        ASK_2,
+        NR_ITEMS
+    };
+    std::string toString(AMC::ModType m);
+
     /**
      * \brief fft takes the Fast Fourier Transform of a signal.
      * \param x Discrete complex-valued time-domain input signal to compute the FFt of. A vector of complex doubles.

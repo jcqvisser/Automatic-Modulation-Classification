@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     featureextractor.cpp \
     uhdmock.cpp \
     datasink.cpp \
-    cosfunction.cpp
+    cosfunction.cpp \
+    filewriter.cpp
 
 DISTFILES +=
 
@@ -46,4 +47,5 @@ HEADERS += \
     streamfunction.h \
     realstreamfunction.h \
     datasink.h \
-    cosfunction.h
+    cosfunction.h \
+    filewriter.h
