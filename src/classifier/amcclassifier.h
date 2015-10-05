@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "amc.h"
+
 /**
  * The AmcClassifier base class is designed for machine learning based classifiers to inherit from, giving an interface
  * that allows for classification of given information, as well as training data to train the classifier.
@@ -21,7 +23,7 @@ public:
      *
      * TODO: Change the return type of the vector, should rather be an enum defined by the amc giving the prediction.
      */
-    virtual void classify(const std::vector<T> &predictData) = 0;
+    virtual AMC::ModType classify(const std::vector<T> &predictData) = 0;
 
     /**
      * @brief Pure virtual function, designed for the training of the classifier, taking in a vector of vectors,

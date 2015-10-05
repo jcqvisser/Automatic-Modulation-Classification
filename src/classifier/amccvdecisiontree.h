@@ -9,7 +9,7 @@ class AmcCvDecisionTree : public AmcClassifier<T>
 public:
     AmcCvDecisionTree();
 
-    void classify(const std::vector<T> &predictData);
+    AMC::ModType classify(const std::vector<T> &predictData);
     void train(const std::vector<std::vector<T> > &trainData, const std::vector<T> &responses);
 };
 
