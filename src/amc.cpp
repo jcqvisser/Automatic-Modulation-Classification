@@ -6,7 +6,69 @@
  * \date 2015-09-30
  */
 
+
+
 #include "amc.h"
+
+std::string AMC::toString(AMC::Feature f)
+{
+    switch(f)
+    {
+    case MU_42_F:
+        return "MU_42_F";
+    case SIGMA_AF:
+        return "SIGMA_AF";
+    case SIGMA_DP:
+        return "SIGMA_DP";
+    case SIGMA_AP:
+        return "SIGMA_AP";
+    case GAMMA_MAX:
+        return "GAMMA_MAX";
+    case P:
+        return "P";
+    case SIGMA_A:
+        return "SIGMA_A";
+    case MU_42_A:
+        return "MU_42_A";
+    case SIGMA_AA:
+        return "SIGMA_AA";
+    default:
+        throw std::invalid_argument("Feature Enum toString unimplemented, see amc.h");
+    }
+}
+
+std::string AMC::toString(AMC::ModType m)
+{
+    switch(m)
+    {
+    case AM_DSB_FC:
+        return "AM_DSB_FC";
+    case AM_USB_FC:
+        return "AM_USB_FC";
+    case AM_LSB_FC:
+        return "AM_LSB_FC";
+    case AM_DSB_SC:
+        return "AM_DSB_SC";
+    case AM_USB_SC:
+        return "AM_USB_SC";
+    case AM_LSB_SC:
+        return "AM_LSB_SC";
+    case FM:
+        return "FM";
+    case PSK_2:
+        return "PSK_2";
+    case MPSK:
+        return "MPSK";
+    case MQAM:
+        return "MQAM";
+    case ASK_2:
+        return "ASK_2";
+    default:
+        throw std::invalid_argument("Modulation Type Enum toString unimplemented, see amc.h");
+    }
+}
+
+
 std::vector<std::complex<double> > AMC::fft(
         std::vector<std::complex<double> > &x)
 {
@@ -252,16 +314,15 @@ double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &
     double pL = 0;
 
     size_t N = x.size();
-    size_t fcnN = (size_t) round(fcn*N);
 
-    if (2*fcnN+1 >= N)
+    if (2*fcn+1 >= N)
     {
         throw std::runtime_error("2*fcn > N. Use a larger window");
     }
-    for (size_t n = 0; n < fcnN; ++n)
+    for (size_t n = 0; n < fcn; ++n)
     {
         pL += std::pow(std::abs(x[n]),2);
-        pU += std::pow(std::abs(x[n+fcnN+1]),2);
+        pU += std::pow(std::abs(x[n+fcn+1]),2);
     }
 
     return (pL - pU)/(pL + pU);

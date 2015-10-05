@@ -25,8 +25,10 @@ namespace AMC
         P,
         SIGMA_A,
         MU_42_A,
-        SIGMA_AA
+        SIGMA_AA,
+        FEATURE_NR_ITEMS
     };
+    std::string toString(AMC::Feature f);
 
     enum ModType
     {
@@ -40,8 +42,10 @@ namespace AMC
         PSK_2,
         MPSK,
         MQAM,
-        ASK_2
+        ASK_2,
+        MODTYPE_NR_ITEMS
     };
+    std::string toString(AMC::ModType m);
 
     /**
      * \brief fft takes the Fast Fourier Transform of a signal.
