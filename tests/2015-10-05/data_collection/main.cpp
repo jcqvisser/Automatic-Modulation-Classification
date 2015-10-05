@@ -1,13 +1,30 @@
 #include <QCoreApplication>
 
-#include <uhdmock.h>
-#include <streamer.h>
-#include <sharedvector.h>
-#include <modulators/amfunction.h>
-#include <boost/smart_ptr.hpp>
-#include <modulators/cosfunction.h>
-#include <datasink.h>
-#include <featureextractor.h>
+#include "uhdmock.h"
+#include "boost/smart_ptr.hpp"
+
+#include "streamer.h"
+#include "sharedvector.h"
+#include "datasink.h"
+#include "featureextractor.h"
+
+#include "modulators/streamfunction.h"
+#include "modulators/realstreamfunction.h"
+#include "modulators/amfunction.h"
+#include "modulators/cosfunction.h"
+#include "modulators/digitalfunction.h"
+#include "modulators/fmfunction.h"
+#include "modulators/mpskfunction.h"
+#include "modulators/mqamfunction.h"
+#include "modulators/maskfunction.h"
+
+#include "demodulators/amcdemodulator.h"
+#include "demodulators/amdemod.h"
+#include "demodulators/fmdemod.h"
+#include "demodulators/digitaldemod.h"
+#include "demodulators/mpskdemod.h"
+#include "demodulators/mqamdemod.h"
+#include "demodulators/maskdemod.h"
 
 int main(int argc, char *argv[])
 {

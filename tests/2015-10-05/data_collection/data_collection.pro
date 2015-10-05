@@ -45,7 +45,11 @@ SOURCES += main.cpp \
     ../../../src/fftgenerator.cpp \
     ../../../src/filewriter.cpp \
     ../../../src/uhdmock.cpp \
-    ../../../src/uhdread.cpp
+    ../../../src/uhdread.cpp \
+    ../../../src/modulators/mqamfunction.cpp \
+    ../../../src/demodulators/mqamdemod.cpp \
+    ../../../src/demodulators/maskdemod.cpp \
+    ../../../src/modulators/maskfunction.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -74,4 +78,8 @@ HEADERS += \
     ../../../src/sharedvector.h \
     ../../../src/streamer.h \
     ../../../src/uhdmock.h \
-    ../../../src/uhdread.h
+    ../../../src/uhdread.h \
+    ../../../src/modulators/mqamfunction.h \
+    ../../../src/demodulators/mqamdemod.h \
+    ../../../src/demodulators/maskdemod.h \
+    ../../../src/modulators/maskfunction.h
