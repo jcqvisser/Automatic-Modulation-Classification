@@ -27,6 +27,7 @@ LIBS += -luhd\
         -lliquid
 
 SOURCES += main.cpp \
+    ../../../src/classifier/amccvdecisiontree.cpp \
     ../../../src/demodulators/amdemod.cpp \
     ../../../src/demodulators/digitaldemod.cpp \
     ../../../src/demodulators/fmdemod.cpp \

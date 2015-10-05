@@ -3,32 +3,14 @@
 
 #include "amcclassifier.h"
 
-template <class T>
-class AmcCvDecisionTree : public AmcClassifier<T>
+class AmcCvDecisionTree : public AmcClassifier<double>
 {
 public:
     AmcCvDecisionTree();
 
-    AMC::ModType classify(const std::vector<T> &predictData);
-    void train(const std::vector<std::vector<T> > &trainData, const std::vector<T> &responses);
+    AMC::ModType classify(const std::vector<double> &predictData);
+    void train(const std::vector<std::vector<double> > &trainData, const std::vector<double> &responses);
 };
 
-template <class T>
-AmcCvDecisionTree<T>::AmcCvDecisionTree()
-{
-
-}
-
-template <class T>
-void AmcCvDecisionTree<T>::classify(const std::vector<T> &predictData)
-{
-
-}
-
-template <class T>
-void AmcCvDecisionTree<T>::train(const std::vector<std::vector<T> > &trainData, const std::vector<T> &responses)
-{
-
-}
 
 #endif // AMCCVDECISIONTREE_H

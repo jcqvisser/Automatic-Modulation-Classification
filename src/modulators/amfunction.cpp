@@ -1,7 +1,8 @@
 #include "amfunction.h"
 
 AmFunction::AmFunction(RealStreamFunction * func, double modIndex, double fc, AmDemod::SideBand sideband, int suppressed_carrier) :
-    _func(func)
+    _func(func),
+    _modIndex(modIndex)
 {
     // Define which sideband to modulate with.
     switch(sideband)
@@ -23,7 +24,7 @@ std::complex < double > AmFunction::calc (const double &inpt)
     // Modulate the data using the liquid-dsp function.
     liquid_float_complex res{0.0f, 0.0f};
 
-    ampmodem_modulate(_mod, (float)_func->calc(inpt), &res);
+    ampmodem_modulate(_mod, (float)(_modIndex * _func->calc(inpt)), &res);
 
     return std::complex < double > (res.real, res.imag);
 }

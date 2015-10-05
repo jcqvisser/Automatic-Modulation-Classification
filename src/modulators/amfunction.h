@@ -39,6 +39,7 @@ public:
 
 private:
     boost::scoped_ptr<RealStreamFunction> _func;
+    double _modIndex;
     ampmodem _mod;
 };
 
