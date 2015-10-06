@@ -30,6 +30,7 @@ void FileWriter::writeToFile(std::vector<double> features)
     {
         _isWriting = true;
         _writerThread =	boost::thread(&FileWriter::run, this);
+        _writerThread.detach();
     }
 }
 

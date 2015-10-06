@@ -21,7 +21,14 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double> * classifier) :
             modType = findModTypes(fileName);
             if(modType != AMC::ModType::MODTYPE_NR_ITEMS)
             {
-                std::cout << AMC::toString(modType) << "\t-\t" << fileName << std::endl;
+                if(AMC::toString(modType).length() >= 8)
+                {
+                    std::cout << AMC::toString(modType) << " -\t" << fileName << std::endl;
+                }
+                else
+                {
+                    std::cout << AMC::toString(modType) << "\t  -\t" << fileName << std::endl;
+                }
                 _fileStrings.push_back(fileName);
                 _modTypes.push_back(modType);
             }
