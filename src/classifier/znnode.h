@@ -2,7 +2,6 @@
 #define ZNNODE_H
 
 #include "amc.h"
-#include "znthreshold.h"
 /**
  * The ZnNode base class is designed to form the basis for AmcZnDecisionTree nodes.
  *
@@ -17,26 +16,31 @@ public:
      * @param The vector of features to be used in data classification.
      * @return A modulation type, as defined in the AMC header.
      */
-    virtual AMC::modtype classify(const std::vector<double> &features);
+    virtual AMC::ModType classify(const std::vector<double> &features) = 0;
 
     /**
      * @brief Pure virtual function used to determine and set the decision threshold in this and all lower nodes.
      * @param A vector of features used to train the nodes.
      * @param A vector of desired responses of corresponding to the feature-vector.
      */
-    virtual void train(const std::vector<double> &features, const std::vector<double> &responses);
+    virtual void train(const std::vector<std::vector<double> > &features, const std::vector<double> &responses) = 0;
 
     /**
      * @brief loadThresholds loads pre-defined thresholds into the known nodes
      * @param thresholds a vector of znThreshold objects.
      */
-    virtual void loadThresholds(const std::vector<ZnThreshold> &thresholds);
+    virtual void loadThresholds() = 0;
 
     /**
-     * @brief ~ZnNode, the virtual destructor.
+     * @brief exportThresholds writes a file to disk that may be used to import the calculated thresholds at a later time.
      */
-    virtual ~ZnNode() {}
+    virtual void exportThresholds() = 0;
 
+    /**
+     * @brief getTypes finds the types that all the following leaf nodes are concerned with.
+     * @return A vector of modulation types.
+     */
+    virtual std::vector<AMC::ModType> getTypes() = 0;
 };
 
 #endif

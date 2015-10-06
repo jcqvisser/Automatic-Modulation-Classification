@@ -6,21 +6,25 @@
 class ZnLeafNode: public ZnNode
 {
 public:
-    ZnLeafNode(AMC::ModType lGroup, AMC::ModType rGroup, AMC::Feature feature);
-    ~ZnBranchNode(){};
+    ZnLeafNode(AMC::ModType lType, AMC::ModType rType, AMC::Feature feature);
+    ~ZnLeafNode(){}
 
     AMC::ModType classify(const std::vector<double> &features);
 
     void train(const std::vector<std::vector<double> > &features, const std::vector<double> &responses);
 
-    void load(const std::vector<ZnThreshold> &thresholds);
+    void loadThresholds();
+
+    void exportThresholds();
+
+    std::vector<AMC::ModType> getTypes();
 
 private:
-    AMC::ModType _lGroup, _rGroup;
+    AMC::ModType _lType, _rType;
     bool _isThresholdSet;
     double _threshold;
     AMC::Feature _feature;
 
 };
 
-#endif ZNLEAFNODE_H
+#endif

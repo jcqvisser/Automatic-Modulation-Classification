@@ -3,6 +3,7 @@
 
 #include "amcclassifier.h"
 #include "znnode.h"
+#include "znbranchnode.h"
 
 class AmcZnDecisionTree : public AmcClassifier<double>
 {
@@ -12,7 +13,7 @@ public:
     void train(const std::vector<std::vector<double> > &trainData, const std::vector<double> &responses);
     void loadThresholds(std::vector<std::vector<double> >);
 private:
-    ZnNode _startNode;
+    ZnBranchNode _startNode;
 };
 
 #endif
