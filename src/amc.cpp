@@ -332,7 +332,7 @@ double AMC::maxPower(const std::vector<std::complex<double> > &x, size_t &k)
 {
     double max = 0;
     size_t N = x.size();
-    for (size_t n = 0; n < N; ++n)
+    for (size_t n = 0; n < floor(N/2); ++n)
     {
         auto power = std::pow(std::abs(x[n]),2);
         if (power > max)
@@ -348,7 +348,7 @@ double AMC::maxPower(const std::vector<double> &x, size_t &k)
 {
     size_t N = x.size();
     double max = 0;
-    for (size_t n = 0; n < N; ++n)
+    for (size_t n = 0; n < floor(N/2) ; ++n)
     {
         if (std::abs(std::pow(x[n],2)) > max)
         {

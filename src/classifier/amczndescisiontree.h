@@ -7,13 +7,13 @@
 
 class AmcZnDecisionTree : public AmcClassifier<double>
 {
+private:
+    boost::shared_ptr<ZnNode> _startNode;
 public:
-    AmcZnDecisionTree();
+    AmcZnDecisionTree(boost::shared_ptr<ZnNode> startNode);
     AMC::ModType classify(const std::vector<double> &predictData);
     void train(const std::vector<std::vector<double> > &trainData, const std::vector<double> &responses);
-    void loadThresholds(std::vector<std::vector<double> >);
-private:
-    ZnBranchNode _startNode;
+    void writeToFile(std::string fileName);
 };
 
 #endif

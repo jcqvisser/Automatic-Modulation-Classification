@@ -1,7 +1,11 @@
 #include "znbranchnode.h"
 
-ZnBranchNode::ZnBranchNode(boost::shared_ptr<ZnNode> lNode, boost::shared_ptr<ZnNode> rNode, AMC::Feature feature) :
-    _lNode(lNode), _rNode(rNode), _threshold(0), _isThresholdSet(false), _feature(feature)
+ZnBranchNode::ZnBranchNode(boost::shared_ptr<ZnNode> lNode,
+                           boost::shared_ptr<ZnNode> rNode,
+                           AMC::Feature feature) :
+    ZnNode::ZnNode(feature),
+    _lNode(lNode),
+    _rNode(rNode)
 {}
 
 AMC::ModType ZnBranchNode::classify(const std::vector<double> &features)
@@ -62,16 +66,6 @@ void ZnBranchNode::train(const std::vector<std::vector<double> > &features, cons
 
     _lNode->train(features, responses);
     _rNode->train(features, responses);
-}
-
-void ZnBranchNode::loadThresholds()
-{
-    //TODO Implement load in ZnBranchNode
-}
-
-void ZnBranchNode::exportThresholds()
-{
-    //TODO Implement exportThresholds in ZnBranchNode
 }
 
 std::vector<AMC::ModType> ZnBranchNode::getTypes()

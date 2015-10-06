@@ -3,11 +3,9 @@
 ZnLeafNode::ZnLeafNode(AMC::ModType lType,
                        AMC::ModType rType,
                        AMC::Feature feature) :
+    ZnNode::ZnNode(feature),
     _lType(lType),
-    _rType(rType),
-    _isThresholdSet(false),
-    _threshold(0),
-    _feature(feature)
+    _rType(rType)
 {}
 
 AMC::ModType ZnLeafNode::classify(const std::vector<double> &features)
@@ -53,16 +51,6 @@ void ZnLeafNode::train(const std::vector<std::vector<double> > &features, const 
 
     _threshold = ((lMean*rStdDev) + (rMean*lStdDev))/(lStdDev+rStdDev);
     _isThresholdSet = true;
-}
-
-void ZnLeafNode::loadThresholds()
-{
-    //TODO Implement load in ZnLeafNode
-}
-
-void ZnLeafNode::exportThresholds()
-{
-    //TODO Implement exportThresholds in ZnLeafNode
 }
 
 std::vector<AMC::ModType> ZnLeafNode::getTypes()
