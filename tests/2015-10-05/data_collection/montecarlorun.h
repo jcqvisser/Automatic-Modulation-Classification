@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ctime>
 #include <cmath>
+#include <boost/timer/timer.hpp>
 
 #include "uhdmock.h"
 #include "streamer.h"
@@ -71,10 +72,10 @@ private:
 
     double _rate;
     double _timePerScheme;
+//    boost::chrono::nanoseconds _timePerScheme;
     size_t _frameSize;
     size_t _N;
 
-    rng_gen_type _rng;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _modIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _fmModIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _freq;
@@ -82,7 +83,8 @@ private:
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _fc;
     boost::variate_generator<rng_gen_type, boost::uniform_int< > > _constSize;
 
-    boost::timer _timer;
+//    boost::timer _timer;
+    boost::timer::cpu_timer _timer;
     boost::thread _thread;
     bool _isRunning;
 };

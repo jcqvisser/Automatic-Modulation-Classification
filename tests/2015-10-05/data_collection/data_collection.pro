@@ -21,6 +21,7 @@ LIBS += -luhd\
         -lboost_thread\
         -lboost_chrono\
         -lboost_date_time\
+        -lboost_timer\
         -lfftw3\
         -lfftw3f\
         -lliquid

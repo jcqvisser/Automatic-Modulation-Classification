@@ -2,7 +2,6 @@
 #define UHDMOCK_H
 
 #include <boost/thread.hpp>
-#include <boost/timer.hpp>
 #include <boost/chrono.hpp>
 #include "streamer.h"
 #include "modulators/streamfunction.h"

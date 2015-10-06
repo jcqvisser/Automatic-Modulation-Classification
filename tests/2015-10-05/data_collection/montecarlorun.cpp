@@ -17,16 +17,16 @@ MonteCarloRun::MonteCarloRun(
     _featureExtractor(new AMC::FeatureExtractor(_buffer, N, rate)),
     _dataSink(new DataSink(_buffer, N)),
     _rate(rate),
-    _timePerScheme(timePerSchemeSec),
+    _timePerScheme(timePerSchemeSec * 1e9),
+//    _timePerScheme(boost::chrono::nanoseconds(timePerSchemeSec * 1000000000)),
     _frameSize(frameSize),
     _N(N),
-    _rng(std::time(0)),
-    _modIndex(_rng, boost::uniform_real<>(modIndex.getMin(), modIndex.getMax())),
-    _fmModIndex(_rng, boost::uniform_real<>(fmModIndex.getMin(), fmModIndex.getMax())),
-    _freq(_rng, boost::uniform_real<>(freq.getMin(), freq.getMax())),
-    _digiFreq(_rng, boost::uniform_real<>(digiFreq.getMin(), digiFreq.getMax())),
-    _fc(_rng, boost::uniform_real<>(fc.getMin(), fc.getMax())),
-    _constSize(_rng, boost::uniform_int<>(2, 8)),
+    _modIndex(rng_gen_type(std::time(0)), boost::uniform_real<>(modIndex.getMin(), modIndex.getMax())),
+    _fmModIndex(rng_gen_type(std::time(0)), boost::uniform_real<>(fmModIndex.getMin(), fmModIndex.getMax())),
+    _freq(rng_gen_type(std::time(0)), boost::uniform_real<>(freq.getMin(), freq.getMax())),
+    _digiFreq(rng_gen_type(std::time(0)), boost::uniform_real<>(digiFreq.getMin(), digiFreq.getMax())),
+    _fc(rng_gen_type(std::time(0)), boost::uniform_real<>(fc.getMin(), fc.getMax())),
+    _constSize(rng_gen_type(std::time(0)), boost::uniform_int<>(2, 8)),
     _timer(),
     _thread(),
     _isRunning(false)
@@ -64,8 +64,8 @@ boost::shared_ptr< SharedBuffer < std::complex < double > > > MonteCarloRun::get
 
 void MonteCarloRun::run()
 {
-    _timer.restart();
-    double period = 1/_rate;
+    boost::timer::nanosecond_type _timeSinceLast = _timer.elapsed().wall;
+    double period = 1 / _rate;
 
     while(_isRunning)
     {
@@ -76,7 +76,7 @@ void MonteCarloRun::run()
             clearBuffer();
         }
 
-        if(_timer.elapsed() > _timePerScheme)
+        if(_timePerScheme < _timer.elapsed().wall - _timeSinceLast)
         {
             _modType = getNextMod();
             if(_modType != AMC::ModType::MODTYPE_NR_ITEMS)
@@ -87,7 +87,7 @@ void MonteCarloRun::run()
                 _dataStream->changeFunc(genStreamFunc());
                 clearBuffer();
                 _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, _modType);
-                _timer.restart();
+                _timeSinceLast = _timer.elapsed().wall;
             }
             else
             {
