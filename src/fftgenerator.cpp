@@ -60,7 +60,7 @@ void FFTGenerator::runFft()
 
             for(unsigned int n = 0; n < _N; ++n)
             {
-                double absFft = std::sqrt(_fftRes[n][0] * _fftRes[n][0] + _fftRes[n][1] * _fftRes[n][1]);
+                double absFft = std::sqrt(_fftRes[n][0] * _fftRes[n][0] + _fftRes[n][1] * _fftRes[n][1]) / _N;
                 if(n < _N/2) {
                     _fftVec->getData()[n + _N/2] = absFft;
                 } else {

@@ -18,7 +18,6 @@ MonteCarloRun::MonteCarloRun(
     _dataSink(new DataSink(_buffer, N)),
     _rate(rate),
     _timePerScheme(timePerSchemeSec * 1e9),
-//    _timePerScheme(boost::chrono::nanoseconds(timePerSchemeSec * 1000000000)),
     _frameSize(frameSize),
     _N(N),
     _modIndex(rng_gen_type(std::time(0)), boost::uniform_real<>(modIndex.getMin(), modIndex.getMax())),
@@ -86,7 +85,9 @@ void MonteCarloRun::run()
 
                 _dataStream->changeFunc(genStreamFunc());
                 clearBuffer();
+
                 _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, _modType);
+
                 _timeSinceLast = _timer.elapsed().wall;
             }
             else
