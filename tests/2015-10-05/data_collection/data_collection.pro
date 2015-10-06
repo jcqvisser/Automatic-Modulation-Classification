@@ -4,14 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core gui
 
-QT       -= gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = data_collection
-CONFIG   += console\
-            c++11
-CONFIG   -= app_bundle
+
+CONFIG   += c++11
 
 INCLUDEPATH += ../../../src/
 
@@ -49,7 +48,11 @@ SOURCES += main.cpp \
     ../../../src/modulators/mqamfunction.cpp \
     ../../../src/demodulators/mqamdemod.cpp \
     ../../../src/demodulators/maskdemod.cpp \
-    ../../../src/modulators/maskfunction.cpp
+    ../../../src/modulators/maskfunction.cpp \
+    montecarlorun.cpp \
+    ../../../src/modulators/cosrelativefunction.cpp \
+    ../../../src/interface/mainwindow.cpp \
+    ../../../src/interface/qcustomplot.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -82,4 +85,12 @@ HEADERS += \
     ../../../src/modulators/mqamfunction.h \
     ../../../src/demodulators/mqamdemod.h \
     ../../../src/demodulators/maskdemod.h \
-    ../../../src/modulators/maskfunction.h
+    ../../../src/modulators/maskfunction.h \
+    montecarlorun.h \
+    minmax.h \
+    ../../../src/modulators/cosrelativefunction.h \
+    ../../../src/interface/mainwindow.h \
+    ../../../src/interface/qcustomplot.h
+
+FORMS += \
+    ../../../src/interface/mainwindow.ui

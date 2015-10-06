@@ -28,7 +28,7 @@ public:
      * @param System gain, any information from the stream function is multiplied by this gain.
      * @param The size of the frames that are generated, data will be generated in chunks of this framesize.
      */
-    explicit UhdMock(StreamFunction * func, double rate, double fc, double gain, size_t frameSize = 384);
+    explicit UhdMock(StreamFunction * func, double rate, double gain, size_t frameSize = 384);
 
     /**
      * @brief The startStream function will initialize the thread and start the data stream onto the shared buffer object.
@@ -72,7 +72,6 @@ private:
     boost::thread _streamThread;
     bool _isStreaming;
     double _rate;
-    double _fc;
     double _gain;
     size_t _frameSize;
 };

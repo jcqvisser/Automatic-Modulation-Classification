@@ -27,9 +27,9 @@ void DataSink::sink()
 
     typedef boost::mt19937 RNGType;
     RNGType rng;
-    boost::uniform_int<> one_to_six( 1, 6 );
+    boost::uniform_int<> n_uniform( _N / 2, _N );
     boost::variate_generator< RNGType, boost::uniform_int<> >
-                    dice(rng, one_to_six);
+                    dice(rng, n_uniform);
 
     while (_isSinking)
     {

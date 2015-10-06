@@ -43,6 +43,7 @@ namespace AMC
         MPSK,
         MQAM,
         ASK_2,
+        MASK,
         MODTYPE_NR_ITEMS
     };
     std::string toString(AMC::ModType m);

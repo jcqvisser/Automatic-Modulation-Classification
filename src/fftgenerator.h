@@ -53,9 +53,11 @@ public:
      */
     boost::shared_ptr < SharedQVector<double> > getFreqVec();
 
+    ~FFTGenerator();
+
 private:
     void runFft();
-    bool getTempBuffer(std::vector < std::complex < double > > & tempBuff);
+    bool getTempBuffer();
 
     boost::shared_ptr < SharedBuffer<std::complex<double> > > _buffer;
     boost::shared_ptr < SharedQVector<double> > _fftVec;
@@ -64,6 +66,11 @@ private:
     double _rate;
     double _N;
     bool _isPerformFft;
+
+    // FFTw variables
+    fftw_complex * _fftBuff;
+    fftw_complex * _fftRes;
+    fftw_plan _plan;
 };
 
 #endif // FFTGENERATER_H

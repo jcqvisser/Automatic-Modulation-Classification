@@ -63,6 +63,8 @@ std::string AMC::toString(AMC::ModType m)
         return "MQAM";
     case ASK_2:
         return "ASK_2";
+    case MASK:
+        return "MASK";
     default:
         throw std::invalid_argument("Modulation Type Enum toString unimplemented, see amc.h");
     }
@@ -73,8 +75,7 @@ std::vector<std::complex<double> > AMC::fft(
         std::vector<std::complex<double> > &x)
 {
     size_t N = x.size();
-
-    std::vector<std::complex<double> > X(x.size());
+    std::vector<std::complex<double> > X(N);
     fftw_plan plan = fftw_plan_dft_1d(N,
             reinterpret_cast<fftw_complex*>(&x[0]),
             reinterpret_cast<fftw_complex*>(&X[0]),
@@ -83,8 +84,9 @@ std::vector<std::complex<double> > AMC::fft(
     fftw_execute(plan);
     for (size_t n = 0; n< N; ++n)
     {
-        X[n] = X[n]/(double)N;
+        X[n] = X[n] /(double)N;
     }
+    fftw_destroy_plan(plan);
     return X;
 }
 

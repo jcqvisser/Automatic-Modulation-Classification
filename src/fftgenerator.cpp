@@ -7,9 +7,26 @@ FFTGenerator::FFTGenerator(boost::shared_ptr < SharedBuffer<std::complex<double>
     _fftThread(),
     _rate(rate),
     _N(N),
-    _isPerformFft(false)
+    _isPerformFft(false),
+    _fftBuff((fftw_complex*)fftw_malloc(sizeof(fftw_complex) * N)),
+    _fftRes((fftw_complex*)fftw_malloc(sizeof(fftw_complex) * N)),
+    _plan(fftw_plan_dft_1d(_N,
+                           _fftBuff,
+                           _fftRes,
+                           FFTW_FORWARD,
+                           FFTW_ESTIMATE))
 {
 
+}
+
+FFTGenerator::~FFTGenerator()
+{
+    _isPerformFft = false;
+
+    fftw_free(_fftBuff);
+    fftw_free(_fftRes);
+
+    fftw_destroy_plan(_plan);
 }
 
 void FFTGenerator::startFft()
@@ -26,9 +43,6 @@ void FFTGenerator::stopFft()
 
 void FFTGenerator::runFft()
 {
-    std::vector < std::complex < double > > tempBuffer(_N);
-    std::vector < std::complex < double > > fftFrame(_N);
-
     for(unsigned int n = 0; n < _N; ++n)
     {
         _freqVec->getData()[n] = (n - _N / 2) * _rate / (_N - 1);
@@ -36,9 +50,9 @@ void FFTGenerator::runFft()
 
     while(_isPerformFft)
     {
-        if(getTempBuffer(tempBuffer))
+        if(getTempBuffer())
         {
-            fftFrame = AMC::fft(tempBuffer);
+            fftw_execute(_plan);
 
             // Get unique access.
             boost::shared_ptr < boost::shared_mutex > mutex = _fftVec->getMutex();
@@ -46,7 +60,7 @@ void FFTGenerator::runFft()
 
             for(unsigned int n = 0; n < _N; ++n)
             {
-                double absFft = std::sqrt(fftFrame[n].real() * fftFrame[n].real() + fftFrame[n].imag() * fftFrame[n].imag());
+                double absFft = std::sqrt(_fftRes[n][0] * _fftRes[n][0] + _fftRes[n][1] * _fftRes[n][1]);
                 if(n < _N/2) {
                     _fftVec->getData()[n + _N/2] = absFft;
                 } else {
@@ -57,17 +71,18 @@ void FFTGenerator::runFft()
     }
 }
 
-bool FFTGenerator::getTempBuffer(std::vector < std::complex < double > > & tempBuff)
+bool FFTGenerator::getTempBuffer()
 {
     // Get unique access.
     boost::shared_ptr < boost::shared_mutex > mutex = _buffer->getMutex();
     boost::shared_lock < boost::shared_mutex > lock (*mutex.get());
 
-    if(_buffer->getBuffer().size() > tempBuff.size())
+    if(_buffer->getBuffer().size() > _N)
     {
-        for(unsigned int n = 0; n < tempBuff.size(); ++n)
+        for(unsigned int n = 0; n < _N; ++n)
         {
-            tempBuff[n] = _buffer->getBuffer()[n];
+            _fftBuff[n][0] = _buffer->getBuffer()[n].real();
+            _fftBuff[n][1] = _buffer->getBuffer()[n].imag();
         }
         return true;
     }

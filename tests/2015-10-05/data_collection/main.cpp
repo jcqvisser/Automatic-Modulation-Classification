@@ -1,83 +1,56 @@
-#include <QCoreApplication>
+#include <QApplication>
 
-#include "uhdmock.h"
-#include "boost/smart_ptr.hpp"
+#include "fftgenerator.h"
+#include "interface/mainwindow.h"
 
-#include "streamer.h"
-#include "sharedvector.h"
-#include "datasink.h"
-#include "featureextractor.h"
-
-#include "modulators/streamfunction.h"
-#include "modulators/realstreamfunction.h"
-#include "modulators/amfunction.h"
-#include "modulators/cosfunction.h"
-#include "modulators/digitalfunction.h"
-#include "modulators/fmfunction.h"
-#include "modulators/mpskfunction.h"
-#include "modulators/mqamfunction.h"
-#include "modulators/maskfunction.h"
-
-#include "demodulators/amcdemodulator.h"
-#include "demodulators/amdemod.h"
-#include "demodulators/fmdemod.h"
-#include "demodulators/digitaldemod.h"
-#include "demodulators/mpskdemod.h"
-#include "demodulators/mqamdemod.h"
-#include "demodulators/maskdemod.h"
+#include "montecarlorun.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-
-    // Signal settings.
+    // Shared settings.
     double rate = 1e6;
-    double freq = 10e3;
-    double fc = 150e3;
+    MinMax<double> freq(20, 16e3);
+    MinMax<double> fc(100e3 / rate, 200e3 / rate);
     double gain = 1;
 
-    // Modulation settings
-    int supp_carrier = 0;
-    double mod_index = 0.5;
-    AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
+    // AM Modulation settings
+    MinMax<double> modIndex(0.1, 1);
 
-    // Frame size and FFT size.
+    // FM Modulation Settings
+    double fmBW = 50e3 / 1e6;
+    MinMax<double> fmModIndex(fmBW - 0.1 * fmBW, fmBW + 0.1 * fmBW);
+
+    // Digital Modulation Settings
+    MinMax<double> digiFreq(1e3 / rate, 20e3 / rate);
+
+    // Frame size and FFT size and other.
     size_t N = 2048;
     size_t frameSize = 384;
+    double timePerScheme = 10;
 
-    // Create data stream object.
-    StreamFunction * streamFunction = new AmFunction(new cosFunction(freq), mod_index, (fc/rate), sideBand, supp_carrier);
-    boost::scoped_ptr < Streamer > dataStream(new UhdMock(streamFunction, rate, freq, gain, frameSize));
-    //boost::scoped_ptr < Streamer > _dataStream(new UhdRead(rate, freq, gain, frameSize));
+    MonteCarloRun _sim(modIndex,
+                       fmModIndex,
+                       freq,
+                       digiFreq,
+                       fc,
+                       rate,
+                       gain,
+                       timePerScheme,
+                       frameSize,
+                       N);
 
-    // Get shared buffer
-    boost::shared_ptr < SharedBuffer<std::complex<double> > > buffer(dataStream->getBuffer());
+    boost::shared_ptr< SharedBuffer < std::complex<double> > > _buffer = _sim.getBuffer();
+    FFTGenerator _fftGen(_buffer, rate, N);
 
-    //Create Feature Extractor
-    AMC::FeatureExtractor featureExtractor(buffer, N, fc);
+    QApplication _app(argc, argv);
+    MainWindow _mainWindow;
+    _mainWindow.show();
 
-    // Create destructive reader
-    DataSink dataSink(buffer, N);
+    _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
+    _mainWindow.setBuffer(_buffer);
 
-    std::cout << "Recording " + AMC::toString(AMC::ModType::AM_DSB_FC) + " features" << std::endl;
-    std::cout << "'x' to stop" << std::endl;
+    _sim.start();
+    _fftGen.startFft();
 
-    dataStream->startStream();
-    featureExtractor.start(AMC::FeatureExtractor::WRITE_TO_FILE, AMC::ModType::AM_DSB_FC);
-    dataSink.start();
-
-    char* input;
-    bool isRunning = true;
-    while (isRunning)
-    {
-        std::cin >> input;
-        if (std::strcmp(input, (const char*)'x'))
-            isRunning = false;
-    }
-
-    dataSink.stop();
-    featureExtractor.stop();
-    dataStream->stopStream();
-
-    return a.exec();
+    return _app.exec();
 }

@@ -1,6 +1,6 @@
 #include "uhdmock.h"
 
-UhdMock::UhdMock(StreamFunction * func, double rate, double fc, double gain, size_t frameSize) :
+UhdMock::UhdMock(StreamFunction * func, double rate, double gain, size_t frameSize) :
     Streamer(),
     _maxBuffSize(16384),
     _buffer(new SharedBuffer<std::complex<double> >()),
@@ -9,7 +9,6 @@ UhdMock::UhdMock(StreamFunction * func, double rate, double fc, double gain, siz
     _streamThread(),
     _isStreaming(false),
     _rate(rate),
-    _fc(fc),
     _gain(gain),
     _frameSize(frameSize)
 {
