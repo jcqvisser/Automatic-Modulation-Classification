@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    AmcClassifier<double> * _amcClassifier = new AmcCvDecisionTree();
+    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree();
 
     ClassifierTrainer _trainer(_amcClassifier);
 

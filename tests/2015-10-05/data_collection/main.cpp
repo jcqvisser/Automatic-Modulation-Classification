@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     // Frame size and FFT size and other.
     size_t N = 2048;
     size_t frameSize = 384;
-    double timePerScheme = 60;
+    double timePerScheme = 600;
 
     MonteCarloRun _sim(modIndex,
                        fmModIndex,

@@ -13,7 +13,7 @@
  * @author Jacques Visser - 457817
  */
 
-template <class T>
+template <class T, class res_T>
 class AmcClassifier
 {
 public:
@@ -23,7 +23,7 @@ public:
      *
      * TODO: Change the return type of the vector, should rather be an enum defined by the amc giving the prediction.
      */
-    virtual AMC::ModType classify(const std::vector<T> &predictData) = 0;
+    virtual res_T classify(const std::vector<T> &predictData) = 0;
 
     /**
      * @brief Pure virtual function, designed for the training of the classifier, taking in a vector of vectors,
@@ -33,7 +33,7 @@ public:
      * response in the response vector.
      * @param The vector of responses, correlated to each vector in the train data input.
      */
-    virtual void train(const std::vector< std::vector < T > > &trainData, const std::vector < T > &responses) = 0;
+    virtual void train(const std::vector< std::vector < T > > &trainData, const std::vector < res_T > &responses) = 0;
 
     /**
      * @brief Virtual Destructor.
