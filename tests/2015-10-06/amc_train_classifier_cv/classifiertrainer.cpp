@@ -1,15 +1,15 @@
 #include "classifiertrainer.h"
 
-ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * classifier) :
+ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * classifier, std::string dir) :
     _classifier(classifier),
-    _currentPath(boost::filesystem::current_path()),
+    _currentPath((dir.size() != 0) ? boost::filesystem::path(dir) : boost::filesystem::current_path()),
     _trainData(),
     _responseData()
 {
     boost::filesystem::directory_iterator end_iter;
 
-    std::cout << "Directory: " << _currentPath.generic_string() << std::endl;
-    std::cout << "Detected the following Training Files: " << std::endl << std::endl;
+    std::cout << "Directory: " << _currentPath.generic_string() << std::endl << std::endl;
+    std::cout << "Detecting files: " << std::endl << std::endl;
 
     std::string fileName;
     AMC::ModType modType;
@@ -24,14 +24,6 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
             modType = findModTypes(fileName);
             if(modType != AMC::ModType::MODTYPE_NR_ITEMS)
             {
-                if(AMC::toString(modType).length() >= 8)
-                {
-                    std::cout << AMC::toString(modType) << " -\t" << fileName << std::endl;
-                }
-                else
-                {
-                    std::cout << AMC::toString(modType) << "\t  -\t" << fileName << std::endl;
-                }
                 _fileStrings.push_back(fileName);
                 _modTypes.push_back(modType);
             }
@@ -46,11 +38,15 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
     for(unsigned int n = 0; (n < _fileStrings.size()) && (n < _modTypes.size()); ++n)
     {
         inptFile.open(_fileStrings[n]);
-        std::cout << "Opening File: " << _fileStrings[n] << std::endl << std::endl;
+        std::cout << "Opening File: " << _fileStrings[n] << std::endl;
         if(inptFile.is_open())
         {
             while( std::getline(inptFile, features_str) )
             {
+                // Reset string stream.
+                featureStream.str(std::string());
+                featureStream.clear();
+                // Open new string stream.
                 featureStream.str(features_str);
                 features_vec.clear();
                 while( std::getline(featureStream, feature_str, ','))
@@ -61,23 +57,14 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
                 _responseData.push_back(_modTypes[n]);
             }
         }
+        inptFile.close();
     }
+    std::cout << std::endl;
 }
 
 void ClassifierTrainer::train()
 {
-    std::cout << "Some collected data: " << std::endl << std::endl;
 
-    for(double entry : _trainData[0])
-    {
-        std::cout << entry << " - ";
-    }
-    std::cout << AMC::toString(_responseData[0]) << std::endl;
-    for(double entry : _trainData[2])
-    {
-        std::cout << entry << " - ";
-    }
-    std::cout << AMC::toString(_responseData[2]) << std::endl;
 }
 
 void ClassifierTrainer::save(const std::string & fileName)

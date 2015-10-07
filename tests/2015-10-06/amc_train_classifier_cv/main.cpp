@@ -11,12 +11,13 @@ int main(int argc, char *argv[])
 
     AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree();
 
-    ClassifierTrainer _trainer(_amcClassifier);
+    std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-07";
 
-    std::cout << "Starting to train classifier." << std::endl;
+    ClassifierTrainer _trainer(_amcClassifier, dir);
+
+    std::cout << "Starting to train classifier." << std::endl << std::endl;
     _trainer.train();
-    std::cout << "Finished Training Classifier." << std::endl;
+    std::cout << "Finished Training Classifier." << std::endl << std::endl;
 
     return a.exec();
 }
-

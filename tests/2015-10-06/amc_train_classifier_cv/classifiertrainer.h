@@ -11,7 +11,7 @@
 class ClassifierTrainer
 {
 public:
-    ClassifierTrainer(AmcClassifier<double, AMC::ModType> * classifier);
+    ClassifierTrainer(AmcClassifier<double, AMC::ModType> * classifier, std::string dir = "");
 
     void train();
     void save(const std::string & fileName);

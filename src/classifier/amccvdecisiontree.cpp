@@ -14,3 +14,8 @@ void AmcCvDecisionTree::train(const std::vector<std::vector<double> > &trainData
 {
 
 }
+
+void AmcCvDecisionTree::save(const std::string & fileName)
+{
+
+}

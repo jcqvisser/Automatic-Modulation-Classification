@@ -36,6 +36,12 @@ public:
     virtual void train(const std::vector< std::vector < T > > &trainData, const std::vector < res_T > &responses) = 0;
 
     /**
+     * @brief save
+     * @param File name, no extension being passed in.
+     */
+    virtual void save(const std::string & fileName) = 0;
+
+    /**
      * @brief Virtual Destructor.
      */
     virtual ~AmcClassifier() {}
