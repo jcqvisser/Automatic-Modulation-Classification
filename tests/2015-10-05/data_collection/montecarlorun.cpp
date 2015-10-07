@@ -65,8 +65,8 @@ void MonteCarloRun::run()
 
     while(_isRunning)
     {
-        boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _N * 2)));
-        if(checkBuffer((_N * 2)))
+        boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _N)));
+        if(checkBuffer((_N + _frameSize)))
         {
             _dataStream->changeFunc(genStreamFunc());
             clearBuffer();

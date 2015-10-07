@@ -6,6 +6,7 @@
 #include <string>
 #include "amc.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/chrono.hpp>
 #include "sharedbuffer.h"
 
 class FileWriter
@@ -16,6 +17,9 @@ public:
     void newFile(AMC::ModType modType);
     void writeToFile(const std::vector<double> &features);
     std::string dateTime();
+
+    void start();
+    void stop();
 private:
     AMC::ModType _modType;
     std::string _filename;

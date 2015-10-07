@@ -1,11 +1,24 @@
 #include "filewriter.h"
 
-FileWriter::FileWriter()
+FileWriter::FileWriter() :
+    _isWriting(false)
 {}
 
 FileWriter::~FileWriter()
 {
 
+}
+
+void FileWriter::start()
+{
+    _isWriting = true;
+    _writerThread =	boost::thread(&FileWriter::run, this);
+}
+
+void FileWriter::stop()
+{
+    _isWriting = false;
+    _writerThread.join();
 }
 
 void FileWriter::newFile(AMC::ModType modType)
@@ -25,34 +38,42 @@ void FileWriter::writeToFile(const std::vector<double> &features)
     boost::unique_lock<boost::shared_mutex> lock(*_featureLists.getMutex());
     _featureLists.getBuffer().push_back(features);
     lock.unlock();
-
-    if (!_isWriting)
-    {
-        _isWriting = true;
-        _writerThread =	boost::thread(&FileWriter::run, this);
-        _writerThread.detach();
-    }
 }
 
 void FileWriter::run()
 {
     boost::unique_lock<boost::shared_mutex> lock(*_featureLists.getMutex());
     file.open(_filename, std::ofstream::app);
-    while (_featureLists.getBuffer().size() > 0)
+
+    while(_isWriting)
     {
-        std::vector<double> tempFeatures(_featureLists.getBuffer().front());
-        _featureLists.getBuffer().pop_front();
-        lock.unlock();
-        for (auto x:tempFeatures)
+        if(_featureLists.getBuffer().size() > 0)
         {
-            file << x;
-            file << ",";
+            std::vector<double> tempFeatures(_featureLists.getBuffer().front());
+
+            _featureLists.getBuffer().pop_front();
+            lock.unlock();
+            for (auto x:tempFeatures)
+            {
+                file << x;
+                file << ",";
+            }
+            file << "\n";
         }
-        file << "\n";
+        else
+        {
+            lock.unlock();
+            boost::this_thread::sleep_for(boost::chrono::nanoseconds((long)(1e6)));
+        }
         lock.lock();
     }
+
+    while (_featureLists.getBuffer().size() > 0)
+    {
+
+
+    }
     file.close();
-    _isWriting = false;
 }
 
 

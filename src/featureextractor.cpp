@@ -21,6 +21,7 @@ void AMC::FeatureExtractor::start(ExtractionMode mode, AMC::ModType modType)
     {
         _mode = mode;
         _fileWriter.newFile(modType);
+        _fileWriter.start();
         _isExtracting = true;
         _extractorThread = boost::thread(&FeatureExtractor::run, this);
     }
@@ -30,6 +31,7 @@ void AMC::FeatureExtractor::stop()
 {
     _mode = AMC::FeatureExtractor::ExtractionMode::STOPPED;
     _isExtracting = false;
+    _fileWriter.stop();
     _extractorThread.join();
 }
 
