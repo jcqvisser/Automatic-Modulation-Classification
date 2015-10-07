@@ -5,13 +5,11 @@ TARGET = amc_train_classifier_cv
 CONFIG += console
 CONFIG -= app_bundle
 
-TEMPLATE = app
+CONFIG += link_pkgconfig
+PKGCONFIG += opencv
 
-CONFIG   += c++11
-
-INCLUDEPATH += ../../../src/
-
-LIBS += -luhd\
+LIBS += \
+        -luhd\
         -lboost_system\
         -lboost_thread\
         -lboost_chrono\
@@ -21,6 +19,12 @@ LIBS += -luhd\
         -lfftw3\
         -lfftw3f\
         -lliquid
+
+TEMPLATE = app
+
+CONFIG   += c++11
+
+INCLUDEPATH +=  ../../../src/
 
 SOURCES += main.cpp \
     ../../../src/classifier/amccvdecisiontree.cpp \
@@ -32,4 +36,3 @@ HEADERS += \
     ../../../src/classifier/amccvdecisiontree.h \
     classifiertrainer.h \
     ../../../src/amc.h
-

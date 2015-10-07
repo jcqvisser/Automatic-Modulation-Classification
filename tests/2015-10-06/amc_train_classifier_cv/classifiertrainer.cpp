@@ -8,11 +8,15 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
     _trainData(),
     _responseData()
 {
-
     if(!boost::filesystem::exists(boost::filesystem::status(_currentPath)))
     {
         std::cout << "Error directory does not exist, defaulting to current path." << std::endl;
         _currentPath = boost::filesystem::current_path();
+    }
+
+    if(_currentPath.string().compare(_currentPath.string().size() - 1, 1, "/") != 0)
+    {
+        _currentPath = boost::filesystem::path(_currentPath.generic_string() + "/");
     }
 
     std::cout << "Directory: " << _currentPath.generic_string() << std::endl << std::endl;
@@ -45,7 +49,7 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
     std::vector < double > features_vec;
     for(unsigned int n = 0; (n < _fileStrings.size()) && (n < _modTypes.size()); ++n)
     {
-        inptFile.open(_fileStrings[n]);
+        inptFile.open(_currentPath.generic_string() + _fileStrings[n]);
         std::cout << "Opening File: " << _fileStrings[n] << std::endl;
         if(inptFile.is_open())
         {
@@ -67,6 +71,7 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
         }
         inptFile.close();
     }
+    std::cout << "Total Feature Groups Found: " << _trainData.size() << std::endl;
     std::cout << std::endl;
 }
 
