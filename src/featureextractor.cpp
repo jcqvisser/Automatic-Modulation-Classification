@@ -149,7 +149,7 @@ void AMC::FeatureExtractor::findSigmaDP()
     xPhaseLock.unlock();
     xPhaseNLWriteLock.unlock();
 
-    _fatureThread4 = boost::thread(&AMC::FeatureExtractor::findSigmaAP, this);
+    _featureThread4 = boost::thread(&AMC::FeatureExtractor::findSigmaAP, this);
 
     boost::shared_lock<boost::shared_mutex> xPhaseNLReadLock(*_xPhaseNL.getMutex());
     _sigmaDP = AMC::stdDev(_xPhaseNL.getData());
