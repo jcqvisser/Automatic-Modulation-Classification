@@ -30,10 +30,15 @@ namespace AMC
     private:
         bool _isExtracting;
         boost::thread _extractorThread;
+		boost::thread _featureThread0;
+		boost::thread _featureThread1;
+		boost::thread _featureThread2;
+		boost::thread _featureThread3;
+		boost::thread _featureThread4;
+
         ExtractionMode _mode;
 
         FileWriter _fileWriter;
-
 
         //Resource hierarchy: _buffer, _x, _xFFT, _xPhase, _xPhaseNL, _xNormCenter
         boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;

@@ -53,11 +53,11 @@ void AMC::FeatureExtractor::run()
         bufferLock.unlock();
         xWriteLock.unlock();
 
-        boost::thread sigmaAMu42A(&AMC::FeatureExtractor::findSigmaAMu42A, this);
+		_featureThread0 = boost::thread(&AMC::FeatureExtractor::findSigmaAMu42A, this);
         AMC::FeatureExtractor::findMu42FSigmaAF();
 
-        sigmaAMu42A.join();
-        switch(_mode)
+        _featureThread0.join();
+		switch(_mode)
         {
             case AMC::FeatureExtractor::WRITE_TO_FILE:
                 _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
@@ -76,12 +76,12 @@ void AMC::FeatureExtractor::findSigmaAMu42A()
     xNormCenterWriteLock.unlock();
 
     boost::shared_lock<boost::shared_mutex> xNormCenterReadLock(*_xNormCenter.getMutex());
-    boost::thread sigmaAA(&AMC::FeatureExtractor::findSigmaAA, this);
+    _featureThread1 = boost::thread(&AMC::FeatureExtractor::findSigmaAA, this);
 
     AMC::stdDevKurtosis( _xNormCenter.getData(), _sigmaA, _mu42A);
     xNormCenterReadLock.unlock();
 
-    sigmaAA.join();
+	_featureThread1.join();
 }
 
 void AMC::FeatureExtractor::findMu42FSigmaAF()
@@ -95,7 +95,7 @@ void AMC::FeatureExtractor::findMu42FSigmaAF()
 
     boost::shared_lock<boost::shared_mutex> xFftReadLock(*_xFft.getMutex());
 
-    boost::thread gammaMaxP(&AMC::FeatureExtractor::findGammaMaxP, this);
+    _featureThread2 = boost::thread(&AMC::FeatureExtractor::findGammaMaxP, this);
 
     auto xAnalFreq = AMC::removeNegFreq(_xFft.getData());
     xFftReadLock.unlock();
@@ -108,7 +108,7 @@ void AMC::FeatureExtractor::findMu42FSigmaAF()
     _xPhase.getData() = AMC::unwrapPhase(xWrappedPhase);
     xPhaseWriteLock.unlock();
 
-    boost::thread sigmaDP(&AMC::FeatureExtractor::findSigmaDP, this);
+    _featureThread3 = boost::thread(&AMC::FeatureExtractor::findSigmaDP, this);
 
     boost::shared_lock<boost::shared_mutex> xPhaseLock(*_xPhase.getMutex());
     std::vector<double> xRelativeInstFreq = AMC::differentiate(_xPhase.getData()); //linear shift when finding actual freq
@@ -118,8 +118,8 @@ void AMC::FeatureExtractor::findMu42FSigmaAF()
     std::vector<double> xRelativeInstFreqNormCenter = AMC::center(xRelativeInstFreqN);
     AMC::stdDevKurtosis(xRelativeInstFreqNormCenter, _mu42F, _sigmaAF);
 
-    gammaMaxP.join();
-    sigmaDP.join();
+	_featureThread2.join();
+	_featureThread3.join();
 }
 
 void AMC::FeatureExtractor::findSigmaAA()
@@ -149,13 +149,13 @@ void AMC::FeatureExtractor::findSigmaDP()
     xPhaseLock.unlock();
     xPhaseNLWriteLock.unlock();
 
-    boost::thread sigmaAP(&AMC::FeatureExtractor::findSigmaAP, this);
+    _fatureThread4 = boost::thread(&AMC::FeatureExtractor::findSigmaAP, this);
 
     boost::shared_lock<boost::shared_mutex> xPhaseNLReadLock(*_xPhaseNL.getMutex());
     _sigmaDP = AMC::stdDev(_xPhaseNL.getData());
     xPhaseNLReadLock.unlock();
 
-    sigmaAP.join();
+	_featureThread4.join();
 }
 
 void AMC::FeatureExtractor::findSigmaAP()
