@@ -17,9 +17,6 @@ int main(int argc, char *argv[])
 
     std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-07";
 
-    cv::ml::DTrees * test;
-    test = cv::ml::DTrees::create();
-
     ClassifierTrainer _trainer(_amcClassifier, dir);
 
     std::cout << "Starting to train classifier." << std::endl << std::endl;
