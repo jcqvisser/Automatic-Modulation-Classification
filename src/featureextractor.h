@@ -4,6 +4,9 @@
 #include <boost/smart_ptr.hpp>
 #include "sharedbuffer.h"
 #include "sharedvector.h"
+#include "sharedstring.h"
+#include "classifier/amcclassifier.h"
+#include "classifier/amccvdecisiontree.h"
 #include "filewriter.h"
 
 namespace AMC
@@ -12,7 +15,8 @@ namespace AMC
     {
     public:
        explicit FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-                size_t windowSize, double fs);
+                                 AmcClassifier<double, AMC::ModType> * classifier,
+                                 size_t windowSize, double fs);
 
         enum ExtractionMode
         {
@@ -26,6 +30,7 @@ namespace AMC
         void start(ExtractionMode mode);
         void start(ExtractionMode mode, AMC::ModType);
         std::vector<double> getFeatureVector();
+        boost::shared_ptr< SharedString > getModTypeString();
 
     private:
         bool _isExtracting;
@@ -39,6 +44,9 @@ namespace AMC
         ExtractionMode _mode;
 
         FileWriter _fileWriter;
+        boost::scoped_ptr< AmcClassifier<double, AMC::ModType> > _classifier;
+
+        boost::shared_ptr< SharedString > _modTypeString;
 
         //Resource hierarchy: _buffer, _x, _xFFT, _xPhase, _xPhaseNL, _xNormCenter
         boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;

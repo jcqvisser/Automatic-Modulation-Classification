@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _xData(new SharedQVector<double>()),
     _yData(new SharedQVector<double>()),
     _buffer(new SharedBuffer<std::complex <double> > ()),
+    _modTypeString(new SharedString),
     _xMin(std::numeric_limits<double>::max()),
     _yMin(std::numeric_limits<double>::max()),
     _xMax(std::numeric_limits<double>::min()),
@@ -43,6 +44,11 @@ void MainWindow::setBuffer(boost::shared_ptr<SharedBuffer<std::complex<double> >
     _buffer.swap(buffer);
 }
 
+void MainWindow::setModTypeString(boost::shared_ptr<SharedString> modTypeStr)
+{
+    _modTypeString.swap(modTypeStr);
+}
+
 void MainWindow::timerEvent(QTimerEvent * event)
 {
     if (event->timerId() == _timer.timerId()) {
@@ -73,7 +79,13 @@ void MainWindow::updateProgBar()
 void MainWindow::updateLabelText()
 {
     _infoText = "Shared Buffer Size: " + std::to_string(_buffer->getBuffer().size());
-    _infoText += "\t\t Modulation Scheme: AM-DSB";
+
+    boost::shared_ptr<boost::shared_mutex> stringMutex(_modTypeString->getMutex());
+    boost::shared_lock<boost::shared_mutex> stringLock(*stringMutex.get());
+
+    _infoText += "\t\t Modulation Scheme: " + _modTypeString->getString();
+
+    stringLock.unlock();
 
     ui->infoLabel->setText(QString::fromStdString(_infoText));
 }

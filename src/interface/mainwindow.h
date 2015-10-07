@@ -10,6 +10,7 @@
 #include "../sharedvector.h"
 #include "../sharedbuffer.h"
 #include "../sharedqvector.h"
+#include "../sharedstring.h"
 
 namespace Ui {
 class MainWindow;
@@ -23,6 +24,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     void setData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y);
     void setBuffer(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer);
+    void setModTypeString(boost::shared_ptr<SharedString> modTypeStr);
 
     ~MainWindow();
 
@@ -38,6 +40,7 @@ private:
     boost::shared_ptr<SharedQVector<double> > _xData;
     boost::shared_ptr<SharedQVector<double> > _yData;
     boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;
+    boost::shared_ptr<SharedString> _modTypeString;
 
     double _xMin;
     double _yMin;

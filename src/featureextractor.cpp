@@ -1,16 +1,26 @@
 #include "featureextractor.h"
 
-AMC::FeatureExtractor::FeatureExtractor(
-        boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-        size_t windowSize, double fs) :
-    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs)
+AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
+                                        AmcClassifier<double, AMC::ModType> * classifier,
+                                        size_t windowSize, double fs) :
+    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs),
+    _classifier(classifier), _modTypeString(new SharedString())
 {
+}
+
+boost::shared_ptr< SharedString > AMC::FeatureExtractor::getModTypeString()
+{
+    return _modTypeString;
 }
 
 void AMC::FeatureExtractor::start(ExtractionMode mode)
 {
     _isExtracting = true;
     _mode = mode;
+    if(mode == AMC::FeatureExtractor::CLASSIFY)
+    {
+        _classifier->load("cvTreeStructure");
+    }
     _extractorThread = boost::thread(&FeatureExtractor::run, this);
 }
 
@@ -59,10 +69,17 @@ void AMC::FeatureExtractor::run()
         AMC::FeatureExtractor::findMu42FSigmaAF();
 
         _featureThread0.join();
-		switch(_mode)
+        switch(_mode)
         {
-            case AMC::FeatureExtractor::WRITE_TO_FILE:
-                _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
+        case AMC::FeatureExtractor::WRITE_TO_FILE:
+            _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
+            break;
+        case AMC::FeatureExtractor::CLASSIFY:
+            boost::shared_ptr < boost::shared_mutex > stringMutex (_modTypeString->getMutex());
+            boost::unique_lock < boost::shared_mutex > stringLock (*stringMutex.get());
+            _modTypeString->getString() = AMC::toString(_classifier->classify(AMC::FeatureExtractor::getFeatureVector()));
+            stringLock.unlock();
+            break;
         }
     }
 }
