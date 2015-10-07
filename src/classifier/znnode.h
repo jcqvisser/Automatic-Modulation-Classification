@@ -31,7 +31,7 @@ public:
      * @param A vector of features used to train the nodes.
      * @param A vector of desired responses of corresponding to the feature-vector.
      */
-    virtual void train(const std::vector<std::vector<double> > &features, const std::vector<double> &responses) = 0;
+    virtual void train(const std::vector<std::vector<double> > &features, const std::vector<AMC::ModType> &responses) = 0;
 
     /**
      * @brief getTypes finds the types that all the following leaf nodes are concerned with.
@@ -40,7 +40,10 @@ public:
     virtual std::vector<AMC::ModType> getTypes() = 0;
 
     virtual void fromString(std::string s) = 0;
-    virtual string toString() = 0;
+    virtual std::string toString() = 0;
+
+    virtual void load(std::vector<std::string> s) = 0;
+    virtual std::vector<std::string> unload() = 0;
 
     AMC::Feature _feature;
     double _threshold;

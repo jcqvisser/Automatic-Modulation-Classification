@@ -2,6 +2,7 @@
 #define ZNLEAFNODE_H
 
 #include "znnode.h"
+#include <stdexcept>
 
 class ZnLeafNode: public ZnNode
 {
@@ -13,11 +14,17 @@ public:
                AMC::Feature feature);
     ~ZnLeafNode(){}
 
-    AMC::ModType classify(const std::vector<double> &features);
+    virtual AMC::ModType classify(const std::vector<double> &features);
 
-    void train(const std::vector<std::vector<double> > &features, const std::vector<double> &responses);
+    virtual void train(const std::vector<std::vector<double> > &features, const std::vector<AMC::ModType> &responses);
 
-    std::vector<AMC::ModType> getTypes();
+    virtual std::vector<AMC::ModType> getTypes();
+
+    virtual void fromString(std::string s);
+    virtual std::string toString();
+
+    virtual void load(std::vector<std::string> s);
+    virtual std::vector<std::string> unload();
 };
 
 #endif

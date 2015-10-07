@@ -4,6 +4,7 @@
 #include "amcclassifier.h"
 #include "znnode.h"
 #include "znbranchnode.h"
+#include <fstream>
 
 class AmcZnDecisionTree : public AmcClassifier<double>
 {
@@ -13,7 +14,11 @@ public:
     AmcZnDecisionTree(boost::shared_ptr<ZnNode> startNode);
     AMC::ModType classify(const std::vector<double> &predictData);
     void train(const std::vector<std::vector<double> > &trainData, const std::vector<double> &responses);
-    void writeToFile(std::string fileName);
+    void train(const std::vector<std::vector<double> > &trainData, const std::vector<AMC::ModType> &responses);
+    void load(std::string fileName);
+    void unload(std::string fileName);
+    AMC::ModType doubletoModType(double d);
+    std::vector<AMC::ModType> doubletoModType(std::vector<double> d);
 };
 
 #endif
