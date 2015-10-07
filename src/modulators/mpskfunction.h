@@ -23,6 +23,8 @@ public:
      */
     explicit MPskFunction(unsigned int const_size);
 
+    ~MPskFunction();
+
     /**
      * @brief The calc function will modulate a symbol using MPSK.
      * @param In the current form the input is irrelevent as the symbol is randomly generated.

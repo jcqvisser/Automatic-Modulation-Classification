@@ -7,6 +7,11 @@ cosFunction::cosFunction(double freq) :
 
 }
 
+cosFunction::~cosFunction()
+{
+
+}
+
 double cosFunction::calc(const double &inpt)
 {
     return cos(2 * _pi * _freq * inpt);

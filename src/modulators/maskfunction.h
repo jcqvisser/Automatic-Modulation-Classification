@@ -23,6 +23,8 @@ public:
      */
     explicit MAskFunction(unsigned int const_size);
 
+    ~MAskFunction();
+
     /**
      * @brief The calc function will modulate a symbol using MASK.
      * @param In the current form the input is irrelevent as the symbol is randomly generated.

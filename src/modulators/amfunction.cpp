@@ -19,6 +19,11 @@ AmFunction::AmFunction(RealStreamFunction * func, double modIndex, double fc, Am
     }
 }
 
+AmFunction::~AmFunction()
+{
+    ampmodem_destroy(_mod);
+}
+
 std::complex < double > AmFunction::calc (const double &inpt)
 {
     // Modulate the data using the liquid-dsp function.

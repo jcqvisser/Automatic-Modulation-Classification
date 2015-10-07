@@ -6,6 +6,11 @@ eFunction::eFunction(double fc) :
 {
 }
 
+eFunction::~eFunction()
+{
+
+}
+
 std::complex < double > eFunction::calc (const double &inpt)
 {
     return std::complex<double>(cos(2 * _pi * _fc * inpt), sin(2 * _pi * _fc * inpt));

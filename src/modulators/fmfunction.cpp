@@ -8,6 +8,11 @@ FmFunction::FmFunction(RealStreamFunction * func, double modIndex, double fc) :
 
 }
 
+FmFunction::~FmFunction()
+{
+    freqmod_destroy(_func);
+}
+
 std::complex <double> FmFunction::calc (const double &inpt)
 {
     liquid_float_complex res{0.0f, 0.0f};

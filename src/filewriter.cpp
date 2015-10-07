@@ -20,7 +20,7 @@ std::string FileWriter::dateTime()
     return boost::posix_time::to_iso_string(t);
 }
 
-void FileWriter::writeToFile(std::vector<double> features)
+void FileWriter::writeToFile(const std::vector<double> &features)
 {
     boost::unique_lock<boost::shared_mutex> lock(*_featureLists.getMutex());
     _featureLists.getBuffer().push_back(features);

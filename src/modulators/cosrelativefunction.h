@@ -10,6 +10,8 @@ class cosRelativeFunction : public RealStreamFunction
 public:
     cosRelativeFunction(double rel_freq);
 
+    ~cosRelativeFunction();
+
     double calc(const double &inpt);
 
 private:

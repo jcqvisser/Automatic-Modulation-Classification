@@ -31,6 +31,8 @@ public:
      */
     DigitalFunction(StreamFunction * func, double rel_fs, double rel_fc, size_t symbolFrame = 9);
 
+    ~DigitalFunction();
+
     /**
      * @brief The function called to calculate the next data point. Every time it is called a new data
      * point is created, must be called in order of the data points requirement as the state information

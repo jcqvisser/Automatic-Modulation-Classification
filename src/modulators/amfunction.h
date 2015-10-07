@@ -30,6 +30,8 @@ public:
      */
     AmFunction(RealStreamFunction * func, double modIndex, double fc, AmDemod::SideBand sideband, int suppressed_carrier);
 
+    ~AmFunction();
+
     /**
      * @brief Calculate the modulated data point for the particular time input.
      * @param The time input to the calculate function

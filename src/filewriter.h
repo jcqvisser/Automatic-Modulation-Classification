@@ -14,7 +14,7 @@ public:
     FileWriter();
     ~FileWriter();
     void newFile(AMC::ModType modType);
-    void writeToFile(std::vector<double> features);
+    void writeToFile(const std::vector<double> &features);
     std::string dateTime();
 private:
     AMC::ModType _modType;

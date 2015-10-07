@@ -27,6 +27,8 @@ public:
      */
     FmFunction(RealStreamFunction * func, double modIndex, double fc);
 
+    ~FmFunction();
+
     /**
      * @brief Modulate the given input, using the RealStreamFunction given in construction to generate
      * an FM modulated signal.

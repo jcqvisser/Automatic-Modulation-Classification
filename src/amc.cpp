@@ -101,6 +101,7 @@ std::vector<std::complex<double> > AMC::ifft(
             FFTW_BACKWARD,
             FFTW_ESTIMATE);
     fftw_execute(plan);
+    fftw_destroy_plan(plan);
     return x;
 }
 

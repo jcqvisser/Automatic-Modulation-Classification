@@ -21,6 +21,8 @@ public:
      */
     eFunction(double fc);
 
+    ~eFunction();
+
     /**
      * @brief Calculate the e ^ (2 * j * pi * fc * inpt).
      * @param The input value to the function (inpt).

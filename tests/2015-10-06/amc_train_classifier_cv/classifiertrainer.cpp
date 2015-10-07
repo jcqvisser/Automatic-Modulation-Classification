@@ -32,7 +32,6 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double> * classifier) :
                 _fileStrings.push_back(fileName);
                 _modTypes.push_back(modType);
             }
-
         }
     }
 }

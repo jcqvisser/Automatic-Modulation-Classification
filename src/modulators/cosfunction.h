@@ -23,6 +23,8 @@ public:
      */
     cosFunction(double freq);
 
+    ~cosFunction();
+
     /**
      * @brief Calculates the cos value for a particular input, cos(2 * Pi * freq * inpt).
      * @param The input to the cos function (expected time).

@@ -40,6 +40,11 @@ MQamFunction::MQamFunction(unsigned int const_size) :
     }
 }
 
+MQamFunction::~MQamFunction()
+{
+    modem_destroy(_mod);
+}
+
 /**
  * @brief The calc function will modulate a symbol using MQAM.
  * @param In the current form the input is irrelevent as the symbol is randomly generated.

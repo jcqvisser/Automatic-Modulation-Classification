@@ -8,6 +8,11 @@ cosRelativeFunction::cosRelativeFunction(double rel_freq) :
 
 }
 
+cosRelativeFunction::~cosRelativeFunction()
+{
+
+}
+
 double cosRelativeFunction::calc(const double &inpt)
 {
     return cos(2 * _pi * _rel_freq * _t);

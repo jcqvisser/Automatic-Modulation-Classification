@@ -28,6 +28,11 @@ DigitalFunction::DigitalFunction(StreamFunction * func, double rel_fs, double re
     }
 }
 
+DigitalFunction::~DigitalFunction()
+{
+
+}
+
 std::complex < double > DigitalFunction::calc(const double &inpt)
 {
     std::complex < double > res(0.0, 0.0);

@@ -46,6 +46,11 @@ MPskFunction::MPskFunction(unsigned int const_size) :
     }
 }
 
+MPskFunction::~MPskFunction()
+{
+    modem_destroy(_mod);
+}
+
 std::complex < double > MPskFunction::calc(const double &inpt)
 {
     // Create result object, the result of mod will be placed in this.
