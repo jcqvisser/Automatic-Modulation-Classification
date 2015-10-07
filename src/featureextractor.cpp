@@ -54,10 +54,9 @@ void AMC::FeatureExtractor::run()
         xWriteLock.unlock();
 
         boost::thread sigmaAMu42A(&AMC::FeatureExtractor::findSigmaAMu42A, this);
-        boost::thread mu42FSigmaAF(&AMC::FeatureExtractor::findMu42FSigmaAF, this);
+        AMC::FeatureExtractor::findMu42FSigmaAF();
 
         sigmaAMu42A.join();
-        mu42FSigmaAF.join();
         switch(_mode)
         {
             case AMC::FeatureExtractor::WRITE_TO_FILE:
