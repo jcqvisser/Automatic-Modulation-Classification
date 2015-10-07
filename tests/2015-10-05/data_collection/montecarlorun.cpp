@@ -15,7 +15,6 @@ MonteCarloRun::MonteCarloRun(
     _dataStream(new UhdMock(new StreamFunction(), rate, gain, frameSize)),
     _buffer(_dataStream->getBuffer()),
     _featureExtractor(new AMC::FeatureExtractor(_buffer, N, rate)),
-    _dataSink(new DataSink(_buffer, N)),
     _rate(rate),
     _timePerScheme(timePerSchemeSec * 1e9),
     _frameSize(frameSize),
@@ -40,7 +39,6 @@ void MonteCarloRun::start()
 
     _dataStream->startStream();
     _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, _modType);
-    _dataSink->start();
 
     _isRunning = true;
     _thread = boost::thread(&MonteCarloRun::run, this);
@@ -50,7 +48,6 @@ void MonteCarloRun::stop()
 {
     _dataStream->stopStream();
     _featureExtractor->stop();
-    _dataSink->stop();
 
     _isRunning = false;
     _thread.join();
@@ -97,7 +94,6 @@ void MonteCarloRun::run()
 
                 _dataStream->stopStream();
                 _featureExtractor->stop();
-                _dataSink->stop();
             }
         }
     }
