@@ -33,13 +33,15 @@ public:
      * response in the response vector.
      * @param The vector of responses, correlated to each vector in the train data input.
      */
-    virtual void train(const std::vector< std::vector < T > > &trainData, const std::vector < res_T > &responses) = 0;
+    virtual bool train(const std::vector< std::vector < T > > &trainData, const std::vector < res_T > &responses) = 0;
 
     /**
      * @brief save
      * @param File name, no extension being passed in.
      */
     virtual void save(const std::string & fileName) = 0;
+
+    virtual void load(const std::string & fileName) = 0;
 
     /**
      * @brief Virtual Destructor.

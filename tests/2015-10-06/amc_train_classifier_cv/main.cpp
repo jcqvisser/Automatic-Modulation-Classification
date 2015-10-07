@@ -19,5 +19,9 @@ int main(int argc, char *argv[])
     _trainer.train();
     std::cout << "Finished Training Classifier." << std::endl << std::endl;
 
+    std::string fileName = "cvTreeStructure";
+    std::cout << "Saving trained classifier as : " << fileName << std::endl;
+    _trainer.save(fileName);
+
     return a.exec();
 }
