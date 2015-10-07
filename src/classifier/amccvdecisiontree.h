@@ -1,8 +1,8 @@
 #ifndef AMCCVDECISIONTREE_H
 #define AMCCVDECISIONTREE_H
 
-//#include <opencv2/core/core.hpp>
-//#include <opencv2/ml/ml.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/ml/ml.hpp>
 #include <boost/smart_ptr.hpp>
 
 #include "amc.h"
@@ -20,7 +20,7 @@ public:
     void save(const std::string & fileName);
 
 private:
-//    boost::scoped_ptr<cv::CvDTree> _tree;
+    boost::scoped_ptr<CvDTree> _tree;
 };
 
 

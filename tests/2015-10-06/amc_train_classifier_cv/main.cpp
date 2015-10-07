@@ -5,10 +5,6 @@
 #include "classifier/amccvdecisiontree.h"
 #include "classifiertrainer.h"
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/ml/ml.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
