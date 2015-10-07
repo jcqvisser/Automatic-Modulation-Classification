@@ -3,10 +3,17 @@
 ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * classifier, std::string dir) :
     _classifier(classifier),
     _currentPath((dir.size() != 0) ? boost::filesystem::path(dir) : boost::filesystem::current_path()),
+    _fileStrings(),
+    _modTypes(),
     _trainData(),
     _responseData()
 {
-    boost::filesystem::directory_iterator end_iter;
+
+    if(!boost::filesystem::exists(boost::filesystem::status(_currentPath)))
+    {
+        std::cout << "Error directory does not exist, defaulting to current path." << std::endl;
+        _currentPath = boost::filesystem::current_path();
+    }
 
     std::cout << "Directory: " << _currentPath.generic_string() << std::endl << std::endl;
     std::cout << "Detecting files: " << std::endl << std::endl;
@@ -14,6 +21,7 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
     std::string fileName;
     AMC::ModType modType;
 
+    boost::filesystem::directory_iterator end_iter;
     for(boost::filesystem::directory_iterator dir_iter(_currentPath);
         dir_iter != end_iter;
         ++dir_iter)
@@ -64,12 +72,12 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
 
 void ClassifierTrainer::train()
 {
-
+    _classifier->train(_trainData, _responseData);
 }
 
 void ClassifierTrainer::save(const std::string & fileName)
 {
-
+    _classifier->save(fileName);
 }
 
 AMC::ModType ClassifierTrainer::findModTypes(const std::string & cmpString)

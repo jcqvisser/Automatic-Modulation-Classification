@@ -21,6 +21,7 @@ private:
 
     boost::scoped_ptr < AmcClassifier<double, AMC::ModType> > _classifier;
     boost::filesystem::path _currentPath;
+
     std::vector < std::string > _fileStrings;
     std::vector < AMC::ModType > _modTypes;
 
