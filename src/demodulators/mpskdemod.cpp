@@ -45,6 +45,11 @@ MPskDemod::MPskDemod(unsigned int const_size) :
     }
 }
 
+MPskDemod::~MPskDemod()
+{
+    modem_destroy(_demod);
+}
+
 double MPskDemod::demod(const std::complex<double> &sampleData)
 {
     // Demodulate the given symbol.

@@ -7,6 +7,11 @@ FmDemod::FmDemod(double modIndex, double fc):
 
 }
 
+FmDemod::~FmDemod()
+{
+    freqdem_destroy(_demod);
+}
+
 double FmDemod::demod(const std::complex<double> &sampleData)
 {
     float res = 0.0f;

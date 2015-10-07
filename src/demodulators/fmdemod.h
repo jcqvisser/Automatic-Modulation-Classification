@@ -23,6 +23,8 @@ public:
      */
     FmDemod(double modIndex, double fc);
 
+    ~FmDemod();
+
     /**
      * @brief demod function, for demodulating a particular data point, taking in the modulated sample, and returning a
      * demodulated data point.

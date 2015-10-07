@@ -41,6 +41,11 @@ MQamDemod::MQamDemod(unsigned int const_size) :
     }
 }
 
+MQamDemod::~MQamDemod()
+{
+    modem_destroy(_demod);
+}
+
 double MQamDemod::demod(const std::complex<double> &sampleData)
 {
     // Demodulate the given symbol.

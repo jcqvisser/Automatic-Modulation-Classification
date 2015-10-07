@@ -24,6 +24,8 @@ public:
      */
     explicit MQamDemod(unsigned int const_size);
 
+    ~MQamDemod();
+
     /**
      * @brief Demodulate the given complex data point into a single symbol, between 0 and constellation size.
      * @param The data point to be demodulated.

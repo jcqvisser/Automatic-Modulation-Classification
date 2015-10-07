@@ -27,6 +27,8 @@ public:
      */
     explicit DigitalDemod(AmcDemodulator * func, double rel_fs, double rel_fc);
 
+    ~DigitalDemod();
+
     /**
      * @brief Performs demodulation on a particular data point, state information is stored within this object
      * so this must be called in order.

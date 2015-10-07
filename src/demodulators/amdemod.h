@@ -32,6 +32,8 @@ public:
      */
     explicit AmDemod(double modIndex, double fc, SideBand sideband, int suppressed_carrier);
 
+    ~AmDemod();
+
     /**
      * @brief Function overloading the inherited demod function, performs demodulation on the input data point,
      * returning the demodulated data point.

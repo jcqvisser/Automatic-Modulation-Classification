@@ -18,6 +18,11 @@ AmDemod::AmDemod(double modIndex, double fc, SideBand sideband, int suppressed_c
     }
 }
 
+AmDemod::~AmDemod()
+{
+    ampmodem_destroy(_demod);
+}
+
 double AmDemod::demod(const std::complex<double> &sampleData)
 {
     // Performs the demodulation using the Liquid-DSP library.

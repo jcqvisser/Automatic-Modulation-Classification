@@ -41,6 +41,11 @@ MAskDemod::MAskDemod(unsigned int const_size) :
     }
 }
 
+MAskDemod::~MAskDemod()
+{
+    modem_destroy(_demod);
+}
+
 double MAskDemod::demod(const std::complex<double> &sampleData)
 {
     // Demodulate the given symbol.

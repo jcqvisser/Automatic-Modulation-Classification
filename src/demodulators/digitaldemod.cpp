@@ -14,6 +14,11 @@ DigitalDemod::DigitalDemod(AmcDemodulator * func, double rel_fs, double rel_fc) 
 
 }
 
+DigitalDemod::~DigitalDemod()
+{
+
+}
+
 double DigitalDemod::demod(const std::complex<double> &sampleData)
 {
     // TODO:: Implement some phase correction.
