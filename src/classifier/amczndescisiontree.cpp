@@ -5,37 +5,16 @@ AmcZnDecisionTree::AmcZnDecisionTree(
     _startNode(startNode)
 {}
 
-AMC::ModType AmcZnDecisionTree::doubletoModType(double d)
-{
-    int m = round(d);
-    return (AMC::ModType) m;
-}
-
-std::vector<AMC::ModType> AmcZnDecisionTree::doubletoModType(std::vector<double> d)
-{
-    std::vector<AMC::ModType> m;
-    for (double di: d)
-    {
-        m.push_back(doubletoModType(di));
-    }
-
-    return m;
-}
 
 AMC::ModType AmcZnDecisionTree::classify(const std::vector<double> &predictData)
 {
     return _startNode->classify(predictData);
 }
 
-void AmcZnDecisionTree::train(const std::vector<std::vector<double> > &trainData, const std::vector<double> &responses)
-{
-    auto r = doubletoModType(responses);
-    _startNode->train(trainData, r);
-}
-
-void AmcZnDecisionTree::train(const std::vector<std::vector<double> > &trainData, const std::vector<AMC::ModType> &responses)
+bool AmcZnDecisionTree::train(const std::vector<std::vector<double> > &trainData, const std::vector<AMC::ModType> &responses)
 {
     _startNode->train(trainData, responses);
+    return true;
 }
 
 void AmcZnDecisionTree::load(std::string fileName)
@@ -51,10 +30,10 @@ void AmcZnDecisionTree::load(std::string fileName)
     f.close();
 }
 
-void AmcZnDecisionTree::unload(std::string fileName)
+void AmcZnDecisionTree::save(std::string fileName)
 {
     std::ofstream f(fileName);
-    std::vector<std::string> l = _startNode->unload();
+    std::vector<std::string> l = _startNode->save();
 
     for (auto line: l)
         f << line << std::endl;

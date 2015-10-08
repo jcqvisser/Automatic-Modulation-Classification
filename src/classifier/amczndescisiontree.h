@@ -6,19 +6,16 @@
 #include "znbranchnode.h"
 #include <fstream>
 
-class AmcZnDecisionTree : public AmcClassifier<double>
+class AmcZnDecisionTree : public AmcClassifier<double, AMC::ModType>
 {
 private:
     boost::shared_ptr<ZnNode> _startNode;
 public:
     AmcZnDecisionTree(boost::shared_ptr<ZnNode> startNode);
     AMC::ModType classify(const std::vector<double> &predictData);
-    void train(const std::vector<std::vector<double> > &trainData, const std::vector<double> &responses);
-    void train(const std::vector<std::vector<double> > &trainData, const std::vector<AMC::ModType> &responses);
+    bool train(const std::vector<std::vector<double> > &trainData, const std::vector<AMC::ModType> &responses);
     void load(std::string fileName);
-    void unload(std::string fileName);
-    AMC::ModType doubletoModType(double d);
-    std::vector<AMC::ModType> doubletoModType(std::vector<double> d);
+    void save(std::string fileName);
 };
 
 #endif

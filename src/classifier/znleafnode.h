@@ -24,7 +24,7 @@ public:
     virtual std::string toString();
 
     virtual void load(std::vector<std::string> s);
-    virtual std::vector<std::string> unload();
+    virtual std::vector<std::string> save();
 };
 
 #endif

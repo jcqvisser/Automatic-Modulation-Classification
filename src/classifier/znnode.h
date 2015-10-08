@@ -43,7 +43,7 @@ public:
     virtual std::string toString() = 0;
 
     virtual void load(std::vector<std::string> s) = 0;
-    virtual std::vector<std::string> unload() = 0;
+    virtual std::vector<std::string> save() = 0;
 
     AMC::Feature _feature;
     double _threshold;

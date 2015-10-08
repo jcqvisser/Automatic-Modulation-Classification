@@ -96,12 +96,12 @@ void ZnBranchNode::load(std::vector<std::string> s)
     }
 }
 
-std::vector<std::string> ZnBranchNode::unload()
+std::vector<std::string> ZnBranchNode::save()
 {
     std::vector<std::string> s;
     s.push_back(ZnBranchNode::toString());
-    std::vector<std::string> sl = _lNode->unload();
-    std::vector<std::string> sr = _rNode->unload();
+    std::vector<std::string> sl = _lNode->save();
+    std::vector<std::string> sr = _rNode->save();
 
     s.insert(s.end(), sr.begin(), sr.end());
     s.insert(s.end(), sl.begin(), sl.end());

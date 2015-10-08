@@ -101,7 +101,7 @@ void ZnLeafNode::load(std::vector<std::string> s)
     }
 }
 
-std::vector<std::string> ZnLeafNode::unload()
+std::vector<std::string> ZnLeafNode::save()
 {
     std::vector<std::string> s(1);
     s[0] = toString();
