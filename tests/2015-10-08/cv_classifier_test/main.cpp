@@ -9,6 +9,7 @@
 #include "sharedvector.h"
 #include "amcrecv.h"
 #include "featureextractor.h"
+#include "sharedtype.h"
 
 #include "interface/mainwindow.h"
 
@@ -19,12 +20,15 @@
 #include "modulators/fmfunction.h"
 #include "modulators/digitalfunction.h"
 #include "modulators/mpskfunction.h"
+#include "modulators/maskfunction.h"
+#include "modulators/mqamfunction.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
 #include "demodulators/fmdemod.h"
 #include "demodulators/digitaldemod.h"
 #include "demodulators/mpskdemod.h"
+#include "demodulators/maskdemod.h"
 
 int main(int argc, char *argv[])
 {
@@ -40,8 +44,8 @@ int main(int argc, char *argv[])
 
     // Specific Modulation Settings.
     AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
-    unsigned int constSize = 16;
-    int supp_carrier = 1;
+    unsigned int constSize = 2;
+    int supp_carrier = 0;
     double mod_index = 0.5;
 
     // Frame size and FFT size.

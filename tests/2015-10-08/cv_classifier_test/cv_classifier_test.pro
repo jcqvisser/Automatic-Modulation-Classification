@@ -50,7 +50,10 @@ SOURCES += main.cpp\
     ../../../src/filewriter.cpp \
     ../../../src/featureextractor.cpp \
     ../../../src/classifier/amccvdecisiontree.cpp \
-    ../../../src/sharedstring.cpp
+    ../../../src/sharedstring.cpp \
+    ../../../src/modulators/cosrelativefunction.cpp \
+    ../../../src/modulators/maskfunction.cpp \
+    ../../../src/modulators/mqamfunction.cpp
 
 HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/interface/mainwindow.h \
@@ -80,6 +83,10 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/classifier/amccvdecisiontree.h \
     ../../../src/filewriter.h \
     ../../../src/featureextractor.h \
-    ../../../src/sharedstring.h
+    ../../../src/sharedstring.h \
+    ../../../src/sharedtype.h \
+    ../../../src/modulators/cosrelativefunction.h \
+    ../../../src/modulators/maskfunction.h \
+    ../../../src/modulators/mqamfunction.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

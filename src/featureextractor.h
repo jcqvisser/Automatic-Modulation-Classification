@@ -6,7 +6,6 @@
 #include "sharedvector.h"
 #include "sharedstring.h"
 #include "classifier/amcclassifier.h"
-#include "classifier/amccvdecisiontree.h"
 #include "filewriter.h"
 
 namespace AMC
