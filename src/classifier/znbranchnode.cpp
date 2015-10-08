@@ -85,7 +85,9 @@ void ZnBranchNode::load(std::vector<std::string> s)
     {
         size_t sc0 = s0.find_last_of(";");
         size_t sc1 = s1.find_last_of(";");
-        if (s0.substr(sc0, s0.length()-sc0).compare(s1.substr(sc1, s1.length()-sc1)))
+        std::string ss0 = s0.substr(0, sc0);
+        std::string ss1 = s1.substr(0, sc1);
+        if (ss0.compare(ss1) == 0)
         {
             ZnBranchNode::fromString(s1);
             _lNode->load(s);
