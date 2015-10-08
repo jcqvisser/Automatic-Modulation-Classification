@@ -3,7 +3,59 @@
 AmcZnDecisionTree::AmcZnDecisionTree(
         boost::shared_ptr<ZnNode> startNode):
     _startNode(startNode)
-{}
+{
+    boost::shared_ptr<ZnNode> usbLsbLeafPtr(
+                new ZnLeafNode(
+                    AMC::ModType::AM_USB_FC,
+                    AMC::ModType::AM_LSB_FC,
+                    AMC::Feature::P));
+    boost::shared_ptr<ZnNode> dsb2PskLeafPtr(
+                new ZnLeafNode(
+                    AMC::ModType::AM_DSB_FC,
+                    AMC::ModType::PSK_2,
+                    AMC::Feature::SIGMA_A));
+    boost::shared_ptr<ZnNode> mqamMpskLeafPtr(
+                new ZnLeafNode(
+                    AMC::ModType::MQAM,
+                    AMC::ModType::MPSK,
+                    AMC::Feature::SIGMA_A));
+    boost::shared_ptr<ZnNode> fmMfskLeafPtr(
+                new ZnLeafNode(
+                    AMC::ModType::FM,
+                    AMC::ModType::MFSK,
+                    AMC::Feature::MU_42_F));
+    boost::shared_ptr<ZnNode> amMaskLeafPtr(
+                new ZnLeafNode(
+                    AMC::ModType::AM,
+                    AMC::ModType::MASK,
+                    AMC::Feature::MU_42_A));
+
+    boost::shared_ptr<ZnNode> gammaMaxBranchPtr(
+                new ZnBranchNode(
+                    mqamMpskLeafPtr,
+                    fmMfskLeafPtr,
+                    AMC::Feature::GAMMA_MAX));
+
+    boost::shared_ptr<ZnNode> sigmaApBranchPtr(
+                new ZnBranchNode(
+                    dsb2PskLeafPtr,
+                    gammaMaxBranchPtr,
+                    AMC::Feature::SIGMA_AP));
+
+    boost::shared_ptr<ZnNode> pBranchPtr(
+                new ZnBranchNode(
+                    usbLsbLeafPtr,
+                    sigmaApBranchPtr,
+                    AMC::Feature::P));
+
+    boost::shared_ptr<ZnNode> sigmaDpBranchPtr(
+                new ZnBranchNode(
+                    pBranchPtr,
+                    amMaskLeafPtr,
+                    AMC::Feature::SIGMA_DP));
+
+    _startNode = sigmaDpBranchPtr;
+}
 
 
 AMC::ModType AmcZnDecisionTree::classify(const std::vector<double> &predictData)

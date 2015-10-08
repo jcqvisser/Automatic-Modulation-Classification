@@ -65,6 +65,10 @@ std::string AMC::toString(AMC::ModType m)
         return "ASK_2";
     case MASK:
         return "MASK";
+    case AM:
+        return "AM";
+    case MFSK:
+        return "MFSK";
     default:
         throw std::invalid_argument("Modulation Type Enum toString unimplemented, see amc.h");
     }

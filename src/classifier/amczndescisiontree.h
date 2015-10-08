@@ -4,6 +4,7 @@
 #include "amcclassifier.h"
 #include "znnode.h"
 #include "znbranchnode.h"
+#include "znleafnode.h"
 #include <fstream>
 
 class AmcZnDecisionTree : public AmcClassifier<double, AMC::ModType>
