@@ -22,21 +22,29 @@ AmcZnDecisionTree::AmcZnDecisionTree()
                     AMC::ModType::MQAM,
                     AMC::ModType::MPSK,
                     AMC::Feature::SIGMA_A));
-    boost::shared_ptr<ZnNode> fmMfskLeafPtr(
+ /*   boost::shared_ptr<ZnNode> fmMfskLeafPtr(
                 new ZnLeafNode(
                     AMC::ModType::FM,
                     AMC::ModType::MFSK,
-                    AMC::Feature::MU_42_F));
-    boost::shared_ptr<ZnNode> amMaskLeafPtr(
+                    AMC::Feature::MU_42_F)); */
+    boost::shared_ptr<ZnNode> fmUnaryLeafPtr(
+                new ZnUnaryLeafNode(AMC::ModType::FM,
+                                    AMC::Feature::MU_42_F));
+    /*boost::shared_ptr<ZnNode> amMaskLeafPtr(
                 new ZnLeafNode(
                     AMC::ModType::AM,
+                    AMC::ModType::MASK,
+                    AMC::Feature::MU_42_A));*/
+    boost::shared_ptr<ZnNode> maskUnaryLeafPtr(
+                new ZnUnaryLeafNode(
                     AMC::ModType::MASK,
                     AMC::Feature::MU_42_A));
 
     boost::shared_ptr<ZnNode> gammaMaxBranchPtr(
                 new ZnBranchNode(
                     mqamMpskLeafPtr,
-                    fmMfskLeafPtr,
+                    //fmMfskLeafPtr,
+                    fmUnaryLeafPtr,
                     AMC::Feature::GAMMA_MAX));
 
     boost::shared_ptr<ZnNode> sigmaApBranchPtr(
@@ -54,7 +62,7 @@ AmcZnDecisionTree::AmcZnDecisionTree()
     boost::shared_ptr<ZnNode> sigmaDpBranchPtr(
                 new ZnBranchNode(
                     pBranchPtr,
-                    amMaskLeafPtr,
+                    maskUnaryLeafPtr,
                     AMC::Feature::SIGMA_DP));
 
     _startNode = sigmaDpBranchPtr;

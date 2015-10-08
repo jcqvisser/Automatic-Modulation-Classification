@@ -23,10 +23,9 @@ void ZnBranchNode::train(const std::vector<std::vector<double> > &features, cons
 {
     if (features.size() != responses.size())
         throw std::length_error("length of features and responses do not match");
-    // TODO dont throw a pure exception
 
-    auto rTypes = _rNode->getTypes();
-    auto lTypes = _lNode->getTypes();
+    std::vector<AMC::ModType> rTypes = _rNode->getTypes();
+    std::vector<AMC::ModType> lTypes = _lNode->getTypes();
 
 
     double rSum = 0, rSquaredSum = 0;
