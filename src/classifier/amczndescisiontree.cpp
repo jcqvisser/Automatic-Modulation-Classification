@@ -3,6 +3,9 @@
 AmcZnDecisionTree::AmcZnDecisionTree(
         boost::shared_ptr<ZnNode> startNode):
     _startNode(startNode)
+{}
+
+AmcZnDecisionTree::AmcZnDecisionTree()
 {
     boost::shared_ptr<ZnNode> usbLsbLeafPtr(
                 new ZnLeafNode(
@@ -69,7 +72,7 @@ bool AmcZnDecisionTree::train(const std::vector<std::vector<double> > &trainData
     return true;
 }
 
-void AmcZnDecisionTree::load(std::string fileName)
+void AmcZnDecisionTree::load(const std::string &fileName)
 {
     std::ifstream f(fileName);
     std::vector<std::string> lA;
@@ -82,7 +85,7 @@ void AmcZnDecisionTree::load(std::string fileName)
     f.close();
 }
 
-void AmcZnDecisionTree::save(std::string fileName)
+void AmcZnDecisionTree::save(const std::string &fileName)
 {
     std::ofstream f(fileName);
     std::vector<std::string> l = _startNode->save();
