@@ -4,7 +4,11 @@ MAskDemod::MAskDemod(unsigned int const_size) :
     _constSize(const_size)
 {
     // Configure the constellation size.
-    if(const_size == 4)
+    if(const_size == 2)
+    {
+        _demod = modem_create(LIQUID_MODEM_ASK2);
+    }
+    else if(const_size == 4)
     {
         _demod = modem_create(LIQUID_MODEM_ASK4);
     }
@@ -34,7 +38,7 @@ MAskDemod::MAskDemod(unsigned int const_size) :
     }
     else
     {
-        std::cout << "Please enter a valid constellation size: {4, 8, 16, 32, 64, 128, 256}" << std::endl;
+        std::cout << "Please enter a valid constellation size: {2, 4, 8, 16, 32, 64, 128, 256}" << std::endl;
         std::cout << "Defaulting constellation size to 4ASK." << std::endl;
         _demod = modem_create(LIQUID_MODEM_ASK4);
         _constSize = 4;
