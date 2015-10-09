@@ -3,14 +3,14 @@
 AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
                                         AmcClassifier<double, AMC::ModType> * classifier,
                                         size_t windowSize, double fs) :
-    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs),
-    _classifier(classifier), _modTypeString(new SharedString())
+    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs), _fileWriter(),
+    _classifier(classifier), _sharedModType(new SharedType<AMC::ModType>())
 {
 }
 
-boost::shared_ptr< SharedString > AMC::FeatureExtractor::getModTypeString()
+boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedModType()
 {
-    return _modTypeString;
+    return _sharedModType;
 }
 
 void AMC::FeatureExtractor::start(ExtractionMode mode)
@@ -61,10 +61,9 @@ void AMC::FeatureExtractor::run()
                 _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
                 break;
             case AMC::FeatureExtractor::CLASSIFY:
-                boost::shared_ptr < boost::shared_mutex > stringMutex (_modTypeString->getMutex());
-                boost::unique_lock < boost::shared_mutex > stringLock (*stringMutex.get());
-                _modTypeString->getString() = AMC::toString(_classifier->classify(AMC::FeatureExtractor::getFeatureVector()));
-                stringLock.unlock();
+                boost::unique_lock<boost::shared_mutex> modTypeLock(*_sharedModType->getMutex());
+                _sharedModType->getData() = _classifier->classify(AMC::FeatureExtractor::getFeatureVector());
+                modTypeLock.unlock();
                 break;
             }
         }

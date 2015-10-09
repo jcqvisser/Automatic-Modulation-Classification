@@ -106,12 +106,18 @@ int main(int argc, char *argv[])
 
     // Initialize interface.
     QApplication _app(argc, argv);
-    MainWindow _mainWindow;
+    MainWindow _mainWindow(rate);
     _mainWindow.show();
+
+/***************************************************************************************************
+ *                                      Share some buffers                                         *
+ **************************************************************************************************/
+    _fftGen.setFc(_amcRecv.getFc());
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
-    _mainWindow.setModTypeString(_featureExtractor.getModTypeString());
+    _mainWindow.setSharedModType(_featureExtractor.getSharedModType());
+    _mainWindow.setFc(_amcRecv.getFc());
 
 /***************************************************************************************************
  *                                          Start threads.                                         *

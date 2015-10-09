@@ -1,20 +1,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(double rate, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     _xData(new SharedQVector<double>()),
     _yData(new SharedQVector<double>()),
     _buffer(new SharedBuffer<std::complex <double> > ()),
-    _modTypeString(new SharedString),
+    _sharedModType(new SharedType<AMC::ModType>()),
     _xMin(std::numeric_limits<double>::max()),
     _yMin(std::numeric_limits<double>::max()),
     _xMax(std::numeric_limits<double>::min()),
     _yMax(std::numeric_limits<double>::min()),
     _timer(),
     _buffTimer(),
-    _infoText("")
+    _infoText(""),
+    _fc(new SharedType<double>),
+    _rate(rate)
 {
     ui->setupUi(this);
     ui->customPlot->addGraph();
@@ -28,6 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setFc(boost::shared_ptr < SharedType < double > > fc)
+{
+    _fc.swap(fc);
 }
 
 void MainWindow::setData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y)
@@ -44,9 +51,9 @@ void MainWindow::setBuffer(boost::shared_ptr<SharedBuffer<std::complex<double> >
     _buffer.swap(buffer);
 }
 
-void MainWindow::setModTypeString(boost::shared_ptr<SharedString> modTypeStr)
+void MainWindow::setSharedModType(boost::shared_ptr<SharedType < AMC::ModType > > modType)
 {
-    _modTypeString.swap(modTypeStr);
+    _sharedModType.swap(modType);
 }
 
 void MainWindow::timerEvent(QTimerEvent * event)
@@ -54,11 +61,19 @@ void MainWindow::timerEvent(QTimerEvent * event)
     if (event->timerId() == _timer.timerId()) {
         plotData();
         updateProgBar();
+        updateCenterFrequency();
     } else if(event->timerId() == _buffTimer.timerId()) {
         updateLabelText();
     } else {
         QWidget::timerEvent(event);
     }
+}
+
+void MainWindow::updateCenterFrequency()
+{
+    boost::unique_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
+    _fc->getData() = (double)ui->hSlider->value() / (double)ui->hSlider->maximum() / 2;
+    fcLock.unlock();
 }
 
 void MainWindow::updateProgBar()
@@ -80,12 +95,20 @@ void MainWindow::updateLabelText()
 {
     _infoText = "Shared Buffer Size: " + std::to_string(_buffer->getBuffer().size());
 
-    boost::shared_ptr<boost::shared_mutex> stringMutex(_modTypeString->getMutex());
-    boost::shared_lock<boost::shared_mutex> stringLock(*stringMutex.get());
+    boost::shared_lock <boost::shared_mutex> modTypeLock(*_sharedModType->getMutex());
 
-    _infoText += "\t\t Modulation Scheme: " + _modTypeString->getString();
+    _infoText += "\t\t Modulation Scheme: " + AMC::toString(_sharedModType->getData());
 
-    stringLock.unlock();
+    modTypeLock.unlock();
+
+    boost::shared_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
+    if(_fc->getData() * _rate < 1000)
+        _infoText += "\t\t Center Frequency: " + std::to_string(_fc->getData() * _rate) + "Hz";
+    else if(_fc->getData() * _rate >= 1000 && _fc->getData() * _rate < 1e6)
+        _infoText += "\t\t Center Frequency: " + std::to_string(_fc->getData() * _rate / 1000) + "kHz";
+    else if(_fc->getData() * _rate >= 1e6)
+        _infoText += "\t\t Center Frequency: " + std::to_string(_fc->getData() * _rate / 1e6) + "MHz";
+    fcLock.unlock();
 
     ui->infoLabel->setText(QString::fromStdString(_infoText));
 }

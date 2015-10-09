@@ -9,6 +9,7 @@
 #include "sharedbuffer.h"
 #include "sharedvector.h"
 #include "sharedqvector.h"
+#include "sharedtype.h"
 
 /**
  * @brief The FFTGenerator class reads off the shared buffer and generates an fft from the information read.
@@ -53,6 +54,8 @@ public:
      */
     boost::shared_ptr < SharedQVector<double> > getFreqVec();
 
+    void setFc(boost::shared_ptr<SharedType < double > > fc);
+
     ~FFTGenerator();
 
 private:
@@ -71,6 +74,8 @@ private:
     fftw_complex * _fftBuff;
     fftw_complex * _fftRes;
     fftw_plan _plan;
+
+    boost::shared_ptr<SharedType < double > > _fc;
 };
 
 #endif // FFTGENERATER_H

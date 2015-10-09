@@ -14,7 +14,8 @@ FFTGenerator::FFTGenerator(boost::shared_ptr < SharedBuffer<std::complex<double>
                            _fftBuff,
                            _fftRes,
                            FFTW_FORWARD,
-                           FFTW_ESTIMATE))
+                           FFTW_ESTIMATE)),
+    _fc(new SharedType<double>(0.0))
 {
 
 }
@@ -27,6 +28,11 @@ FFTGenerator::~FFTGenerator()
     fftw_free(_fftRes);
 
     fftw_destroy_plan(_plan);
+}
+
+void FFTGenerator::setFc(boost::shared_ptr<SharedType < double > > fc)
+{
+    _fc.swap(fc);
 }
 
 void FFTGenerator::startFft()
@@ -43,10 +49,14 @@ void FFTGenerator::stopFft()
 
 void FFTGenerator::runFft()
 {
+    boost::unique_lock < boost::shared_mutex > freqLock(*_freqVec->getMutex());
     for(unsigned int n = 0; n < _N; ++n)
     {
         _freqVec->getData()[n] = (n - _N / 2) * _rate / (_N - 1);
     }
+    freqLock.unlock();
+
+    std::vector < double > tempFftVec(_N);
 
     while(_isPerformFft)
     {
@@ -54,19 +64,25 @@ void FFTGenerator::runFft()
         {
             fftw_execute(_plan);
 
-            // Get unique access.
-            boost::shared_ptr < boost::shared_mutex > mutex = _fftVec->getMutex();
-            boost::unique_lock < boost::shared_mutex > lock (*mutex.get());
-
             for(unsigned int n = 0; n < _N; ++n)
             {
                 double absFft = std::sqrt(_fftRes[n][0] * _fftRes[n][0] + _fftRes[n][1] * _fftRes[n][1]) / _N;
                 if(n < _N/2) {
-                    _fftVec->getData()[n + _N/2] = absFft;
+                    tempFftVec[n + _N/2] = absFft;
                 } else {
-                    _fftVec->getData()[n - _N/2] = absFft;
+                    tempFftVec[n - _N/2] = absFft;
                 }
             }
+
+            std::rotate(tempFftVec.begin(), tempFftVec.begin() + (unsigned int)(_fc->getData() * _N), tempFftVec.end());
+
+            // Get unique access.
+            boost::shared_ptr < boost::shared_mutex > mutex = _fftVec->getMutex();
+            boost::unique_lock < boost::shared_mutex > fftLock (*mutex.get());
+
+            _fftVec->getData() = QVector<double>::fromStdVector(tempFftVec);
+
+            fftLock.unlock();
         }
     }
 }
