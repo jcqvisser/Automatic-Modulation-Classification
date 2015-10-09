@@ -52,7 +52,7 @@ void DigitalDemod::reset()
     _func->reset();
 }
 
-std::string DigitalDemod::modType()
+AMC::ModType DigitalDemod::modType()
 {
     return _func->modType();
 }

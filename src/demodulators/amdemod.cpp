@@ -33,36 +33,30 @@ double AmDemod::demod(const std::complex<double> &sampleData)
     return (double) res;
 }
 
-std::string AmDemod::modType()
+AMC::ModType AmDemod::modType()
 {
-    // Returns the type of modulation being demodulated, appending full or suppressed carrier.
-    std::string strModType = "AM";
-
     // Check which sideband modulation type.
     switch(_sideband)
     {
     case(UPPER):
-        strModType += "-USB";
+        if(_suppressedCarrier == 0)
+            return AMC::ModType::AM_USB_FC;
+        else
+            return AMC::ModType::AM_USB_SC;
         break;
     case(LOWER):
-        strModType += "-LSB";
+        if(_suppressedCarrier == 0)
+            return AMC::ModType::AM_LSB_FC;
+        else
+            return AMC::ModType::AM_LSB_SC;
         break;
     case(DOUBLE):
-        strModType += "-DSB";
+        if(_suppressedCarrier == 0)
+            return AMC::ModType::AM_DSB_FC;
+        else
+            return AMC::ModType::AM_DSB_SC;
         break;
     }
-
-    // Check if suppressed carrier or not.
-    if(_suppressedCarrier)
-    {
-        strModType += "-SC";
-    }
-    else
-    {
-        strModType += "-FC";
-    }
-
-    return strModType;
 }
 
 void AmDemod::reset()

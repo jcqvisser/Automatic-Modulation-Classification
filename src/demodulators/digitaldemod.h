@@ -46,7 +46,7 @@ public:
      * @brief Returns the modulation type that is being demodulated.
      * @return Modulation Type (string).
      */
-    std::string modType();
+    AMC::ModType modType();
 
 private:
     boost::scoped_ptr<AmcDemodulator> _func;

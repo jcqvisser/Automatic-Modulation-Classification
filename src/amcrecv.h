@@ -43,7 +43,7 @@ public:
      * @param The demodulator object that will be used in demodulation, inherits from the AmcDemodulator class.
      */
     void setDemod(AmcDemodulator * demodulator);
-    std::string getDemodType();
+    AMC::ModType getDemodType();
     boost::shared_ptr < SharedType < double > > getFc();
 
 private:

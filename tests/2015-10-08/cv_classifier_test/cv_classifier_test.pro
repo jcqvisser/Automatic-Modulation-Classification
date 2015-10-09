@@ -53,7 +53,9 @@ SOURCES += main.cpp\
     ../../../src/sharedstring.cpp \
     ../../../src/modulators/cosrelativefunction.cpp \
     ../../../src/modulators/maskfunction.cpp \
-    ../../../src/modulators/mqamfunction.cpp
+    ../../../src/modulators/mqamfunction.cpp \
+    ../../../src/demodulators/maskdemod.cpp \
+    ../../../src/demodulators/mqamdemod.cpp
 
 HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/interface/mainwindow.h \
@@ -87,6 +89,8 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/sharedtype.h \
     ../../../src/modulators/cosrelativefunction.h \
     ../../../src/modulators/maskfunction.h \
-    ../../../src/modulators/mqamfunction.h
+    ../../../src/modulators/mqamfunction.h \
+    ../../../src/demodulators/maskdemod.h \
+    ../../../src/demodulators/mqamdemod.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

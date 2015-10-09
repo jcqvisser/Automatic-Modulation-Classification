@@ -33,7 +33,7 @@ public:
      * @brief The modulation type of this object.
      * @return The modulation type of this object as a string.
      */
-    std::string modType();
+    AMC::ModType modType();
 
 private:
     unsigned int _constSize;

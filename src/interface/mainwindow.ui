@@ -87,10 +87,10 @@
           <item>
            <widget class="QSlider" name="hSlider">
             <property name="maximum">
-             <number>10000</number>
+             <number>1000</number>
             </property>
             <property name="pageStep">
-             <number>1000</number>
+             <number>100</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>

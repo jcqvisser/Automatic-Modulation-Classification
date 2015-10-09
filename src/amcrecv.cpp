@@ -36,7 +36,7 @@ void AmcRecv::setDemod(AmcDemodulator * demodulator)
     _demodulator.reset(demodulator);
 }
 
-std::string AmcRecv::getDemodType()
+AMC::ModType AmcRecv::getDemodType()
 {
     // Return the type of demodulation being performed.
     return _demodulator->modType();

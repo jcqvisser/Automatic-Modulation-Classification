@@ -3,6 +3,7 @@
 
 #include <complex>
 #include <vector>
+#include "../amc.h"
 
 /**
  * @brief The AmcDemodulator abstract base class - This class is used to demodulate information that is modulated using AM-DSB-FC/SC.
@@ -46,9 +47,9 @@ public:
      * @brief Return the modulation type of the relevent class.
      * @return
      */
-    virtual std::string modType()
+    virtual AMC::ModType modType()
     {
-        return "NONE";
+        return AMC::ModType::MODTYPE_NR_ITEMS;
     }
 
     virtual ~AmcDemodulator() {}
