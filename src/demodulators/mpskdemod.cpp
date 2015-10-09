@@ -67,8 +67,11 @@ void MPskDemod::reset()
     modem_reset(_demod);
 }
 
-std::string MPskDemod::modType()
+AMC::ModType MPskDemod::modType()
 {
     // Return the constellation size and mod type.
-    return std::to_string(_constSize) + "-PSK";
+    if(_constSize == 2)
+        return AMC::ModType::PSK_2;
+
+    return AMC::ModType::MPSK;
 }

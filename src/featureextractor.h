@@ -4,7 +4,7 @@
 #include <boost/smart_ptr.hpp>
 #include "sharedbuffer.h"
 #include "sharedvector.h"
-#include "sharedstring.h"
+#include "sharedtype.h"
 #include "classifier/amcclassifier.h"
 #include "filewriter.h"
 
@@ -29,7 +29,7 @@ namespace AMC
         void start(ExtractionMode mode);
         void start(ExtractionMode mode, AMC::ModType);
         std::vector<double> getFeatureVector();
-        boost::shared_ptr< SharedString > getModTypeString();
+        boost::shared_ptr< SharedType<AMC::ModType > > getSharedModType();
 
     private:
         bool _isExtracting;
@@ -40,12 +40,9 @@ namespace AMC
 		boost::thread _featureThread3;
 		boost::thread _featureThread4;
 
+        bool get_x();
+
         ExtractionMode _mode;
-
-        FileWriter _fileWriter;
-        boost::scoped_ptr< AmcClassifier<double, AMC::ModType> > _classifier;
-
-        boost::shared_ptr< SharedString > _modTypeString;
 
         //Resource hierarchy: _buffer, _x, _xFFT, _xPhase, _xPhaseNL, _xNormCenter
         boost::shared_ptr<SharedBuffer<std::complex<double> > > _buffer;
@@ -66,6 +63,10 @@ namespace AMC
         double _fmax;
         double _fs;
         size_t _fnc;
+
+        FileWriter _fileWriter;
+        boost::scoped_ptr< AmcClassifier<double, AMC::ModType> > _classifier;
+        boost::shared_ptr< SharedType<AMC::ModType> > _sharedModType;
     };
 }
 #endif // FEATUREEXTRACTOR_H

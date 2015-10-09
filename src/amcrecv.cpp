@@ -5,9 +5,15 @@ AmcRecv::AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > 
     _recvThread(),
     _demodulator(new AmcDemodulator()),
     _buffer(buffer),
-    _N(N)
+    _N(N),
+    _fc(new SharedType<double>(0.25))
 {
 
+}
+
+boost::shared_ptr < SharedType < double > > AmcRecv::getFc()
+{
+    return _fc;
 }
 
 void AmcRecv::startDemod()
@@ -30,7 +36,7 @@ void AmcRecv::setDemod(AmcDemodulator * demodulator)
     _demodulator.reset(demodulator);
 }
 
-std::string AmcRecv::getDemodType()
+AMC::ModType AmcRecv::getDemodType()
 {
     // Return the type of demodulation being performed.
     return _demodulator->modType();
@@ -60,7 +66,7 @@ bool AmcRecv::getTempFrame(std::vector < std::complex < double > > & tempFrame)
     boost::unique_lock < boost::shared_mutex > lock (*mutex.get());
 
     // Check that the buffer is the right size.
-    if(_buffer->getBuffer().size() > tempFrame.size() * 1.5)
+    if(_buffer->getBuffer().size() > _N * 1.5)
     {
         // Read N points from the buffer, deleting them in the process.
         for(unsigned int n = 0; n < tempFrame.size(); ++n)

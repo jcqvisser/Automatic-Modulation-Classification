@@ -5,6 +5,7 @@
 #include <boost/thread.hpp>
 #include "demodulators/amcdemodulator.h"
 #include "sharedbuffer.h"
+#include "sharedtype.h"
 
 /**
  * @brief The AmcRecv class performs the actual receival of data from the USRP, it will do the demodulation of the
@@ -42,7 +43,8 @@ public:
      * @param The demodulator object that will be used in demodulation, inherits from the AmcDemodulator class.
      */
     void setDemod(AmcDemodulator * demodulator);
-    std::string getDemodType();
+    AMC::ModType getDemodType();
+    boost::shared_ptr < SharedType < double > > getFc();
 
 private:
     void runDemod();
@@ -53,6 +55,7 @@ private:
     boost::scoped_ptr < AmcDemodulator > _demodulator;
     boost::shared_ptr < SharedBuffer < std::complex < double > > > _buffer;
     size_t _N;
+    boost::shared_ptr < SharedType < double > > _fc;
 };
 
 #endif // AMCRECV_H

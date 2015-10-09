@@ -52,7 +52,7 @@ public:
      * @brief Defines the modulation type of this class, returning a string of that modulation type.
      * @return The modulation type of this class.
      */
-    std::string modType();
+    AMC::ModType modType();
 
 private:
     ampmodem _demod;

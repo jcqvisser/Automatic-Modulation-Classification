@@ -63,8 +63,11 @@ void MAskDemod::reset()
     modem_reset(_demod);
 }
 
-std::string MAskDemod::modType()
+AMC::ModType MAskDemod::modType()
 {
     // Return the constellation size and mod type.
-    return std::to_string(_constSize) + "-ASK";
+    if(_constSize == 2)
+        return AMC::ModType::ASK_2;
+
+    return AMC::ModType::MASK;
 }

@@ -92,13 +92,13 @@ int main(int argc, char *argv[])
     AmcRecv _amcRecv(_buffer, N);
 
     // Am Demodulator.
-        _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
+    _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
 
     // Fm Demodulator.
 //    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
 
     // MPSK Demodulator
-//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fs, rel_fc));
+//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fc));
 
 /***************************************************************************************************
  *                                      Initialize GUI Objects                                     *
@@ -106,19 +106,25 @@ int main(int argc, char *argv[])
 
     // Initialize interface.
     QApplication _app(argc, argv);
-    MainWindow _mainWindow;
+    MainWindow _mainWindow(rate);
     _mainWindow.show();
+
+/***************************************************************************************************
+ *                                      Share some buffers                                         *
+ **************************************************************************************************/
+    _fftGen.setFc(_amcRecv.getFc());
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
-    _mainWindow.setModTypeString(_featureExtractor.getModTypeString());
+    _mainWindow.setSharedModType(_featureExtractor.getSharedModType());
+    _mainWindow.setFc(_amcRecv.getFc());
 
 /***************************************************************************************************
  *                                          Start threads.                                         *
  **************************************************************************************************/
 
     _dataStream->startStream();
-//    _amcRecv.startDemod();
+    _amcRecv.startDemod();
     _fftGen.startFft();
     _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY);
 

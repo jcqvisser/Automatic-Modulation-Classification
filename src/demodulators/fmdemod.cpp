@@ -26,7 +26,7 @@ void FmDemod::reset()
     freqdem_reset(_demod);
 }
 
-std::string FmDemod::modType()
+AMC::ModType FmDemod::modType()
 {
-    return "FM";
+    return AMC::ModType::FM;
 }

@@ -42,7 +42,7 @@ public:
      * @brief Returns the modulation type of the class
      * @return Modulation type being demodulated.
      */
-    std::string modType();
+    AMC::ModType modType();
 
 private:
     freqdem _demod;

@@ -3,14 +3,14 @@
 AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
                                         AmcClassifier<double, AMC::ModType> * classifier,
                                         size_t windowSize, double fs) :
-    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs),
-    _classifier(classifier), _modTypeString(new SharedString())
+    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs), _fileWriter(),
+    _classifier(classifier), _sharedModType(new SharedType<AMC::ModType>())
 {
 }
 
-boost::shared_ptr< SharedString > AMC::FeatureExtractor::getModTypeString()
+boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedModType()
 {
-    return _modTypeString;
+    return _sharedModType;
 }
 
 void AMC::FeatureExtractor::start(ExtractionMode mode)
@@ -49,14 +49,39 @@ void AMC::FeatureExtractor::run()
 {
     while (_isExtracting)
     {
-        while (_buffer->getBuffer().size() < _windowSize)
+        if(get_x())
+        {
+            _featureThread0 = boost::thread(&AMC::FeatureExtractor::findSigmaAMu42A, this);
+            AMC::FeatureExtractor::findMu42FSigmaAF();
+
+            _featureThread0.join();
+            switch(_mode)
+            {
+            case AMC::FeatureExtractor::WRITE_TO_FILE:
+                _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
+                break;
+            case AMC::FeatureExtractor::CLASSIFY:
+                boost::unique_lock<boost::shared_mutex> modTypeLock(*_sharedModType->getMutex());
+                _sharedModType->getData() = _classifier->classify(AMC::FeatureExtractor::getFeatureVector());
+                modTypeLock.unlock();
+                break;
+            }
+        }
+        else
         {
             //TODO: How long to sleep?
             boost::this_thread::sleep(boost::posix_time::milliseconds(10));
         }
-        boost::shared_lock<boost::shared_mutex> bufferLock(*_buffer->getMutex());
-        boost::unique_lock<boost::shared_mutex> xWriteLock(*_x.getMutex());
+    }
+}
 
+bool AMC::FeatureExtractor::get_x()
+{
+    boost::shared_lock<boost::shared_mutex> bufferLock(*_buffer->getMutex());
+    boost::unique_lock<boost::shared_mutex> xWriteLock(*_x.getMutex());
+
+    if(_buffer->getBuffer().size() >= _windowSize)
+    {
         for (size_t n = 0; n < _windowSize; ++n)
         {
             _x.getData()[n] = _buffer->getBuffer()[n];
@@ -64,24 +89,13 @@ void AMC::FeatureExtractor::run()
 
         bufferLock.unlock();
         xWriteLock.unlock();
-
-		_featureThread0 = boost::thread(&AMC::FeatureExtractor::findSigmaAMu42A, this);
-        AMC::FeatureExtractor::findMu42FSigmaAF();
-
-        _featureThread0.join();
-        switch(_mode)
-        {
-        case AMC::FeatureExtractor::WRITE_TO_FILE:
-            _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
-            break;
-        case AMC::FeatureExtractor::CLASSIFY:
-            boost::shared_ptr < boost::shared_mutex > stringMutex (_modTypeString->getMutex());
-            boost::unique_lock < boost::shared_mutex > stringLock (*stringMutex.get());
-            _modTypeString->getString() = AMC::toString(_classifier->classify(AMC::FeatureExtractor::getFeatureVector()));
-            stringLock.unlock();
-            break;
-        }
+        return true;
     }
+
+    bufferLock.unlock();
+    xWriteLock.unlock();
+
+    return false;
 }
 
 void AMC::FeatureExtractor::findSigmaAMu42A()

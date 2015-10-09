@@ -63,8 +63,8 @@ void MQamDemod::reset()
     modem_reset(_demod);
 }
 
-std::string MQamDemod::modType()
+AMC::ModType MQamDemod::modType()
 {
     // Return the constellation size and mod type.
-    return std::to_string(_constSize) + "-QAM";
+    return AMC::ModType::MQAM;
 }
