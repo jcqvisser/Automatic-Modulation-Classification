@@ -40,6 +40,8 @@ namespace AMC
 		boost::thread _featureThread3;
 		boost::thread _featureThread4;
 
+        bool get_x();
+
         ExtractionMode _mode;
 
         FileWriter _fileWriter;

@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     AmcRecv _amcRecv(_buffer, N);
 
     // Am Demodulator.
-        _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
+    _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
 
     // Fm Demodulator.
 //    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     _dataStream->startStream();
-//    _amcRecv.startDemod();
+    _amcRecv.startDemod();
     _fftGen.startFft();
     _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY);
 
