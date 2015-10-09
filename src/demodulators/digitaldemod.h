@@ -25,7 +25,7 @@ public:
      * @param The relative symbol rate, fs/Fs (Symbol rate / sample rate).
      * @param The relative carrier frequency, fc / Fs (Carrier Freq / sample rate).
      */
-    explicit DigitalDemod(AmcDemodulator * func, double rel_fs, double rel_fc);
+    explicit DigitalDemod(AmcDemodulator * func, double rel_fc);
 
     ~DigitalDemod();
 
@@ -51,13 +51,6 @@ public:
 private:
     boost::scoped_ptr<AmcDemodulator> _func;
     double _rel_fc;
-    double _rel_fs;
-    double _rel_tau;
-    double _pi;
-    std::complex <double> _symbol;
-    double _realSymbol;
-    double _imagSymbol;
-    size_t _t;
 };
 
 #endif // DIGITALDEMOD_H

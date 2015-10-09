@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 //    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
 
     // MPSK Demodulator
-//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fs, rel_fc));
+//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fc));
 
 /***************************************************************************************************
  *                                      Initialize GUI Objects                                     *
