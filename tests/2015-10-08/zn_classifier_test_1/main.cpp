@@ -20,6 +20,7 @@
 #include "modulators/fmfunction.h"
 #include "modulators/digitalfunction.h"
 #include "modulators/mpskfunction.h"
+#include "modulators/awgnfunction.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -55,8 +56,8 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     // AM Stream function.
-    //StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
-
+    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
+    StreamFunction * _noisyStreamFunction = new AwgnFunction(_streamFunction, 0, rate, 1e-3);
     // FM Stream Function
     //StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), mod_index, rel_fc);
 
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
 
     // ------------ Create Streamer Object ------------ //
     // UhdMock Object
-    boost::scoped_ptr < Streamer > _dataStream(new UhdMock(_streamFunction, rate, gain, frameSize));
+    boost::scoped_ptr < Streamer > _dataStream(new UhdMock(_noisyStreamFunction, rate, gain, frameSize));
     // UhdRead Object
     //    boost::scoped_ptr < Streamer > _dataStream(new UhdRead(rate, freq, gain, frameSize));
 
@@ -80,9 +81,11 @@ int main(int argc, char *argv[])
     FFTGenerator _fftGen(_buffer, rate, N);
 
     AmcClassifier<double, AMC::ModType> * classifier = new AmcZnDecisionTree();
+    //classifier->load("test0");
     std::string dir = "/home/jcq/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-07";
     ClassifierTrainer ct(classifier,dir);
     ct.train();
+    ct.save("test0");
     AMC::FeatureExtractor _featureExtractor(_buffer, classifier, N, rate);
 
 /***************************************************************************************************

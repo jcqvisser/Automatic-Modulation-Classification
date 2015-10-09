@@ -5,7 +5,7 @@
 #include "znnode.h"
 #include "znbranchnode.h"
 #include "znleafnode.h"
-#include "znUnaryLeafNode.h"
+#include "znunaryleafnode.h"
 #include <fstream>
 
 class AmcZnDecisionTree : public AmcClassifier<double, AMC::ModType>

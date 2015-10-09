@@ -1,4 +1,4 @@
-#include "znUnaryLeafNode.h"
+#include "znunaryleafnode.h"
 #include <iostream>
 
 AMC::ModType ZnUnaryLeafNode::classify(const std::vector<double> &features)

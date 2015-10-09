@@ -5,6 +5,7 @@
 #include <boost/chrono.hpp>
 #include "streamer.h"
 #include "modulators/streamfunction.h"
+//#include "awgngenerator.h"
 
 /**
  * @brief The UhdMock class is used to stream test data to the system, acting similarily to the UhdRead class.
@@ -73,6 +74,8 @@ private:
     double _rate;
     double _gain;
     size_t _frameSize;
+    //TODO
+    //boost::shared_ptr< AwgnGenerator > _awgnGenerator;
 };
 
 #endif // UHDMOCK_H

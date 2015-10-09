@@ -22,6 +22,7 @@ LIBS += -luhd\
         -lboost_date_time\
         -lboost_timer\
         -lboost_filesystem\
+        -lboost_random\
         -lfftw3\
         -lfftw3f\
         -lliquid
@@ -41,8 +42,6 @@ SOURCES += main.cpp\
     ../../../src/modulators/mpskfunction.cpp \
     ../../../src/amc.cpp \
     ../../../src/amcrecv.cpp \
-    ../../../src/uhdmock.cpp \
-    ../../../src/uhdread.cpp \
     ../../../src/fftgenerator.cpp \
     ../../../src/filewriter.cpp \
     ../../../src/featureextractor.cpp \
@@ -51,7 +50,9 @@ SOURCES += main.cpp\
     ../../../src/classifier/classifiertrainer.cpp \
     ../../../src/classifier/znbranchnode.cpp \
     ../../../src/classifier/znleafnode.cpp \
-    ../../../src/classifier/znterminalleafnode.cpp
+    ../../../src/classifier/znUnaryLeafNode.cpp \
+    ../../../src/uhdmock.cpp \
+    ../../../src/modulators/awgnfunction.cpp
 
 HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/interface/mainwindow.h \
@@ -75,7 +76,6 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/sharedvector.h \
     ../../../src/streamer.h \
     ../../../src/uhdmock.h \
-    ../../../src/uhdread.h \
     ../../../src/fftgenerator.h \
     ../../../src/classifier/amcclassifier.h \
     ../../../src/filewriter.h \
@@ -86,6 +86,7 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/classifier/znbranchnode.h \
     ../../../src/classifier/znleafnode.h \
     ../../../src/classifier/znnode.h \
-    ../../../src/classifier/znterminalleafnode.h
+    ../../../src/classifier/znunaryleafnode.h \
+    ../../../src/modulators/awgnfunction.h
 
 FORMS    += ../../../src/interface/mainwindow.ui
