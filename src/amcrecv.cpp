@@ -6,14 +6,14 @@ AmcRecv::AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > 
     _demodulator(new AmcDemodulator()),
     _buffer(buffer),
     _N(N),
-    _fc(new SharedType<double>(0.25))
+    _fc(new SharedType<double>)
 {
 
 }
 
-boost::shared_ptr < SharedType < double > > AmcRecv::getFc()
+void AmcRecv::setFc(boost::shared_ptr < SharedType < double > > fc)
 {
-    return _fc;
+    _fc.swap(fc);
 }
 
 void AmcRecv::startDemod()

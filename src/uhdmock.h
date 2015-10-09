@@ -5,7 +5,8 @@
 #include <boost/chrono.hpp>
 #include "streamer.h"
 #include "modulators/streamfunction.h"
-//#include "awgngenerator.h"
+#include "firfilter.h"
+#include "sharedtype.h"
 
 /**
  * @brief The UhdMock class is used to stream test data to the system, acting similarily to the UhdRead class.
@@ -48,6 +49,9 @@ public:
      */
     boost::shared_ptr < SharedBuffer<std::complex<double> > > getBuffer();
 
+    boost::shared_ptr < SharedType < double > > getFc();
+    boost::shared_ptr < SharedType < double > > getWindow();
+
     /**
      * @brief Set the absolute maximum size of the buffer, is set by default to 16384 samples, if the buffer size exceeds this then the
      * oldest sample is deleted from the buffer automatically.
@@ -65,6 +69,8 @@ public:
 private:
     void runStream();
 
+    void checkFrame();
+
     size_t _maxBuffSize;
     boost::shared_ptr < SharedBuffer<std::complex<double> > > _buffer;
     boost::scoped_ptr < StreamFunction > _func;
@@ -74,8 +80,14 @@ private:
     double _rate;
     double _gain;
     size_t _frameSize;
-    //TODO
-    //boost::shared_ptr< AwgnGenerator > _awgnGenerator;
+
+    boost::shared_ptr < SharedType <double> > _fc;
+    boost::shared_ptr < SharedType <double> > _window;
+
+    double _shadowFc;
+    double _shadowWindow;
+
+    boost::scoped_ptr < FirFilter > _filter;
 };
 
 #endif // UHDMOCK_H

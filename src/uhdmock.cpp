@@ -10,7 +10,12 @@ UhdMock::UhdMock(StreamFunction * func, double rate, double gain, size_t frameSi
     _isStreaming(false),
     _rate(rate),
     _gain(gain),
-    _frameSize(frameSize)
+    _frameSize(frameSize),
+    _fc(new SharedType<double>),
+    _window(new SharedType<double>),
+    _shadowFc(0.0),
+    _shadowWindow(0.0),
+    _filter(new FirFilter(0.00f, 0.5f, 128))
 {
 
 }
@@ -19,6 +24,16 @@ void UhdMock::setMaxBuffer(size_t maxBuffSize)
 {
     // Change the max buffer size
     _maxBuffSize = maxBuffSize;
+}
+
+boost::shared_ptr < SharedType < double > > UhdMock::getFc()
+{
+    return _fc;
+}
+
+boost::shared_ptr < SharedType < double > > UhdMock::getWindow()
+{
+    return _window;
 }
 
 void UhdMock::startStream()
@@ -54,6 +69,9 @@ void UhdMock::runStream()
         // Sleep for the duration relative to the data rate, so that the rate is approximately right.
         boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _frameSize)));
 
+        // Check that the filter frame has not moved.
+        checkFrame();
+
         // Get unique access.
         boost::shared_ptr < boost::shared_mutex > mutex = _buffer->getMutex();
         boost::unique_lock < boost::shared_mutex > lock (*mutex.get());
@@ -62,7 +80,8 @@ void UhdMock::runStream()
         // Generate a frame of data.
         for(unsigned int n = 0; n < _frameSize; ++n)
         {
-            _buffer->getBuffer().push_back(_func->calc(t) * _gain);
+            _buffer->getBuffer().push_back(_filter->filter(_func->calc(t) * _gain));
+//            _buffer->getBuffer().push_back(_func->calc(t) * _gain);
 
             // Prohibit data buffer from getting too large.
             if(_buffer->getBuffer().size() > _maxBuffSize)
@@ -74,6 +93,39 @@ void UhdMock::runStream()
         }
     }
     std::cout << std::endl << "Closing UHD mock thread" << std::endl;
+}
+
+void UhdMock::checkFrame()
+{
+    // Get center frequency
+    boost::shared_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
+    double newFc = _fc->getData();
+    fcLock.unlock();
+
+    // Get window.
+    boost::shared_lock<boost::shared_mutex> winLock(*_fc->getMutex());
+    double newWindow = _window->getData();
+    winLock.unlock();
+
+    if(newFc != _shadowFc || newWindow != _shadowWindow)
+    {
+        // Redesign filter.
+        if(newWindow > 0.0)
+        {
+            if(newFc - newWindow / 2 < 0)
+                _filter->redesign(0.0f, newFc + newWindow / 2);
+            else if(newFc + newWindow / 2 > 0.5f)
+                _filter->redesign(newFc - newWindow / 2, 0.5f);
+            else
+                _filter->redesign(newFc - newWindow / 2, newFc + newWindow / 2);
+        }
+        else
+        {
+            _filter->redesign(0.0f, 0.5f);
+        }
+    }
+    _shadowFc = newFc;
+    _shadowWindow = newWindow;
 }
 
 boost::shared_ptr < SharedBuffer<std::complex<double> > > UhdMock::getBuffer()

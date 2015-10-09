@@ -77,6 +77,8 @@ int main(int argc, char *argv[])
 
     // Get shared buffer
     boost::shared_ptr < SharedBuffer<std::complex<double> > > _buffer(_dataStream->getBuffer());
+    boost::shared_ptr < SharedType<double> > _fc(_dataStream->getFc());
+    boost::shared_ptr < SharedType<double> > _window(_dataStream->getWindow());
 
     // Create fft generator function.
     FFTGenerator _fftGen(_buffer, rate, N);
@@ -90,6 +92,7 @@ int main(int argc, char *argv[])
 
     // Create demodulator object.
     AmcRecv _amcRecv(_buffer, N);
+    _amcRecv.setFc(_fc);
 
     // Am Demodulator.
     _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
@@ -106,18 +109,19 @@ int main(int argc, char *argv[])
 
     // Initialize interface.
     QApplication _app(argc, argv);
-    MainWindow _mainWindow(rate);
+    MainWindow _mainWindow(rate, N);
     _mainWindow.show();
 
 /***************************************************************************************************
  *                                      Share some buffers                                         *
  **************************************************************************************************/
-    _fftGen.setFc(_amcRecv.getFc());
+    _fftGen.setFc(_fc);
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
     _mainWindow.setSharedModType(_featureExtractor.getSharedModType());
-    _mainWindow.setFc(_amcRecv.getFc());
+    _mainWindow.setFc(_fc);
+    _mainWindow.setWindow(_window);
 
 /***************************************************************************************************
  *                                          Start threads.                                         *

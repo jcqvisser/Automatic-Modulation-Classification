@@ -29,7 +29,7 @@ LIBS += -luhd\
         -lfftw3f\
         -lliquid
 
-SOURCES += main.cpp\
+SOURCES += main.cpp \
     ../../../src/interface/qcustomplot.cpp \
     ../../../src/interface/mainwindow.cpp \
     ../../../src/demodulators/amdemod.cpp \
@@ -55,9 +55,11 @@ SOURCES += main.cpp\
     ../../../src/modulators/maskfunction.cpp \
     ../../../src/modulators/mqamfunction.cpp \
     ../../../src/demodulators/maskdemod.cpp \
-    ../../../src/demodulators/mqamdemod.cpp
+    ../../../src/demodulators/mqamdemod.cpp \
+    ../../../src/firfilter.cpp
 
-HEADERS  += ../../../src/interface/qcustomplot.h \
+HEADERS  += \
+    ../../../src/interface/qcustomplot.h \
     ../../../src/interface/mainwindow.h \
     ../../../src/demodulators/amcdemodulator.h \
     ../../../src/demodulators/amdemod.h \
@@ -91,6 +93,7 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/modulators/maskfunction.h \
     ../../../src/modulators/mqamfunction.h \
     ../../../src/demodulators/maskdemod.h \
-    ../../../src/demodulators/mqamdemod.h
+    ../../../src/demodulators/mqamdemod.h \
+    ../../../src/firfilter.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

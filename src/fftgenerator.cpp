@@ -56,31 +56,23 @@ void FFTGenerator::runFft()
     }
     freqLock.unlock();
 
-    std::vector < double > tempFftVec(_N);
-
     while(_isPerformFft)
     {
         if(getTempBuffer())
         {
             fftw_execute(_plan);
 
+            boost::unique_lock < boost::shared_mutex > fftLock (*_fftVec->getMutex());
+
             for(unsigned int n = 0; n < _N; ++n)
             {
                 double absFft = std::sqrt(_fftRes[n][0] * _fftRes[n][0] + _fftRes[n][1] * _fftRes[n][1]) / _N;
                 if(n < _N/2) {
-                    tempFftVec[n + _N/2] = absFft;
+                    _fftVec->getData()[n + _N/2] = absFft;
                 } else {
-                    tempFftVec[n - _N/2] = absFft;
+                    _fftVec->getData()[n - _N/2] = absFft;
                 }
             }
-
-            std::rotate(tempFftVec.begin(), tempFftVec.begin() + (unsigned int)(_fc->getData() * _N), tempFftVec.end());
-
-            // Get unique access.
-            boost::shared_ptr < boost::shared_mutex > mutex = _fftVec->getMutex();
-            boost::unique_lock < boost::shared_mutex > fftLock (*mutex.get());
-
-            _fftVec->getData() = QVector<double>::fromStdVector(tempFftVec);
 
             fftLock.unlock();
         }

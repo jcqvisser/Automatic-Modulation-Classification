@@ -1,13 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(double rate, QWidget *parent) :
+MainWindow::MainWindow(double rate, unsigned int N, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    _N(N),
     _xData(new SharedQVector<double>()),
     _yData(new SharedQVector<double>()),
     _buffer(new SharedBuffer<std::complex <double> > ()),
     _sharedModType(new SharedType<AMC::ModType>()),
+    _fftFc(_N),
+    _fftWindow(_N),
     _xMin(std::numeric_limits<double>::max()),
     _yMin(std::numeric_limits<double>::max()),
     _xMax(std::numeric_limits<double>::min()),
@@ -16,10 +19,24 @@ MainWindow::MainWindow(double rate, QWidget *parent) :
     _buffTimer(),
     _infoText(""),
     _fc(new SharedType<double>),
+    _windowSize(new SharedType<double>),
     _rate(rate)
 {
     ui->setupUi(this);
+    // Graph for fft plot (0)
     ui->customPlot->addGraph();
+    // Graph for fc spike (1)
+    ui->customPlot->addGraph();
+    QPen _fcLinePen;
+    _fcLinePen.setColor(QColor(166, 166, 166));
+    _fcLinePen.setWidth(0.01);
+    _fcLinePen.setStyle(Qt::DashLine);
+    ui->customPlot->graph(1)->setPen(_fcLinePen);
+    ui->customPlot->graph(1)->setLineStyle(QCPGraph::lsImpulse);
+    // Graph for fc window (2)
+    ui->customPlot->addGraph();
+    ui->customPlot->graph(2)->setPen(_fcLinePen);
+    ui->customPlot->graph(2)->setLineStyle(QCPGraph::lsLine);
 
     ui->customPlot->xAxis->setLabel("Frequency (Hz)");
     ui->customPlot->yAxis->setLabel("Magnitude");
@@ -35,6 +52,11 @@ MainWindow::~MainWindow()
 void MainWindow::setFc(boost::shared_ptr < SharedType < double > > fc)
 {
     _fc.swap(fc);
+}
+
+void MainWindow::setWindow(boost::shared_ptr < SharedType < double > > windowSize)
+{
+    _windowSize.swap(windowSize);
 }
 
 void MainWindow::setData(boost::shared_ptr < SharedQVector < double > > X, boost::shared_ptr < SharedQVector < double > > Y)
@@ -72,8 +94,12 @@ void MainWindow::timerEvent(QTimerEvent * event)
 void MainWindow::updateCenterFrequency()
 {
     boost::unique_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
-    _fc->getData() = (double)ui->hSlider->value() / (double)ui->hSlider->maximum() / 2;
+    _fc->getData() = (double)ui->fcSlider->value() / (double)ui->fcSlider->maximum() / 2;
     fcLock.unlock();
+
+    boost::unique_lock<boost::shared_mutex> winLock(*_windowSize->getMutex());
+    _windowSize->getData() = (double)ui->windowSlider->value() / (double)ui->windowSlider->maximum() / 4;
+    winLock.unlock();
 }
 
 void MainWindow::updateProgBar()
@@ -126,8 +152,16 @@ void MainWindow::plotData()
     _xMax = std::numeric_limits<double>::min();
     _yMax = std::numeric_limits<double>::min();
 
+    unsigned int fcLocation = (unsigned int)(_fc->getData() * (_N - 1));
+
     for(int n = 0; n < _xData->getData().size(); ++n)
     {
+        if((unsigned int)n < _N)
+        {
+            _fftWindow[n] = -1;
+            _fftFc[n] = -1;
+        }
+
         _xMin = qMin(_xMin, _xData->getData()[n]);
         _xMax = qMax(_xMax, _xData->getData()[n]);
         _yMin = qMin(_yMin, _yData->getData()[n]);
@@ -136,8 +170,18 @@ void MainWindow::plotData()
 
     _yMax = pow(10, ceil(log10(_yMax)));
 
-    // give the axes some labels:
+    _fftFc[fcLocation + _N/2] = _yMax * 0.9;
+
+    for(unsigned int n = fcLocation + _N/2 - _windowSize->getData() / 2 * _N; n < fcLocation + _N/2 + _windowSize->getData() / 2 * _N; ++n)
+    {
+        if(n < _N)
+            _fftWindow[n] = _yMax * 0.9;
+    }
+
+    // Set the graph data
     ui->customPlot->graph(0)->setData(_xData->getData(), _yData->getData());
+    ui->customPlot->graph(1)->setData(_xData->getData(), _fftFc);
+    ui->customPlot->graph(2)->setData(_xData->getData(), _fftWindow);
 
     // set axes ranges, so we see all data:
     ui->customPlot->xAxis->setRange(_xMin, _xMax);

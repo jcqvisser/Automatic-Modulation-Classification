@@ -44,7 +44,7 @@ public:
      */
     void setDemod(AmcDemodulator * demodulator);
     AMC::ModType getDemodType();
-    boost::shared_ptr < SharedType < double > > getFc();
+    void setFc(boost::shared_ptr < SharedType < double > > fc);
 
 private:
     void runDemod();

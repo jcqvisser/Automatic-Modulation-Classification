@@ -3,6 +3,7 @@
 
 #include <boost/smart_ptr.hpp>
 
+#include "sharedtype.h"
 #include "sharedbuffer.h"
 
 /**
@@ -32,6 +33,9 @@ public:
      * @return Shared buffer object, created by the streamer object.
      */
     virtual boost::shared_ptr < SharedBuffer< std::complex <double > > > getBuffer() = 0;
+
+    virtual boost::shared_ptr < SharedType <double> > getFc() = 0;
+    virtual boost::shared_ptr < SharedType <double> > getWindow() = 0;
 
     /**
      * @brief Set the max buffer size, recommended to be quite large.

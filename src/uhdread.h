@@ -68,6 +68,9 @@ public:
      */
     void setMaxBuffer(size_t maxBuffSize);
 
+    boost::shared_ptr< SharedType<double> > getFc();
+    boost::shared_ptr< SharedType<double> > getWindow();
+
 private:
     /**
      * @brief The init function performs the initialization of the USRP, called by the constructor.
@@ -82,15 +85,20 @@ private:
      */
     void run();
 
+    void checkFrame();
+
     size_t _maxBuffSize;
     uhd::usrp::multi_usrp::sptr _usrp;
     uhd::rx_streamer::sptr _rxStream;
     uhd::rx_metadata_t _rxMetadata;
     size_t _frameSize;
     boost::shared_ptr< SharedBuffer<std::complex<double> > > _buffer;
+    boost::shared_ptr< SharedType<double> > _fc;
+    boost::shared_ptr< SharedType<double> > _window;
     boost::thread _uhdThread;
+    double _shadowFc;
+    double _shadowWindow;
     volatile bool _isReading;
-    boost::shared_mutex _bufferMutex;
 };
 
 #endif // UHDREAD_H

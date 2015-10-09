@@ -85,19 +85,64 @@
            <widget class="QCustomPlot" name="customPlot" native="true"/>
           </item>
           <item>
-           <widget class="QSlider" name="hSlider">
-            <property name="maximum">
-             <number>1000</number>
+           <widget class="QWidget" name="sliderHolder" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="pageStep">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="invertedAppearance">
-             <bool>false</bool>
-            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="fcLabel">
+               <property name="text">
+                <string>Center Frequency</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="fcSlider">
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="pageStep">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>300</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="windowLabel">
+               <property name="text">
+                <string>Window Size</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="windowSlider">
+               <property name="minimum">
+                <number>10</number>
+               </property>
+               <property name="maximum">
+                <number>1000</number>
+               </property>
+               <property name="pageStep">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>250</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
