@@ -17,14 +17,14 @@ void FirFilter::filterDesign(float relLowF, float relHighF)
 {
     _hCoeffs = (float*)malloc(sizeof(float) * _hLength);
 
-    if(relLowF == 0.0f && relHighF == 0.5f)
+    if(relLowF <= 0.0f && relHighF >= 0.5f)
         _numBands = 1;
-    else if(relLowF == 0.0f || relHighF == 0.5f)
+    else if(relLowF <= 0.0f || relHighF >= 0.5f)
         _numBands = 2;
     else
         _numBands = 3;
 
-    if(relHighF - relLowF < 0.01)
+    if(relHighF - relLowF < 0.005)
         _numBands = 1;
 
     _bands = (float*)malloc(sizeof(float) * _numBands);
@@ -33,13 +33,12 @@ void FirFilter::filterDesign(float relLowF, float relHighF)
     _bType = LIQUID_FIRDESPM_BANDPASS;
     _wType = (liquid_firdespm_wtype*)malloc(sizeof(liquid_firdespm_wtype) * _numBands);
 
-    if(_numBands == 2 && relLowF == 0.0f)
+    if(_numBands == 2 && relLowF <= 0.0f)
         designLowPass(relHighF);
-    else if(_numBands == 2 && relHighF == 0.5f)
+    else if(_numBands == 2 && relHighF >= 0.5f)
         designHighPass(relLowF);
     else if(_numBands == 3)
         designBandPass(relLowF, relHighF);
-    std::cout << relHighF - relLowF << " - " << _numBands << std::endl;
 }
 
 
