@@ -86,6 +86,8 @@ int main(int argc, char *argv[])
     AmcClassifier<double, AMC::ModType> * classifier = new AmcCvDecisionTree();
     AMC::FeatureExtractor _featureExtractor(_buffer, classifier, N, rate);
 
+    boost::shared_ptr < SharedType<AMC::ModType> > _modType(_featureExtractor.getSharedModType());
+
 /***************************************************************************************************
  *                                      Create Demodulator                                         *
  **************************************************************************************************/
@@ -93,6 +95,7 @@ int main(int argc, char *argv[])
     // Create demodulator object.
     AmcRecv _amcRecv(_buffer, N);
     _amcRecv.setFc(_fc);
+    _amcRecv.setModType(_modType);
 
     // Am Demodulator.
     _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
@@ -119,7 +122,7 @@ int main(int argc, char *argv[])
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
-    _mainWindow.setSharedModType(_featureExtractor.getSharedModType());
+    _mainWindow.setSharedModType(_modType);
     _mainWindow.setFc(_fc);
     _mainWindow.setWindow(_window);
 

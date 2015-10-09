@@ -3,9 +3,16 @@
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
-#include "demodulators/amcdemodulator.h"
 #include "sharedbuffer.h"
 #include "sharedtype.h"
+
+#include "demodulators/amcdemodulator.h"
+#include "demodulators/amdemod.h"
+#include "demodulators/fmdemod.h"
+#include "demodulators/digitaldemod.h"
+#include "demodulators/mpskdemod.h"
+#include "demodulators/maskdemod.h"
+#include "demodulators/mqamdemod.h"
 
 /**
  * @brief The AmcRecv class performs the actual receival of data from the USRP, it will do the demodulation of the
@@ -45,10 +52,13 @@ public:
     void setDemod(AmcDemodulator * demodulator);
     AMC::ModType getDemodType();
     void setFc(boost::shared_ptr < SharedType < double > > fc);
+    void setModType(boost::shared_ptr < SharedType < AMC::ModType > > sharedModType);
 
 private:
     void runDemod();
     bool getTempFrame(std::vector < std::complex < double > > & tempFrame);
+    void updateFunction();
+    AmcDemodulator * getDemodFunction();
 
     bool _isReceiving;
     boost::thread _recvThread;
@@ -56,6 +66,9 @@ private:
     boost::shared_ptr < SharedBuffer < std::complex < double > > > _buffer;
     size_t _N;
     boost::shared_ptr < SharedType < double > > _fc;
+    boost::shared_ptr < SharedType < AMC::ModType > > _modType;
+    double _shadowFc;
+    AMC::ModType _shadowModType;
 };
 
 #endif // AMCRECV_H
