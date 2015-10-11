@@ -81,7 +81,6 @@ void UhdMock::runStream()
         for(unsigned int n = 0; n < _frameSize; ++n)
         {
             _buffer->getBuffer().push_back(_filter->filter(_func->calc(t) * _gain));
-//            _buffer->getBuffer().push_back(_func->calc(t) * _gain);
 
             // Prohibit data buffer from getting too large.
             if(_buffer->getBuffer().size() > _maxBuffSize)

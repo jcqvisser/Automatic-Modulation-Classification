@@ -5,6 +5,7 @@ MonteCarloRun::MonteCarloRun(
         const MinMax<double> & fmModIndex,
         const MinMax<double> & freq,
         const MinMax<double> & digiFreq,
+        const MinMax<double> & snr,
         const double & fc,
         const double & rate,
         const double & gain,
@@ -20,16 +21,22 @@ MonteCarloRun::MonteCarloRun(
     _frameSize(frameSize),
     _N(N),
     _fc(_dataStream->getFc()),
+    _firWindow(_dataStream->getWindow()),
     _modIndex(rng_gen_type(std::time(0) + 100), boost::uniform_real<>(modIndex.getMin(), modIndex.getMax())),
     _fmModIndex(rng_gen_type(std::time(0) + 125), boost::uniform_real<>(fmModIndex.getMin(), fmModIndex.getMax())),
     _freq(rng_gen_type(std::time(0) + 259), boost::uniform_real<>(freq.getMin(), freq.getMax())),
     _digiFreq(rng_gen_type(std::time(0) - 9), boost::uniform_real<>(digiFreq.getMin(), digiFreq.getMax())),
+    _snr(rng_gen_type(std::time(0) - 206), boost::uniform_real<>(snr.getMin(), snr.getMax())),
     _constSize(rng_gen_type(std::time(0) + 169), boost::uniform_int<>(2, 8)),
     _timer(),
     _thread(),
     _isRunning(false)
 {
     _fc->getData() = fc;
+    double maxWin = std::max(freq.getMax() / rate, digiFreq.getMax());
+    maxWin = std::max(maxWin, fmModIndex.getMax());
+    _firWindow->getData() = maxWin * 2;
+    std::cout << "Max max max: " << maxWin << std::endl;
 }
 
 void MonteCarloRun::start()
@@ -63,6 +70,16 @@ boost::shared_ptr< SharedBuffer < std::complex < double > > > MonteCarloRun::get
 boost::shared_ptr<SharedType<AMC::ModType> > MonteCarloRun::getModType()
 {
     return _modType;
+}
+
+boost::shared_ptr< SharedType<double> > MonteCarloRun::getFc()
+{
+    return _fc;
+}
+
+boost::shared_ptr< SharedType<double> > MonteCarloRun::getWindow()
+{
+    return _firWindow;
 }
 
 void MonteCarloRun::run()
@@ -112,47 +129,66 @@ StreamFunction * MonteCarloRun::genStreamFunc()
     AMC::ModType tempModType = _modType->getData();
     modTypeLock.unlock();
 
+    StreamFunction * baseFunc;
+
+    boost::unique_lock<boost::shared_mutex> winLock(*_firWindow->getMutex());
+
     switch(tempModType)
     {
     case (AMC::ModType::AM_DSB_FC):
-        return new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::DOUBLE, 0);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::DOUBLE, 0);
+        break;
 
     case (AMC::ModType::AM_DSB_SC):
-        return new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::DOUBLE, 1);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::DOUBLE, 1);
+        break;
 
     case (AMC::ModType::AM_LSB_FC):
-        return new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::LOWER, 0);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::LOWER, 0);
+        break;
 
     case (AMC::ModType::AM_LSB_SC):
-        return new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::LOWER, 1);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::LOWER, 1);
+        break;
 
     case (AMC::ModType::AM_USB_FC):
-        return new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::UPPER, 0);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::UPPER, 0);
+        break;
 
     case (AMC::ModType::AM_USB_SC):
-        return new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::UPPER, 1);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::UPPER, 1);
+        break;
 
     case (AMC::ModType::FM):
-        return new FmFunction(new cosFunction(_freq()), _fmModIndex(), _fc->getData());
+        baseFunc = new FmFunction(new cosFunction(_freq()), _fmModIndex(), _fc->getData());
+        break;
 
     case (AMC::ModType::ASK_2):
-        return new DigitalFunction(new MAskFunction(2), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MAskFunction(2), _digiFreq(), _fc->getData());
+        break;
 
     case (AMC::ModType::MASK):
-        return new DigitalFunction(new MAskFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MAskFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        break;
 
     case (AMC::ModType::PSK_2):
-        return new DigitalFunction(new MPskFunction(2), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MPskFunction(2), _digiFreq(), _fc->getData());
+        break;
 
     case (AMC::ModType::MPSK):
-        return new DigitalFunction(new MPskFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MPskFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        break;
 
     case (AMC::ModType::MQAM):
-        return new DigitalFunction(new MQamFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MQamFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        break;
 
     default:
-        return new StreamFunction();
+        baseFunc = new StreamFunction();
+        break;
     }
+    winLock.unlock();
+    return new AwgnFunction(baseFunc, _snr(), _rate, 10e3);
 }
 
 void MonteCarloRun::clearBuffer()
@@ -187,42 +223,55 @@ void MonteCarloRun::getNextMod()
     {
     case (AMC::ModType::AM_DSB_FC):
         _modType->getData() = AMC::ModType::AM_DSB_SC;
+        break;
 
     case (AMC::ModType::AM_DSB_SC):
         _modType->getData() = AMC::ModType::AM_LSB_FC;
+        break;
 
     case (AMC::ModType::AM_LSB_FC):
         _modType->getData() = AMC::ModType::AM_LSB_SC;
+        break;
 
     case (AMC::ModType::AM_LSB_SC):
         _modType->getData() = AMC::ModType::AM_USB_FC;
+        break;
 
     case (AMC::ModType::AM_USB_FC):
         _modType->getData() = AMC::ModType::AM_USB_SC;
+        break;
 
     case (AMC::ModType::AM_USB_SC):
         _modType->getData() = AMC::ModType::FM;
+        break;
 
     case (AMC::ModType::FM):
         _modType->getData() = AMC::ModType::ASK_2;
+        break;
 
     case (AMC::ModType::ASK_2):
         _modType->getData() = AMC::ModType::MASK;
+        break;
 
     case (AMC::ModType::MASK):
         _modType->getData() = AMC::ModType::PSK_2;
+        break;
 
     case (AMC::ModType::PSK_2):
         _modType->getData() = AMC::ModType::MPSK;
+        break;
 
     case (AMC::ModType::MPSK):
         _modType->getData() = AMC::ModType::MQAM;
+        break;
 
     case (AMC::ModType::MQAM):
         _modType->getData() = AMC::ModType::MODTYPE_NR_ITEMS;
+        break;
 
     default:
         _modType->getData() = AMC::ModType::MODTYPE_NR_ITEMS;
+        break;
     }
 
     modTypeLock.unlock();

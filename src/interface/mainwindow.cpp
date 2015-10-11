@@ -50,12 +50,20 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setFc(boost::shared_ptr < SharedType < double > > fc)
-{
+{    
+    boost::shared_lock<boost::shared_mutex> fcLock(*_windowSize->getMutex());
+    ui->fcSlider->setValue(fc->getData() * ui->fcSlider->maximum() * 2);
+    fcLock.unlock();
+
     _fc.swap(fc);
 }
 
 void MainWindow::setWindow(boost::shared_ptr < SharedType < double > > windowSize)
 {
+    boost::shared_lock<boost::shared_mutex> winLock(*_windowSize->getMutex());
+    ui->windowSlider->setValue(windowSize->getData() * ui->windowSlider->maximum() * 4);
+    winLock.unlock();
+
     _windowSize.swap(windowSize);
 }
 
@@ -152,7 +160,9 @@ void MainWindow::plotData()
     _xMax = std::numeric_limits<double>::min();
     _yMax = std::numeric_limits<double>::min();
 
+    boost::shared_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
     unsigned int fcLocation = (unsigned int)(_fc->getData() * (_N - 1));
+    fcLock.unlock();
 
     for(int n = 0; n < _xData->getData().size(); ++n)
     {

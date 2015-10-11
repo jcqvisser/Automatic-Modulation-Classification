@@ -23,6 +23,9 @@ int main(int argc, char *argv[])
     // Digital Modulation Settings
     MinMax<double> digiFreq(1e3 / rate, 20e3 / rate);
 
+    // Noise settings
+    MinMax<double> snr(0, 30);
+
     // Frame size and FFT size and other.
     size_t N = 2048;
     size_t frameSize = 384;
@@ -32,6 +35,7 @@ int main(int argc, char *argv[])
                        fmModIndex,
                        freq,
                        digiFreq,
+                       snr,
                        fc,
                        rate,
                        gain,
@@ -39,8 +43,11 @@ int main(int argc, char *argv[])
                        frameSize,
                        N);
 
-    boost::shared_ptr< SharedBuffer < std::complex<double> > > _buffer = _sim.getBuffer();
-    boost::shared_ptr< SharedType < AMC::ModType > > _modType = _sim.getModType();
+    boost::shared_ptr< SharedBuffer < std::complex<double> > > _buffer(_sim.getBuffer());
+    boost::shared_ptr< SharedType < AMC::ModType > > _modType (_sim.getModType());
+    boost::shared_ptr< SharedType < double > > _shared_fc(_sim.getFc());
+    boost::shared_ptr< SharedType < double > > _shared_window(_sim.getWindow());
+
     FFTGenerator _fftGen(_buffer, rate, N);
 
     QApplication _app(argc, argv);
@@ -50,6 +57,8 @@ int main(int argc, char *argv[])
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
     _mainWindow.setSharedModType(_modType);
+    _mainWindow.setFc(_shared_fc);
+    _mainWindow.setWindow(_shared_window);
 
     _sim.start();
     _fftGen.startFft();

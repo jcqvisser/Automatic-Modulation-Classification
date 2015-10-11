@@ -6,6 +6,7 @@
 #include <boost/random.hpp>
 #include <boost/generator_iterator.hpp>
 #include <iostream>
+#include <cstdlib>
 #include <ctime>
 #include <cmath>
 #include <boost/timer/timer.hpp>
@@ -17,7 +18,9 @@
 #include "datasink.h"
 #include "featureextractor.h"
 #include "minmax.h"
+
 #include "classifier/amccvdecisiontree.h"
+#include "classifier/amcclassifier.h"
 
 #include "modulators/streamfunction.h"
 #include "modulators/realstreamfunction.h"
@@ -29,6 +32,7 @@
 #include "modulators/mpskfunction.h"
 #include "modulators/mqamfunction.h"
 #include "modulators/maskfunction.h"
+#include "modulators/awgnfunction.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -48,6 +52,7 @@ public:
             const MinMax<double> & fmModIndex,
             const MinMax<double> & freq,
             const MinMax<double> & digiFreq,
+            const MinMax<double> & snr,
             const double & fc,
             const double & rate,
             const double & gain = 1,        // Gain of 1.
@@ -59,6 +64,8 @@ public:
     void stop();
     boost::shared_ptr< SharedBuffer < std::complex < double > > > getBuffer();
     boost::shared_ptr< SharedType < AMC::ModType > > getModType();
+    boost::shared_ptr< SharedType<double> > getFc();
+    boost::shared_ptr< SharedType<double> > getWindow();
 
 private:
     void run();
@@ -77,11 +84,13 @@ private:
     size_t _frameSize;
     size_t _N;
     boost::shared_ptr< SharedType<double> > _fc;
+    boost::shared_ptr< SharedType<double> > _firWindow;
 
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _modIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _fmModIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _freq;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _digiFreq;
+    boost::variate_generator<rng_gen_type, boost::uniform_real< > > _snr;
     boost::variate_generator<rng_gen_type, boost::uniform_int< > > _constSize;
 
     boost::timer::cpu_timer _timer;

@@ -57,7 +57,8 @@ SOURCES += main.cpp \
     ../../../src/modulators/cosrelativefunction.cpp \
     ../../../src/interface/mainwindow.cpp \
     ../../../src/interface/qcustomplot.cpp \
-    ../../../src/firfilter.cpp
+    ../../../src/firfilter.cpp \
+    ../../../src/modulators/awgnfunction.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -97,7 +98,8 @@ HEADERS += \
     ../../../src/interface/mainwindow.h \
     ../../../src/interface/qcustomplot.h \
     ../../../src/sharedtype.h \
-    ../../../src/firfilter.h
+    ../../../src/firfilter.h \
+    ../../../src/modulators/awgnfunction.h
 
 FORMS += \
     ../../../src/interface/mainwindow.ui
