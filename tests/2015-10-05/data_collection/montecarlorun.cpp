@@ -32,11 +32,16 @@ MonteCarloRun::MonteCarloRun(
     _thread(),
     _isRunning(false)
 {
+    boost::unique_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
     _fc->getData() = fc;
+    fcLock.unlock();
+
     double maxWin = std::max(freq.getMax() / rate, digiFreq.getMax());
     maxWin = std::max(maxWin, fmModIndex.getMax());
+
+    boost::unique_lock<boost::shared_mutex> firLock(*_firWindow->getMutex());
     _firWindow->getData() = maxWin * 2;
-    std::cout << "Max max max: " << maxWin << std::endl;
+    firLock.unlock();
 }
 
 void MonteCarloRun::start()
