@@ -8,6 +8,8 @@ UhdRead::UhdRead(double rate, double freq, double gain, size_t frameSize, std::s
     _rxMetadata(),
     _frameSize(frameSize),
     _buffer(new SharedBuffer<std::complex<double> >() ),
+    _fc(new SharedType<double>),
+    _window(new SharedType<double>),
     _uhdThread(),
     _isReading(false)
 {
@@ -124,9 +126,37 @@ void UhdRead::run()
     std::cout << std::endl << "UHD Reader thread closing... " << std::endl;
 }
 
+void UhdRead::checkFrame()
+{
+    // Get center frequency
+    boost::shared_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
+    double newFc = _fc->getData();
+    fcLock.unlock();
+
+    // Get window.
+    boost::shared_lock<boost::shared_mutex> winLock(*_fc->getMutex());
+    double newWindow = _window->getData();
+    winLock.unlock();
+
+    if(newFc != _shadowFc || newWindow != _shadowWindow)
+    {
+        //TODO: Redesign filter.
+    }
+    _shadowFc = newFc;
+    _shadowWindow = newWindow;
+}
+
 boost::shared_ptr< SharedBuffer<std::complex<double> > > UhdRead::getBuffer()
 {
     return _buffer;
 }
 
+boost::shared_ptr< SharedType<double> > UhdRead::getFc()
+{
+    return _fc;
+}
 
+boost::shared_ptr< SharedType<double> > UhdRead::getWindow()
+{
+    return _window;
+}
