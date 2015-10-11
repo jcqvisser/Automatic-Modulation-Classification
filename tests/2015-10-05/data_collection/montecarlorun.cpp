@@ -47,11 +47,14 @@ MonteCarloRun::MonteCarloRun(
 void MonteCarloRun::start()
 {
     _dataStream->changeFunc(genStreamFunc());
-    boost::shared_lock<boost::shared_mutex> modTypeLock(*_modType->getMutex());
-    std::cout << "Setting modulation scheme to: " << AMC::toString(_modType->getData()) << std::endl;
 
+    // Lock the mod type mutex.
+    boost::shared_lock<boost::shared_mutex> modTypeLock(*_modType->getMutex());
+
+    std::cout << "Setting modulation scheme to: " << AMC::toString(_modType->getData()) << std::endl;
     _dataStream->startStream();
     _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, _modType->getData());
+
     modTypeLock.unlock();
 
     _isRunning = true;
@@ -104,15 +107,20 @@ void MonteCarloRun::run()
         if(_timePerScheme < _timer.elapsed().wall - _timeSinceLast)
         {
             getNextMod();
-            if(_modType->getData() != AMC::ModType::MODTYPE_NR_ITEMS)
+
+            boost::shared_lock<boost::shared_mutex> modLock(*_modType->getMutex());
+            AMC::ModType tempModType = _modType->getData();
+            modLock.unlock();
+
+            if(tempModType != AMC::ModType::MODTYPE_NR_ITEMS)
             {
-                std::cout << "Setting modulation scheme to: " << AMC::toString(_modType->getData()) << std::endl;
+                std::cout << "Setting modulation scheme to: " << AMC::toString(tempModType) << std::endl;
                 _featureExtractor->stop();
 
                 _dataStream->changeFunc(genStreamFunc());
                 clearBuffer();
 
-                _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, _modType->getData());
+                _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, tempModType);
 
                 _timeSinceLast = _timer.elapsed().wall;
             }
@@ -134,65 +142,66 @@ StreamFunction * MonteCarloRun::genStreamFunc()
     AMC::ModType tempModType = _modType->getData();
     modTypeLock.unlock();
 
-    StreamFunction * baseFunc;
+    boost::shared_lock<boost::shared_mutex> fcLock(*_modType->getMutex());
+    double fc = _fc->getData();
+    fcLock.unlock();
 
-    boost::unique_lock<boost::shared_mutex> winLock(*_firWindow->getMutex());
+    StreamFunction * baseFunc;
 
     switch(tempModType)
     {
     case (AMC::ModType::AM_DSB_FC):
-        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::DOUBLE, 0);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), fc, AmDemod::SideBand::DOUBLE, 0);
         break;
 
     case (AMC::ModType::AM_DSB_SC):
-        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::DOUBLE, 1);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), fc, AmDemod::SideBand::DOUBLE, 1);
         break;
 
     case (AMC::ModType::AM_LSB_FC):
-        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::LOWER, 0);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), fc, AmDemod::SideBand::LOWER, 0);
         break;
 
     case (AMC::ModType::AM_LSB_SC):
-        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::LOWER, 1);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), fc, AmDemod::SideBand::LOWER, 1);
         break;
 
     case (AMC::ModType::AM_USB_FC):
-        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::UPPER, 0);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), fc, AmDemod::SideBand::UPPER, 0);
         break;
 
     case (AMC::ModType::AM_USB_SC):
-        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), _fc->getData(), AmDemod::SideBand::UPPER, 1);
+        baseFunc = new AmFunction(new cosFunction(_freq()), _modIndex(), fc, AmDemod::SideBand::UPPER, 1);
         break;
 
     case (AMC::ModType::FM):
-        baseFunc = new FmFunction(new cosFunction(_freq()), _fmModIndex(), _fc->getData());
+        baseFunc = new FmFunction(new cosFunction(_freq()), _fmModIndex(), fc);
         break;
 
     case (AMC::ModType::ASK_2):
-        baseFunc = new DigitalFunction(new MAskFunction(2), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MAskFunction(2), _digiFreq(), fc);
         break;
 
     case (AMC::ModType::MASK):
-        baseFunc = new DigitalFunction(new MAskFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MAskFunction(std::pow(2, _constSize())), _digiFreq(), fc);
         break;
 
     case (AMC::ModType::PSK_2):
-        baseFunc = new DigitalFunction(new MPskFunction(2), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MPskFunction(2), _digiFreq(), fc);
         break;
 
     case (AMC::ModType::MPSK):
-        baseFunc = new DigitalFunction(new MPskFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MPskFunction(std::pow(2, _constSize())), _digiFreq(), fc);
         break;
 
     case (AMC::ModType::MQAM):
-        baseFunc = new DigitalFunction(new MQamFunction(std::pow(2, _constSize())), _digiFreq(), _fc->getData());
+        baseFunc = new DigitalFunction(new MQamFunction(std::pow(2, _constSize())), _digiFreq(), fc);
         break;
 
     default:
         baseFunc = new StreamFunction();
         break;
     }
-    winLock.unlock();
     return new AwgnFunction(baseFunc, _snr(), _rate, 10e3);
 }
 
