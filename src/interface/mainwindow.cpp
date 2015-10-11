@@ -8,7 +8,7 @@ MainWindow::MainWindow(double rate, unsigned int N, QWidget *parent) :
     _xData(new SharedQVector<double>()),
     _yData(new SharedQVector<double>()),
     _buffer(new SharedBuffer<std::complex <double> > ()),
-    _sharedModType(new SharedType<AMC::ModType>()),
+    _sharedModType(new SharedType<AMC::ModType>(AMC::MODTYPE_NR_ITEMS)),
     _fftFc(_N),
     _fftWindow(_N),
     _xMin(std::numeric_limits<double>::max()),

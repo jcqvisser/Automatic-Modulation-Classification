@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     // Shared settings.
     double rate = 1e6;
     MinMax<double> freq(20, 16e3);
-    MinMax<double> fc(100e3 / rate, 200e3 / rate);
+    double fc = 150e3 / rate;
     double gain = 1;
 
     // AM Modulation settings
@@ -40,14 +40,16 @@ int main(int argc, char *argv[])
                        N);
 
     boost::shared_ptr< SharedBuffer < std::complex<double> > > _buffer = _sim.getBuffer();
+    boost::shared_ptr< SharedType < AMC::ModType > > _modType = _sim.getModType();
     FFTGenerator _fftGen(_buffer, rate, N);
 
     QApplication _app(argc, argv);
-    MainWindow _mainWindow;
+    MainWindow _mainWindow(rate, N);
     _mainWindow.show();
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
+    _mainWindow.setSharedModType(_modType);
 
     _sim.start();
     _fftGen.startFft();

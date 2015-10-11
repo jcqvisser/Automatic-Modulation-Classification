@@ -56,7 +56,8 @@ SOURCES += main.cpp \
     ../../../src/modulators/mqamfunction.cpp \
     ../../../src/demodulators/maskdemod.cpp \
     ../../../src/demodulators/mqamdemod.cpp \
-    ../../../src/firfilter.cpp
+    ../../../src/firfilter.cpp \
+    ../../../src/modulators/awgnfunction.cpp
 
 HEADERS  += \
     ../../../src/interface/qcustomplot.h \
@@ -94,6 +95,7 @@ HEADERS  += \
     ../../../src/modulators/mqamfunction.h \
     ../../../src/demodulators/maskdemod.h \
     ../../../src/demodulators/mqamdemod.h \
-    ../../../src/firfilter.h
+    ../../../src/firfilter.h \
+    ../../../src/modulators/awgnfunction.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

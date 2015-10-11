@@ -13,9 +13,11 @@
 #include "uhdmock.h"
 #include "streamer.h"
 #include "sharedvector.h"
+#include "sharedtype.h"
 #include "datasink.h"
 #include "featureextractor.h"
 #include "minmax.h"
+#include "classifier/amccvdecisiontree.h"
 
 #include "modulators/streamfunction.h"
 #include "modulators/realstreamfunction.h"
@@ -46,7 +48,7 @@ public:
             const MinMax<double> & fmModIndex,
             const MinMax<double> & freq,
             const MinMax<double> & digiFreq,
-            const MinMax<double> & fc,
+            const double & fc,
             const double & rate,
             const double & gain = 1,        // Gain of 1.
             const double & timePerSchemeSec = 600,  // 10 Min per scheme
@@ -56,33 +58,32 @@ public:
     void start();
     void stop();
     boost::shared_ptr< SharedBuffer < std::complex < double > > > getBuffer();
+    boost::shared_ptr< SharedType < AMC::ModType > > getModType();
 
 private:
     void run();
     StreamFunction * genStreamFunc();
     void clearBuffer();
     bool checkBuffer(const size_t & NSize);
-    AMC::ModType getNextMod();
+    void getNextMod();
 
-    AMC::ModType _modType;
+    boost::shared_ptr< SharedType< AMC::ModType> > _modType;
     boost::scoped_ptr < UhdMock > _dataStream;
     boost::shared_ptr < SharedBuffer < std::complex < double > > > _buffer;
     boost::scoped_ptr < AMC::FeatureExtractor > _featureExtractor;
 
     double _rate;
     double _timePerScheme;
-//    boost::chrono::nanoseconds _timePerScheme;
     size_t _frameSize;
     size_t _N;
+    boost::shared_ptr< SharedType<double> > _fc;
 
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _modIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _fmModIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _freq;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _digiFreq;
-    boost::variate_generator<rng_gen_type, boost::uniform_real< > > _fc;
     boost::variate_generator<rng_gen_type, boost::uniform_int< > > _constSize;
 
-//    boost::timer _timer;
     boost::timer::cpu_timer _timer;
     boost::thread _thread;
     bool _isRunning;

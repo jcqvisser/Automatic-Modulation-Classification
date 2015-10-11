@@ -16,6 +16,9 @@ INCLUDEPATH += ../../../src/
 
 TEMPLATE = app
 
+CONFIG += link_pkgconfig
+PKGCONFIG += opencv
+
 LIBS += -luhd\
         -lboost_system\
         -lboost_thread\
@@ -53,7 +56,8 @@ SOURCES += main.cpp \
     montecarlorun.cpp \
     ../../../src/modulators/cosrelativefunction.cpp \
     ../../../src/interface/mainwindow.cpp \
-    ../../../src/interface/qcustomplot.cpp
+    ../../../src/interface/qcustomplot.cpp \
+    ../../../src/firfilter.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -91,7 +95,9 @@ HEADERS += \
     minmax.h \
     ../../../src/modulators/cosrelativefunction.h \
     ../../../src/interface/mainwindow.h \
-    ../../../src/interface/qcustomplot.h
+    ../../../src/interface/qcustomplot.h \
+    ../../../src/sharedtype.h \
+    ../../../src/firfilter.h
 
 FORMS += \
     ../../../src/interface/mainwindow.ui

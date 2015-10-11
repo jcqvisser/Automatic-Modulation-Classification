@@ -25,9 +25,9 @@ public:
 	 * @param The signal-to-noise ratio in dB's. SNR = 10*log10(P_s/P_n)
 	 */
     AwgnFunction(StreamFunction* func,
-            double snr,
-            double sampleRate,
-            size_t k);
+                 double snr,
+                 double sampleRate = 1e9,
+                 size_t k = 1e9);
 	/**
 	 * @brief Add AWGN to the input signal based on the supplied snr
 	 * @param Variable passed to the function to be polluted with AWGN, most

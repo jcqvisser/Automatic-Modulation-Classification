@@ -56,6 +56,8 @@ AMC::ModType AmDemod::modType()
         else
             return AMC::ModType::AM_DSB_SC;
         break;
+    default:
+        return AMC::ModType::MODTYPE_NR_ITEMS;
     }
 }
 

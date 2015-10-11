@@ -1,10 +1,11 @@
 #include "amcrecv.h"
 
-AmcRecv::AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > buffer, size_t N) :
+AmcRecv::AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > buffer, double rate, size_t N) :
     _isReceiving(false),
     _recvThread(),
     _demodulator(new AmcDemodulator()),
     _buffer(buffer),
+    _rate(rate),
     _N(N),
     _fc(new SharedType<double>),
     _modType(new SharedType<AMC::ModType>),

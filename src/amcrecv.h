@@ -3,6 +3,7 @@
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
+#include <portaudio.h>
 #include "sharedbuffer.h"
 #include "sharedtype.h"
 
@@ -33,7 +34,7 @@ public:
      * read from.
      * @param N The size of the N-Point fft and thus size of the number of points to read from the buffer.
      */
-    explicit AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > buffer, size_t N = 2048);
+    explicit AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > buffer, double rate, size_t N = 2048);
 
     /**
      * @brief This function will launch the thread that the AmcRecv class will run on. Starts the demod process.
@@ -64,6 +65,7 @@ private:
     boost::thread _recvThread;
     boost::scoped_ptr < AmcDemodulator > _demodulator;
     boost::shared_ptr < SharedBuffer < std::complex < double > > > _buffer;
+    double _rate;
     size_t _N;
     boost::shared_ptr < SharedType < double > > _fc;
     boost::shared_ptr < SharedType < AMC::ModType > > _modType;

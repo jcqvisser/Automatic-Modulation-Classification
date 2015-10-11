@@ -2,8 +2,8 @@
 
 AwgnFunction::AwgnFunction(StreamFunction* func,
         double snr,
-        double sampleRate = 1e9,
-        size_t k = 1e9) :
+        double sampleRate,
+        size_t k) :
     _func(func)
 {
     double meanPowerR = 0;
