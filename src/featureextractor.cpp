@@ -1,12 +1,20 @@
 #include "featureextractor.h"
 
-AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-                                        AmcClassifier<double, AMC::ModType> * classifier,
-                                        size_t windowSize, double fs) :
-    _buffer(buffer),  _x(windowSize), _windowSize(windowSize), _fs(fs), _fileWriter(),
-    _classifier(classifier), _sharedModType(new SharedType<AMC::ModType>())
-{
-}
+AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBufer<std::complex<double> > > buffer,
+                                        AmcClassifier<double, 
+										AMC::ModType> * classifier,
+                                        size_t windowSize, 
+										double fs,
+										double fcRelative) :
+    _buffer(buffer),  
+	_x(windowSize), 
+	_windowSize(windowSize), 
+	_fs(fs), 
+	_fileWriter(),
+    _classifier(classifier), 
+	_sharedModType(new SharedType<AMC::ModType>()),
+	_fnc((size_t) (fcRelative * windowSize))
+{}
 
 boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedModType()
 {
@@ -168,7 +176,9 @@ void AMC::FeatureExtractor::findGammaMaxP()
 {
     boost::shared_lock<boost::shared_mutex> xFftLock(*_xFft.getMutex());
 
-    _gammaMax = AMC::maxPower(_xFft.getData(),_fnc);
+	size_t unused;
+    _gammaMax = AMC::maxPower(_xFft.getData(), unused);
+
     _P = AMC::symmetry(_xFft.getData(), _fnc);
     xFftLock.unlock();
 }

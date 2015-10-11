@@ -21,6 +21,7 @@
 #include "modulators/digitalfunction.h"
 #include "modulators/mpskfunction.h"
 #include "modulators/awgnfunction.h"
+#include "modulators/efunction.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -57,7 +58,8 @@ int main(int argc, char *argv[])
 
     // AM Stream function.
     StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
-    StreamFunction * _noisyStreamFunction = new AwgnFunction(_streamFunction, 0, rate, 1e-3);
+    //StreamFunction * _streamFunction = new eFunction(freq);
+    StreamFunction * _noisyStreamFunction = new AwgnFunction(_streamFunction, 0, 1e6, 1e6);
     // FM Stream Function
     //StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), mod_index, rel_fc);
 
@@ -110,12 +112,12 @@ int main(int argc, char *argv[])
 
     // Initialize interface.
     QApplication _app(argc, argv);
-    MainWindow _mainWindow;
+    MainWindow _mainWindow(rate);
     _mainWindow.show();
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
     _mainWindow.setBuffer(_buffer);
-    _mainWindow.setModTypeString(_featureExtractor.getModTypeString());
+    _mainWindow.setSharedModType(_featureExtractor.getSharedModType());
 
 /***************************************************************************************************
  *                                          Start threads.                                         *

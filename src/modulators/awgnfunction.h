@@ -27,7 +27,7 @@ public:
     AwgnFunction(StreamFunction* func,
             double snr,
             double sampleRate,
-            double duration);
+            size_t k);
 	/**
 	 * @brief Add AWGN to the input signal based on the supplied snr
 	 * @param Variable passed to the function to be polluted with AWGN, most

@@ -15,7 +15,10 @@ namespace AMC
     public:
        explicit FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
                                  AmcClassifier<double, AMC::ModType> * classifier,
-                                 size_t windowSize, double fs);
+                                 size_t windowSize, 
+								 double fs,
+								 double fcRelative
+								 );
 
         enum ExtractionMode
         {

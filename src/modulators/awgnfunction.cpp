@@ -1,24 +1,23 @@
 #include "awgnfunction.h"
 
 AwgnFunction::AwgnFunction(StreamFunction* func,
-		double snr,
-	   	double sampleRate = 1e6,
-		double duration = 1e-3) :
+        double snr,
+        double sampleRate = 1e9,
+        size_t k = 1e9) :
     _func(func)
 {
     double meanPowerR = 0;
     double meanPowerI = 0;
-    double iterations = duration*sampleRate;
-    for (size_t n = 0; n < iterations; ++n)
+    for (size_t n = 0; n < k; ++n)
     {
-        std::complex<double> val = _func->calc(n*sampleRate);
+        std::complex<double> val = _func->calc(n/sampleRate);
         double absValR = std::real(val);
         double absValI = std::imag(val);
-        meanPowerR = std::pow(absValR,2);
-        meanPowerI = std::pow(absValI,2);
+        meanPowerR += std::pow(absValR,2);
+        meanPowerI += std::pow(absValI,2);
     }
-    meanPowerR = meanPowerR/(duration*sampleRate);
-    meanPowerR = meanPowerI/(duration*sampleRate);
+    meanPowerR = meanPowerR/(k);
+    meanPowerI = meanPowerI/(k);
 
 	double mean = 0;
     double stdDevR = std::sqrt(meanPowerR/(std::pow(10,snr/20)));
@@ -31,6 +30,7 @@ AwgnFunction::AwgnFunction(StreamFunction* func,
                 new boost::variate_generator<boost::mt19937, boost::normal_distribution<> >(
                 *_generator.get(),
                 *_distributionReal.get()));
+
     _distributionImag = boost::shared_ptr<boost::normal_distribution<> >(new boost::normal_distribution<>(mean, stdDevI));
     _randImag = boost::shared_ptr< boost::variate_generator<boost::mt19937, boost::normal_distribution<> > >(
                 new boost::variate_generator<boost::mt19937, boost::normal_distribution<> >(
