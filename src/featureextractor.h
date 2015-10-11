@@ -5,20 +5,22 @@
 #include "sharedbuffer.h"
 #include "sharedvector.h"
 #include "sharedtype.h"
+#include "sharedbuffer.h"
 #include "classifier/amcclassifier.h"
 #include "filewriter.h"
+#include <complex>
 
 namespace AMC
 {
     class FeatureExtractor
     {
     public:
-       explicit FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-                                 AmcClassifier<double, AMC::ModType> * classifier,
-                                 size_t windowSize, 
-								 double fs,
-								 double fcRelative
-								 );
+       explicit FeatureExtractor(
+                boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
+                AmcClassifier<double, AMC::ModType> * classifier,
+                double fs,
+                boost::shared_ptr<SharedType<double> > fcRelative,
+                size_t windowSize);
 
         enum ExtractionMode
         {
@@ -70,6 +72,7 @@ namespace AMC
         FileWriter _fileWriter;
         boost::scoped_ptr< AmcClassifier<double, AMC::ModType> > _classifier;
         boost::shared_ptr< SharedType<AMC::ModType> > _sharedModType;
+        boost::shared_ptr<SharedType<double> > _sharedFcRelative;
     };
 }
 #endif // FEATUREEXTRACTOR_H

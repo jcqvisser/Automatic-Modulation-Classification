@@ -87,6 +87,7 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/classifier/znleafnode.h \
     ../../../src/classifier/znnode.h \
     ../../../src/classifier/znunaryleafnode.h \
-    ../../../src/modulators/awgnfunction.h
+    ../../../src/modulators/awgnfunction.h \
+    ../../../src/sharedtype.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

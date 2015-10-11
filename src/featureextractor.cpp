@@ -1,19 +1,19 @@
 #include "featureextractor.h"
 
-AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBufer<std::complex<double> > > buffer,
-                                        AmcClassifier<double, 
-										AMC::ModType> * classifier,
-                                        size_t windowSize, 
-										double fs,
-										double fcRelative) :
+AMC::FeatureExtractor::FeatureExtractor(
+        boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
+        AmcClassifier<double, AMC::ModType> * classifier,
+        double fs,
+        boost::shared_ptr<SharedType<double> > fcRelative,
+        size_t windowSize) :
     _buffer(buffer),  
 	_x(windowSize), 
 	_windowSize(windowSize), 
 	_fs(fs), 
 	_fileWriter(),
     _classifier(classifier), 
-	_sharedModType(new SharedType<AMC::ModType>()),
-	_fnc((size_t) (fcRelative * windowSize))
+    _sharedModType(new SharedType<AMC::ModType>()),
+    _sharedFcRelative(fcRelative)
 {}
 
 boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedModType()
@@ -25,6 +25,7 @@ void AMC::FeatureExtractor::start(ExtractionMode mode)
 {
     _isExtracting = true;
     _mode = mode;
+
     if(mode == AMC::FeatureExtractor::CLASSIFY)
     {
         _classifier->load("cvTreeStructure");
@@ -34,7 +35,6 @@ void AMC::FeatureExtractor::start(ExtractionMode mode)
 
 void AMC::FeatureExtractor::start(ExtractionMode mode, AMC::ModType modType)
 {
-
     if (mode == WRITE_TO_FILE)
     {
         _mode = mode;
@@ -59,6 +59,10 @@ void AMC::FeatureExtractor::run()
     {
         if(get_x())
         {
+            boost::shared_lock<boost::shared_mutex> fcLock(*_sharedFcRelative->getMutex());
+            _fnc = _sharedFcRelative->getData() * _windowSize;
+            fcLock.unlock();
+
             _featureThread0 = boost::thread(&AMC::FeatureExtractor::findSigmaAMu42A, this);
             AMC::FeatureExtractor::findMu42FSigmaAF();
 

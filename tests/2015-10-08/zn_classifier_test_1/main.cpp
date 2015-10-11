@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
     // Initialize interface.
     QApplication _app(argc, argv);
-    MainWindow _mainWindow(rate);
+    MainWindow _mainWindow(rate, N);
     _mainWindow.show();
 
     _mainWindow.setData(_fftGen.getFreqVec(), _fftGen.getFftVec());
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     _dataStream->startStream();
 //    _amcRecv.startDemod();
     _fftGen.startFft();
-    _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY);
+    _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY, 0.3);
 
     return _app.exec();
 }
