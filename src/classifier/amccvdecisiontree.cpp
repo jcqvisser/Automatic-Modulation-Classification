@@ -1,24 +1,24 @@
 #include "amccvdecisiontree.h"
 
-AmcCvDecisionTree::AmcCvDecisionTree(int max_categories,
-                                     int max_depth,
+AmcCvDecisionTree::AmcCvDecisionTree(int max_depth,
                                      int min_sample_count,
-                                     int cv_folds,
+                                     float regression_accuracy,
                                      bool use_surrogates,
+                                     int max_categories,
+                                     int cv_folds,
                                      bool use_1se_rule,
                                      bool truncate_pruned_tree,
-                                     float regression_accuracy,
-                                     const float *priors) :
-    _treeParams(new CvDTreeParams( max_categories,
-                                   max_depth,
-                                   min_sample_count,
-                                   cv_folds,
-                                   use_surrogates,
-                                   use_1se_rule,
-                                   truncate_pruned_tree,
-                                   regression_accuracy,
-                                   priors) ),
-    _tree(new CvDTree())
+                                     const float* priors ) :
+    _tree(new CvDTree()),
+    _maxDepth(max_depth),
+    _minSampleCount(min_sample_count),
+    _regressionAccuracy(regression_accuracy),
+    _useSurrogates(use_surrogates),
+    _maxCategories(max_categories),
+    _cvFolds(cv_folds),
+    _use1SERule(use_1se_rule),
+    _truncatePrunedTree(truncate_pruned_tree),
+    _priors(priors)
 {
 
 }
@@ -54,8 +54,21 @@ bool AmcCvDecisionTree::train(const std::vector<std::vector<double> > &trainData
     cv::Mat sampleIdx;
 
    return _tree->train(dataMat,
-                 CV_ROW_SAMPLE,
-                 responseMat);
+                       CV_ROW_SAMPLE,
+                       responseMat,
+                       cv::Mat(),
+                       cv::Mat(),
+                       cv::Mat(),
+                       cv::Mat(),
+                       CvDTreeParams(_maxDepth,
+                                     _minSampleCount,
+                                     _regressionAccuracy,
+                                     _useSurrogates,
+                                     _maxCategories,
+                                     _cvFolds,
+                                     _use1SERule,
+                                     _truncatePrunedTree,
+                                     _priors));
 }
 
 void AmcCvDecisionTree::save(const std::string & fileName)

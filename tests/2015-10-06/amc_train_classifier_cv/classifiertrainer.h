@@ -4,6 +4,8 @@
 #include <fstream>
 #include <boost/smart_ptr.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/random.hpp>
+#include <ctime>
 
 #include "amc.h"
 #include "classifier/amcclassifier.h"
@@ -18,6 +20,7 @@ public:
 
 private:
     AMC::ModType findModTypes(const std::string & cmpString);
+    void randomShuffle();
 
     boost::scoped_ptr < AmcClassifier<double, AMC::ModType> > _classifier;
     boost::filesystem::path _currentPath;

@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree();
 
-    std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-07";
+    std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-12";
 
     ClassifierTrainer _trainer(_amcClassifier, dir);
 
@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     std::string fileName = "cvTreeStructure";
     std::cout << "Saving trained classifier as : " << fileName << std::endl;
     _trainer.save(fileName);
+    std::cout << "Finished..." << std::endl;
 
     return a.exec();
 }

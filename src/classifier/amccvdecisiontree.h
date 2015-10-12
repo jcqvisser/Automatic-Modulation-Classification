@@ -12,14 +12,14 @@
 class AmcCvDecisionTree : public AmcClassifier<double, AMC::ModType>
 {
 public:
-    AmcCvDecisionTree(int max_categories = 10,
-                      int max_depth = INT_MAX,
+    AmcCvDecisionTree(int max_depth = INT_MAX,
                       int min_sample_count = 10,
-                      int cv_folds = 10,
+                      float regression_accuracy = 0.01f,
                       bool use_surrogates = true,
+                      int max_categories = 10,
+                      int cv_folds = 10,
                       bool use_1se_rule = true,
                       bool truncate_pruned_tree = true,
-                      float regression_accuracy = 0.01f,
                       const float* priors = NULL);
 
     AMC::ModType classify(const std::vector<double> &predictData);
@@ -29,8 +29,17 @@ public:
     void load(const std::string & fileName);
 
 private:
-    boost::scoped_ptr<CvDTreeParams> _treeParams;
     boost::scoped_ptr<CvDTree> _tree;
+
+    int _maxDepth;
+    int _minSampleCount;
+    float _regressionAccuracy;
+    bool _useSurrogates;
+    int _maxCategories;
+    int _cvFolds;
+    bool _use1SERule;
+    bool _truncatePrunedTree;
+    const float * _priors;
 };
 
 

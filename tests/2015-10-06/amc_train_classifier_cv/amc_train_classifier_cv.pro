@@ -16,6 +16,7 @@ LIBS += \
         -lboost_date_time\
         -lboost_timer\
         -lboost_filesystem\
+        -lboost_random\
         -lfftw3\
         -lfftw3f\
         -lliquid
