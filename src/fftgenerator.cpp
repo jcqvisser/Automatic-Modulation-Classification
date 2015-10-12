@@ -92,8 +92,10 @@ bool FFTGenerator::getTempBuffer()
             _fftBuff[n][0] = _buffer->getBuffer()[n].real();
             _fftBuff[n][1] = _buffer->getBuffer()[n].imag();
         }
+        lock.unlock();
         return true;
     }
+    lock.unlock();
     return false;
 }
 

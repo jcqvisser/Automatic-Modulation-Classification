@@ -68,10 +68,18 @@ void FileWriter::run()
         lock.lock();
     }
 
+    // Write out the feature list before closing the program.
     while (_featureLists.getBuffer().size() > 0)
     {
+        std::vector<double> tempFeatures(_featureLists.getBuffer().front());
 
-
+        _featureLists.getBuffer().pop_front();
+        for (auto x:tempFeatures)
+        {
+            file << x;
+            file << ",";
+        }
+        file << "\n";
     }
     file.close();
 }
