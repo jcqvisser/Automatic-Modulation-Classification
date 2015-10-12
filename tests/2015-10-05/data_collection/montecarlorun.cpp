@@ -240,20 +240,22 @@ void MonteCarloRun::getNextMod()
         break;
 
     case (AMC::ModType::AM_DSB_SC):
-        _modType->getData() = AMC::ModType::AM_LSB_FC;
-        break;
-
-    case (AMC::ModType::AM_LSB_FC):
+//        _modType->getData() = AMC::ModType::AM_LSB_FC;
         _modType->getData() = AMC::ModType::AM_LSB_SC;
         break;
 
+//    case (AMC::ModType::AM_LSB_FC):
+//        _modType->getData() = AMC::ModType::AM_LSB_SC;
+//        break;
+
     case (AMC::ModType::AM_LSB_SC):
-        _modType->getData() = AMC::ModType::AM_USB_FC;
+        _modType->getData() = AMC::ModType::AM_USB_SC;
+//        _modType->getData() = AMC::ModType::AM_USB_FC;
         break;
 
-    case (AMC::ModType::AM_USB_FC):
-        _modType->getData() = AMC::ModType::AM_USB_SC;
-        break;
+//    case (AMC::ModType::AM_USB_FC):
+//        _modType->getData() = AMC::ModType::AM_USB_SC;
+//        break;
 
     case (AMC::ModType::AM_USB_SC):
         _modType->getData() = AMC::ModType::FM;

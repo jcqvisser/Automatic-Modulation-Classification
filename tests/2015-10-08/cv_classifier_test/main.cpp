@@ -44,10 +44,12 @@ int main(int argc, char *argv[])
     double rel_fs = freq / rate;
 
     // Specific Modulation Settings.
-    AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
+    AmDemod::SideBand sideBand = AmDemod::SideBand::UPPER;
     unsigned int constSize = 2;
-    int supp_carrier = 0;
-    double mod_index = 0.5;
+    int supp_carrier = 1;
+    double mod_index = 1;
+    double fm_mod_index = 20e3/rate;
+    double snr = 12.0;
 
     // Frame size and FFT size.
     size_t N = 2048;
@@ -61,13 +63,16 @@ int main(int argc, char *argv[])
     StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
 
     // FM Stream Function
-//    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), mod_index, rel_fc);
+//    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, rel_fc);
 
-    // MPSK Stream Function
-//    StreamFunction * _streamFunction = new DigitalFunction(new MPskFunction(constSize), rel_fs, rel_fc);
+    // Digital Stream Function
+//    StreamFunction * _digiBase = new MPskFunction(constSize);
+//    StreamFunction * _digiBase = new MQamFunction(constSize);
+//    StreamFunction * _digiBase = new MAskFunction(constSize);
+//    StreamFunction * _streamFunction = new DigitalFunction(_digiBase, rel_fs, rel_fc);
 
     // ------------ Create Streamer Object ------------ //
-    StreamFunction * _awgnFunction = new AwgnFunction(_streamFunction, 12.0, rate, 1e6);
+    StreamFunction * _awgnFunction = new AwgnFunction(_streamFunction, snr, rate, 1e6);
     // UhdMock Object
     boost::scoped_ptr < Streamer > _dataStream(new UhdMock(_awgnFunction, rate, gain, frameSize));
     // UhdRead Object
@@ -81,6 +86,9 @@ int main(int argc, char *argv[])
     boost::shared_ptr < SharedBuffer<std::complex<double> > > _buffer(_dataStream->getBuffer());
     boost::shared_ptr < SharedType<double> > _fc_rel(_dataStream->getFc());
     boost::shared_ptr < SharedType<double> > _window(_dataStream->getWindow());
+
+    _fc_rel->getData() = rel_fc;
+    _window->getData() = 100e3 / rate;
 
     // Create fft generator function.
     FFTGenerator _fftGen(_buffer, rate, N);

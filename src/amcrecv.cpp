@@ -9,6 +9,7 @@ AmcRecv::AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > 
     _N(N),
     _fc(new SharedType<double>),
     _modType(new SharedType<AMC::ModType>),
+    _paBuffer(new SharedBuffer<float>),
     _shadowFc(0.0),
     _shadowModType(AMC::ModType::MODTYPE_NR_ITEMS)
 {
@@ -55,16 +56,24 @@ void AmcRecv::runDemod()
 {
     // Make a temp frame to read into for demodulation.
     std::vector < std::complex < double > > tempFrame(_N);
+    unsigned int counter = 0;
+    unsigned int audioDestr = (unsigned int)std::floor(_rate / AUDIO_RATE );
+    float demodRes = 0.0f;
     while(_isReceiving)
     {
         updateFunction();
         // Read a temp frame, check again if the frame is not larger than the fft size yet.
         if(getTempFrame(tempFrame))
         {
+            boost::unique_lock<boost::shared_mutex> paBuffLock(*_paBuffer->getMutex());
             for(std::complex < double > & sample : tempFrame)
             {
-                _demodulator->demod(sample);
+                demodRes = (float)_demodulator->demod(sample);
+
+//                if(counter % audioDestr == 0)
+//                    _paBuffer->getBuffer().push_back(demodRes);
             }
+            paBuffLock.unlock();
         }
     }
 }
@@ -113,22 +122,24 @@ AmcDemodulator * AmcRecv::getDemodFunction()
 {
     // TODO: Determine Constellation Size.
     unsigned int constSize = 4;
+    double modIndex = 1;
+    double fmModIndex = 0.05;
     switch(_shadowModType)
     {
     case(AMC::ModType::AM_DSB_FC):
-        return new AmDemod(0.5, _shadowFc, AmDemod::SideBand::DOUBLE, 0);
+        return new AmDemod(modIndex, _shadowFc, AmDemod::SideBand::DOUBLE, 0);
     case(AMC::ModType::AM_DSB_SC):
-        return new AmDemod(0.5, _shadowFc, AmDemod::SideBand::DOUBLE, 1);
+        return new AmDemod(modIndex, _shadowFc, AmDemod::SideBand::DOUBLE, 1);
     case(AMC::ModType::AM_LSB_FC):
-        return new AmDemod(0.5, _shadowFc, AmDemod::SideBand::LOWER, 0);
+        return new AmDemod(modIndex, _shadowFc, AmDemod::SideBand::LOWER, 0);
     case(AMC::ModType::AM_LSB_SC):
-        return new AmDemod(0.5, _shadowFc, AmDemod::SideBand::LOWER, 1);
+        return new AmDemod(modIndex, _shadowFc, AmDemod::SideBand::LOWER, 1);
     case(AMC::ModType::AM_USB_FC):
-        return new AmDemod(0.5, _shadowFc, AmDemod::SideBand::UPPER, 0);
+        return new AmDemod(modIndex, _shadowFc, AmDemod::SideBand::UPPER, 0);
     case(AMC::ModType::AM_USB_SC):
-        return new AmDemod(0.5, _shadowFc, AmDemod::SideBand::UPPER, 1);
+        return new AmDemod(modIndex, _shadowFc, AmDemod::SideBand::UPPER, 1);
     case(AMC::ModType::FM):
-        return new FmDemod(0.05, _shadowFc);
+        return new FmDemod(fmModIndex, _shadowFc);
     case(AMC::ModType::ASK_2):
         return new DigitalDemod(new MAskDemod(2), _shadowFc);
     case(AMC::ModType::MASK):
@@ -142,4 +153,33 @@ AmcDemodulator * AmcRecv::getDemodFunction()
     default:
         return new AmcDemodulator();
     }
+}
+
+int AmcRecv::paAmcCallback(const void *inptBuff,
+                           void *outBuff,
+                           unsigned long framesPerBuff,
+                           const PaStreamCallbackTimeInfo *timeInfo,
+                           PaStreamCallbackFlags statusFlags,
+                           void *userData)
+{
+    SharedBuffer<float> * recvData = (SharedBuffer<float>*)userData;
+    float * out = (float*)outBuff;
+    unsigned int i;
+    (void) inptBuff; // Unused arg warning.
+
+    boost::unique_lock<boost::shared_mutex> recvLock(*recvData->getMutex());
+    for(i = 0; i < framesPerBuff; ++i)
+    {
+        if(i < recvData->getBuffer().size())
+        {
+            *out = recvData->getBuffer().front();
+            recvData->getBuffer().pop_front();
+        }
+        else
+            *out = 0.0f;
+
+        ++(*out);
+    }
+    recvLock.unlock();
+    return 0;
 }

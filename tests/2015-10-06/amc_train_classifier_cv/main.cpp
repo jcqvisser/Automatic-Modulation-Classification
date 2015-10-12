@@ -9,9 +9,18 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree();
+    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree(
+                INT_MAX,
+                10,
+                0.01f,
+                true,
+                10,
+                10,
+                true,
+                true,
+                NULL);
 
-    std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-12";
+    std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-12-3";
 
     ClassifierTrainer _trainer(_amcClassifier, dir);
 

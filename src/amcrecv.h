@@ -6,6 +6,7 @@
 #include <portaudio.h>
 #include "sharedbuffer.h"
 #include "sharedtype.h"
+#include "sharedvector.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -14,6 +15,8 @@
 #include "demodulators/mpskdemod.h"
 #include "demodulators/maskdemod.h"
 #include "demodulators/mqamdemod.h"
+
+#define AUDIO_RATE (44100.0)
 
 /**
  * @brief The AmcRecv class performs the actual receival of data from the USRP, it will do the demodulation of the
@@ -61,6 +64,19 @@ private:
     void updateFunction();
     AmcDemodulator * getDemodFunction();
 
+    // Port Audio Test.
+    static int paAmcCallback(const void * inptBuff,
+                             void * outBuff,
+                             unsigned long framesPerBuff,
+                             const PaStreamCallbackTimeInfo * timeInfo,
+                             PaStreamCallbackFlags statusFlags,
+                             void * userData);
+    // PA Variables
+
+
+    /*
+     * Private variables.
+     */
     bool _isReceiving;
     boost::thread _recvThread;
     boost::scoped_ptr < AmcDemodulator > _demodulator;
@@ -69,6 +85,7 @@ private:
     size_t _N;
     boost::shared_ptr < SharedType < double > > _fc;
     boost::shared_ptr < SharedType < AMC::ModType > > _modType;
+    boost::scoped_ptr < SharedBuffer < float > > _paBuffer;
     double _shadowFc;
     AMC::ModType _shadowModType;
 };

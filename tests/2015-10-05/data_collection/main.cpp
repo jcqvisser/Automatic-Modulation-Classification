@@ -18,18 +18,18 @@ int main(int argc, char *argv[])
 
     // FM Modulation Settings
     double fmBW = 50e3 / 1e6;
-    MinMax<double> fmModIndex(fmBW - 0.1 * fmBW, fmBW + 0.1 * fmBW);
+    MinMax<double> fmModIndex(fmBW - 0.6 * fmBW, fmBW);
 
     // Digital Modulation Settings
     MinMax<double> digiFreq(1e3 / rate, 20e3 / rate);
 
     // Noise settings
-    MinMax<double> snr(0, 30);
+    MinMax<double> snr(6, 30);
 
     // Frame size and FFT size and other.
     size_t N = 2048;
     size_t frameSize = 384;
-    double timePerScheme = 600;
+    double timePerScheme = 300;
 
     MonteCarloRun _sim(modIndex,
                        fmModIndex,

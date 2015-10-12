@@ -49,7 +49,7 @@ bool AmcCvDecisionTree::train(const std::vector<std::vector<double> > &trainData
 
     cv::Mat varType(dataMat.cols + 1, 1, CV_8U);
     varType.setTo(CV_VAR_CATEGORICAL);
-    cv::Mat missingMask(dataMat.size(), CV_8U, 0);
+    cv::Mat missingMask;
     cv::Mat varIdx;
     cv::Mat sampleIdx;
 
