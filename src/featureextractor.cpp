@@ -74,12 +74,12 @@ void AMC::FeatureExtractor::run()
             case AMC::FeatureExtractor::WRITE_TO_FILE:
                 _fileWriter.writeToFile(AMC::FeatureExtractor::getFeatureVector());
                 break;
+            case AMC::FeatureExtractor::STOPPED:
+                break;
             case AMC::FeatureExtractor::CLASSIFY:
                 boost::unique_lock<boost::shared_mutex> modTypeLock(*_sharedModType->getMutex());
                 _sharedModType->getData() = _classifier->classify(AMC::FeatureExtractor::getFeatureVector());
                 modTypeLock.unlock();
-                break;
-            case AMC::FeatureExtractor::STOPPED:
                 break;
             }
         }
