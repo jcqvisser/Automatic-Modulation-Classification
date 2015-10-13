@@ -17,7 +17,8 @@ INCLUDEPATH += ../../../src/
 TEMPLATE = app
 
 CONFIG += link_pkgconfig
-PKGCONFIG += opencv
+PKGCONFIG += opencv \
+             portaudio-2.0
 
 LIBS += -luhd\
         -lboost_system\
@@ -58,7 +59,9 @@ SOURCES += main.cpp \
     ../../../src/interface/mainwindow.cpp \
     ../../../src/interface/qcustomplot.cpp \
     ../../../src/firfilter.cpp \
-    ../../../src/modulators/awgnfunction.cpp
+    ../../../src/modulators/awgnfunction.cpp \
+    ../../../src/pareceiveplayback.cpp \
+    ../../../src/modulators/multifunction.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -99,7 +102,9 @@ HEADERS += \
     ../../../src/interface/qcustomplot.h \
     ../../../src/sharedtype.h \
     ../../../src/firfilter.h \
-    ../../../src/modulators/awgnfunction.h
+    ../../../src/modulators/awgnfunction.h \
+    ../../../src/pareceiveplayback.h \
+    ../../../src/modulators/multifunction.h
 
 FORMS += \
     ../../../src/interface/mainwindow.ui

@@ -102,6 +102,7 @@ void UhdMock::runStream()
 void UhdMock::checkFrame()
 {
     unsigned int _filterLength = 128;
+
     // Get center frequency
     boost::shared_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
     double newFc = _fc->getData();

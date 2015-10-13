@@ -146,6 +146,13 @@ StreamFunction * MonteCarloRun::genStreamFunc()
     double fc = _fc->getData();
     fcLock.unlock();
 
+    double fcMulti = fc / 2;
+
+    std::vector < boost::shared_ptr <StreamFunction> > multiFunctions;
+
+    StreamFunction * func1 = new AmFunction(new cosFunction(_freq()), _modIndex(), fcMulti, AmDemod::SideBand::DOUBLE, 0);
+    multiFunctions.push_back(boost::shared_ptr<StreamFunction>(func1));
+
     StreamFunction * baseFunc;
 
     switch(tempModType)
@@ -202,7 +209,19 @@ StreamFunction * MonteCarloRun::genStreamFunc()
         baseFunc = new StreamFunction();
         break;
     }
-    return new AwgnFunction(baseFunc, _snr(), _rate, 10e3);
+
+    multiFunctions.push_back(boost::shared_ptr<StreamFunction>(baseFunc));
+
+    StreamFunction * func3 = new AmFunction(new cosFunction(_freq()), _modIndex(), 3 * fcMulti, AmDemod::SideBand::DOUBLE, 0);
+    multiFunctions.push_back(boost::shared_ptr<StreamFunction>(func3));
+
+    StreamFunction * func4 = new AmFunction(new cosFunction(_freq()), _modIndex(), 4 * fcMulti, AmDemod::SideBand::DOUBLE, 1);
+    multiFunctions.push_back(boost::shared_ptr<StreamFunction>(func4));
+
+    StreamFunction * func5 = new DigitalFunction(new MAskFunction(2), _digiFreq(), 5 * fcMulti);
+    multiFunctions.push_back(boost::shared_ptr<StreamFunction>(func5));
+
+    return new AwgnFunction(new MultiFunction(multiFunctions), _snr(), _rate, 10e3);
 }
 
 void MonteCarloRun::clearBuffer()

@@ -33,6 +33,7 @@
 #include "modulators/mqamfunction.h"
 #include "modulators/maskfunction.h"
 #include "modulators/awgnfunction.h"
+#include "modulators/multifunction.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"

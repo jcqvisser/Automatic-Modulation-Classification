@@ -12,6 +12,7 @@
 #include <boost/smart_ptr.hpp>
 #include "sharedbuffer.h"
 #include "streamer.h"
+#include "firfilter.h"
 
 /**
  * @brief The UhdRead class
@@ -99,6 +100,8 @@ private:
     double _shadowFc;
     double _shadowWindow;
     volatile bool _isReading;
+
+    boost::scoped_ptr<FirFilter> _filter;
 };
 
 #endif // UHDREAD_H

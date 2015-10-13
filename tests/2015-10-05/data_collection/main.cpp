@@ -8,26 +8,26 @@
 int main(int argc, char *argv[])
 {
     // Shared settings.
-    double rate = 1e6;
+    double rate = 2e6;
     MinMax<double> freq(20, 16e3);
-    double fc = 150e3 / rate;
+    double fc = 200e3 / rate;
     double gain = 1;
 
     // AM Modulation settings
     MinMax<double> modIndex(0.1, 1);
 
     // FM Modulation Settings
-    double fmBW = 50e3 / 1e6;
+    double fmBW = 30e3 / 1e6;
     MinMax<double> fmModIndex(fmBW - 0.6 * fmBW, fmBW);
 
     // Digital Modulation Settings
     MinMax<double> digiFreq(1e3 / rate, 20e3 / rate);
 
     // Noise settings
-    MinMax<double> snr(6, 30);
+    MinMax<double> snr(0, 30);
 
     // Frame size and FFT size and other.
-    size_t N = 2048;
+    size_t N = 4096;
     size_t frameSize = 384;
     double timePerScheme = 300;
 
