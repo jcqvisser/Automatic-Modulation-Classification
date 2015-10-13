@@ -37,24 +37,26 @@ int main(int argc, char *argv[])
 {
     // Signal settings.
     double rate = 2e6;
+    // Frequency of transmitted signal
     double freq = 10e3;
+    // Center frequency for window to start at.
     double fc = 100e3;
 
     // Modulation settings
     double gain = 1;
     double rel_fc = fc / rate;
-    double rel_fs = freq / rate;
+    AmDemod::SideBand sideBand;
+    int suppCarrier;
 
-    // Specific Modulation Settings.
-    AmDemod::SideBand sideBand = AmDemod::SideBand::LOWER;
-    unsigned int constSize = 2;
-    int supp_carrier = 1;
+    // AM.
     double mod_index = 1;
-    double fm_mod_index = 25e3/rate;
-    double snr = 10.0;
+    // FM
+    double fm_mod_index = 20e3/rate;
+    // Noise
+    double snr = 20.0;
 
     // Frame size and FFT size.
-    size_t N = 2048;
+    size_t N = 4096;
     size_t frameSize = 384;
 
 /***************************************************************************************************
@@ -65,11 +67,39 @@ int main(int argc, char *argv[])
 
     StreamFunction * _streamFunction;
 
-    _streamFunction = new AmFunction(new cosFunction(freq), mod_index, 200e3/rate, sideBand, supp_carrier);
+    // Signal 1.
+    double fc1 = 100e3 / rate;
+    sideBand = AmDemod::SideBand::DOUBLE;
+    suppCarrier = 0;
+    _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc1, sideBand, suppCarrier);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
-//    _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, rel_fc);
-//    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+    // Signal 2.
+    double fc2 = 200e3 / rate;
+    sideBand = AmDemod::SideBand::DOUBLE;
+    suppCarrier = 1;
+    _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc2, sideBand, suppCarrier);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+    // Signal 3.
+    double fc3 = 300e3 / rate;
+    sideBand = AmDemod::SideBand::LOWER;
+    suppCarrier = 1;
+    _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc3, sideBand, suppCarrier);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+    // Signal 4.
+    double fc4 = 400e3 / rate;
+    sideBand = AmDemod::SideBand::UPPER;
+    suppCarrier = 1;
+    _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc4, sideBand, suppCarrier);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+    // Signal 5.
+    double fc5 = 500e3 / rate;
+    _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, fc5);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
 
     // ------------ Create Streamer Object ------------ //
     StreamFunction * _multiStreamFunction = new MultiFunction(_streamFunctions);
@@ -109,15 +139,6 @@ int main(int argc, char *argv[])
     AmcRecv _amcRecv(_buffer, rate, N);
     _amcRecv.setFc(_fc_rel);
     _amcRecv.setModType(_modType);
-
-    // Am Demodulator.
-    _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
-
-    // Fm Demodulator.
-//    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
-
-    // MPSK Demodulator
-//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fc));
 
 /***************************************************************************************************
  *                                      Initialize GUI Objects                                     *
