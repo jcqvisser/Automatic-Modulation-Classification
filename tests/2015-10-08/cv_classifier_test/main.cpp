@@ -24,6 +24,7 @@
 #include "modulators/maskfunction.h"
 #include "modulators/mqamfunction.h"
 #include "modulators/awgnfunction.h"
+#include "modulators/multifunction.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -35,9 +36,9 @@
 int main(int argc, char *argv[])
 {
     // Signal settings.
-    double rate = 1e6;
-    double freq = 6e3;
-    double fc = 150e3;
+    double rate = 2e6;
+    double freq = 10e3;
+    double fc = 100e3;
 
     // Modulation settings
     double gain = 1;
@@ -45,12 +46,12 @@ int main(int argc, char *argv[])
     double rel_fs = freq / rate;
 
     // Specific Modulation Settings.
-    AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
+    AmDemod::SideBand sideBand = AmDemod::SideBand::LOWER;
     unsigned int constSize = 2;
     int supp_carrier = 1;
     double mod_index = 1;
-    double fm_mod_index = 20e3/rate;
-    double snr = 100.0;
+    double fm_mod_index = 25e3/rate;
+    double snr = 10.0;
 
     // Frame size and FFT size.
     size_t N = 2048;
@@ -60,20 +61,20 @@ int main(int argc, char *argv[])
  *                                      Create stream object                                       *
  **************************************************************************************************/
 
-    // AM Stream function.
-//    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
+    std::vector<boost::shared_ptr<StreamFunction> > _streamFunctions;
 
-    // FM Stream Function
-    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, rel_fc);
+    StreamFunction * _streamFunction;
 
-    // Digital Stream Function
-//    StreamFunction * _digiBase = new MPskFunction(constSize);
-//    StreamFunction * _digiBase = new MQamFunction(constSize);
-//    StreamFunction * _digiBase = new MAskFunction(constSize);
-//    StreamFunction * _streamFunction = new DigitalFunction(_digiBase, rel_fs, rel_fc);
+    _streamFunction = new AmFunction(new cosFunction(freq), mod_index, 200e3/rate, sideBand, supp_carrier);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+//    _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, rel_fc);
+//    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
     // ------------ Create Streamer Object ------------ //
-    StreamFunction * _awgnFunction = new AwgnFunction(_streamFunction, snr, rate, 1e6);
+    StreamFunction * _multiStreamFunction = new MultiFunction(_streamFunctions);
+
+    StreamFunction * _awgnFunction = new AwgnFunction(_multiStreamFunction, snr, rate, 1e6);
     // UhdMock Object
     boost::scoped_ptr < Streamer > _dataStream(new UhdMock(_awgnFunction, rate, gain, frameSize));
     // UhdRead Object
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     _dataStream->startStream();
-    _amcRecv.startDemod(AmcRecv::ReceiveMode::PLAYBACK);
+    _amcRecv.startDemod(AmcRecv::ReceiveMode::NOTHING);
     _fftGen.startFft();
     _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY);
 

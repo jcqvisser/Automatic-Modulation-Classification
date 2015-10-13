@@ -59,11 +59,12 @@ SOURCES += main.cpp \
     ../../../src/demodulators/mqamdemod.cpp \
     ../../../src/firfilter.cpp \
     ../../../src/modulators/awgnfunction.cpp \
-    pareceiveplayback.cpp \
     ../../../src/classifier/amczndescisiontree.cpp \
     ../../../src/classifier/znbranchnode.cpp \
     ../../../src/classifier/znleafnode.cpp \
-    ../../../src/classifier/znUnaryLeafNode.cpp
+    ../../../src/classifier/znUnaryLeafNode.cpp \
+    pareceiveplayback.cpp \
+    ../../../src/modulators/multifunction.cpp
 
 HEADERS  += \
     ../../../src/interface/qcustomplot.h \
@@ -108,6 +109,7 @@ HEADERS  += \
     ../../../src/classifier/znbranchnode.h \
     ../../../src/classifier/znleafnode.h \
     ../../../src/classifier/znnode.h \
-    ../../../src/classifier/znunaryleafnode.h
+    ../../../src/classifier/znunaryleafnode.h \
+    ../../../src/modulators/multifunction.h
 
 FORMS    += ../../../src/interface/mainwindow.ui
