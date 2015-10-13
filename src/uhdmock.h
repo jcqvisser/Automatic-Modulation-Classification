@@ -3,6 +3,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/chrono.hpp>
+#include <boost/timer/timer.hpp>
 #include "streamer.h"
 #include "modulators/streamfunction.h"
 #include "firfilter.h"
@@ -80,6 +81,7 @@ private:
     double _rate;
     double _gain;
     size_t _frameSize;
+    boost::timer::cpu_timer _timer;
 
     boost::shared_ptr < SharedType <double> > _fc;
     boost::shared_ptr < SharedType <double> > _window;

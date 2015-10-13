@@ -4,9 +4,12 @@
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
 #include <portaudio.h>
+#include <exception>
+
 #include "sharedbuffer.h"
 #include "sharedtype.h"
 #include "sharedvector.h"
+#include "pareceiveplayback.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -16,7 +19,7 @@
 #include "demodulators/maskdemod.h"
 #include "demodulators/mqamdemod.h"
 
-#define AUDIO_RATE (44100.0)
+#define AUDIO_RATE (50000.0)
 
 /**
  * @brief The AmcRecv class performs the actual receival of data from the USRP, it will do the demodulation of the
@@ -30,6 +33,8 @@
 class AmcRecv
 {
 public:
+    enum ReceiveMode {WRITE, PLAYBACK, NOTHING};
+
     /**
      * @brief AmcRecv This constructor will take in the shared buffer from the data stream object, there is no
      * default constructor as a buffer object is required.
@@ -42,7 +47,7 @@ public:
     /**
      * @brief This function will launch the thread that the AmcRecv class will run on. Starts the demod process.
      */
-    void startDemod();
+    void startDemod(ReceiveMode recvMode);
 
     /**
      * @brief Stop the demod loop once it is completed or needs to stop. This will end the loop and close the thread.
@@ -64,16 +69,6 @@ private:
     void updateFunction();
     AmcDemodulator * getDemodFunction();
 
-    // Port Audio Test.
-    static int paAmcCallback(const void * inptBuff,
-                             void * outBuff,
-                             unsigned long framesPerBuff,
-                             const PaStreamCallbackTimeInfo * timeInfo,
-                             PaStreamCallbackFlags statusFlags,
-                             void * userData);
-    // PA Variables
-
-
     /*
      * Private variables.
      */
@@ -85,9 +80,11 @@ private:
     size_t _N;
     boost::shared_ptr < SharedType < double > > _fc;
     boost::shared_ptr < SharedType < AMC::ModType > > _modType;
-    boost::scoped_ptr < SharedBuffer < float > > _paBuffer;
+    boost::shared_ptr < SharedBuffer < float > > _paBuffer;
     double _shadowFc;
     AMC::ModType _shadowModType;
+    ReceiveMode _recvMode;
+    paReceivePlayback _paPlayer;
 };
 
 #endif // AMCRECV_H

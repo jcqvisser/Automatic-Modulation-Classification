@@ -30,10 +30,19 @@ INCLUDEPATH +=  ../../../src/
 SOURCES += main.cpp \
     ../../../src/classifier/amccvdecisiontree.cpp \
     classifiertrainer.cpp \
-    ../../../src/amc.cpp
+    ../../../src/amc.cpp \
+    ../../../src/classifier/amczndescisiontree.cpp \
+    ../../../src/classifier/znbranchnode.cpp \
+    ../../../src/classifier/znleafnode.cpp \
+    ../../../src/classifier/znUnaryLeafNode.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
     ../../../src/classifier/amccvdecisiontree.h \
     classifiertrainer.h \
-    ../../../src/amc.h
+    ../../../src/amc.h \
+    ../../../src/classifier/amczndescisiontree.h \
+    ../../../src/classifier/znbranchnode.h \
+    ../../../src/classifier/znleafnode.h \
+    ../../../src/classifier/znnode.h \
+    ../../../src/classifier/znunaryleafnode.h

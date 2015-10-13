@@ -14,6 +14,7 @@
 #include "interface/mainwindow.h"
 
 #include "classifier/amccvdecisiontree.h"
+#include "classifier/amczndescisiontree.h"
 
 #include "modulators/cosfunction.h"
 #include "modulators/amfunction.h"
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
 {
     // Signal settings.
     double rate = 1e6;
-    double freq = 10e3;
+    double freq = 6e3;
     double fc = 150e3;
 
     // Modulation settings
@@ -44,12 +45,12 @@ int main(int argc, char *argv[])
     double rel_fs = freq / rate;
 
     // Specific Modulation Settings.
-    AmDemod::SideBand sideBand = AmDemod::SideBand::UPPER;
+    AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
     unsigned int constSize = 2;
     int supp_carrier = 1;
     double mod_index = 1;
     double fm_mod_index = 20e3/rate;
-    double snr = 12.0;
+    double snr = 100.0;
 
     // Frame size and FFT size.
     size_t N = 2048;
@@ -60,10 +61,10 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     // AM Stream function.
-    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
+//    StreamFunction * _streamFunction = new AmFunction(new cosFunction(freq), mod_index, rel_fc, sideBand, supp_carrier);
 
     // FM Stream Function
-//    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, rel_fc);
+    StreamFunction * _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, rel_fc);
 
     // Digital Stream Function
 //    StreamFunction * _digiBase = new MPskFunction(constSize);
@@ -76,7 +77,7 @@ int main(int argc, char *argv[])
     // UhdMock Object
     boost::scoped_ptr < Streamer > _dataStream(new UhdMock(_awgnFunction, rate, gain, frameSize));
     // UhdRead Object
-    //    boost::scoped_ptr < Streamer > _dataStream(new UhdRead(rate, freq, gain, frameSize));
+//    boost::scoped_ptr < Streamer > _dataStream(new UhdRead(rate, freq, gain, frameSize));
 
 /***************************************************************************************************
  *                                     Initialize utilities                                        *
@@ -94,6 +95,7 @@ int main(int argc, char *argv[])
     FFTGenerator _fftGen(_buffer, rate, N);
 
     AmcClassifier<double, AMC::ModType> * classifier = new AmcCvDecisionTree();
+//    AmcClassifier<double, AMC::ModType> * classifier = new AmcZnDecisionTree();
     AMC::FeatureExtractor _featureExtractor(_buffer, classifier, rate, _fc_rel, N);
 
     boost::shared_ptr < SharedType<AMC::ModType> > _modType(_featureExtractor.getSharedModType());
@@ -141,7 +143,7 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     _dataStream->startStream();
-    _amcRecv.startDemod();
+    _amcRecv.startDemod(AmcRecv::ReceiveMode::PLAYBACK);
     _fftGen.startFft();
     _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY);
 

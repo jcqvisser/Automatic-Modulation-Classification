@@ -11,6 +11,7 @@ UhdMock::UhdMock(StreamFunction * func, double rate, double gain, size_t frameSi
     _rate(rate),
     _gain(gain),
     _frameSize(frameSize),
+    _timer(),
     _fc(new SharedType<double>),
     _window(new SharedType<double>),
     _shadowFc(0.0),
@@ -64,10 +65,14 @@ void UhdMock::runStream()
     double period = 1/_rate;
     double t = 0.0;
 
+    boost::timer::nanosecond_type _timeSinceLast = _timer.elapsed().wall;
+    unsigned long _timeDiff;
+
     while(_isStreaming)
     {
         // Sleep for the duration relative to the data rate, so that the rate is approximately right.
-        boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _frameSize)));
+        _timeDiff = _timer.elapsed().wall - _timeSinceLast;
+        boost::this_thread::sleep_for(boost::chrono::nanoseconds((boost::int_least64_t)(period * 1e9 * _frameSize - _timeDiff)));
 
         // Check that the filter frame has not moved.
         checkFrame();

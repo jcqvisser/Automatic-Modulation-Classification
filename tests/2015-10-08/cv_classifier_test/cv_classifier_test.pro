@@ -16,7 +16,8 @@ INCLUDEPATH += ../../../src/
 CONFIG += c++11
 
 CONFIG += link_pkgconfig
-PKGCONFIG += opencv
+PKGCONFIG += opencv \
+             portaudio-2.0
 
 LIBS += -luhd\
         -lboost_system\
@@ -57,7 +58,12 @@ SOURCES += main.cpp \
     ../../../src/demodulators/maskdemod.cpp \
     ../../../src/demodulators/mqamdemod.cpp \
     ../../../src/firfilter.cpp \
-    ../../../src/modulators/awgnfunction.cpp
+    ../../../src/modulators/awgnfunction.cpp \
+    pareceiveplayback.cpp \
+    ../../../src/classifier/amczndescisiontree.cpp \
+    ../../../src/classifier/znbranchnode.cpp \
+    ../../../src/classifier/znleafnode.cpp \
+    ../../../src/classifier/znUnaryLeafNode.cpp
 
 HEADERS  += \
     ../../../src/interface/qcustomplot.h \
@@ -96,6 +102,12 @@ HEADERS  += \
     ../../../src/demodulators/maskdemod.h \
     ../../../src/demodulators/mqamdemod.h \
     ../../../src/firfilter.h \
-    ../../../src/modulators/awgnfunction.h
+    ../../../src/modulators/awgnfunction.h \
+    pareceiveplayback.h \
+    ../../../src/classifier/amczndescisiontree.h \
+    ../../../src/classifier/znbranchnode.h \
+    ../../../src/classifier/znleafnode.h \
+    ../../../src/classifier/znnode.h \
+    ../../../src/classifier/znunaryleafnode.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

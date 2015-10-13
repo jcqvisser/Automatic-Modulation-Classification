@@ -11,7 +11,9 @@ AmcRecv::AmcRecv(boost::shared_ptr < SharedBuffer < std::complex < double > > > 
     _modType(new SharedType<AMC::ModType>),
     _paBuffer(new SharedBuffer<float>),
     _shadowFc(0.0),
-    _shadowModType(AMC::ModType::MODTYPE_NR_ITEMS)
+    _shadowModType(AMC::ModType::MODTYPE_NR_ITEMS),
+    _recvMode(ReceiveMode::NOTHING),
+    _paPlayer(_paBuffer, AUDIO_RATE)
 {
 
 }
@@ -26,8 +28,16 @@ void AmcRecv::setModType(boost::shared_ptr < SharedType < AMC::ModType > > share
     _modType.swap(sharedModType);
 }
 
-void AmcRecv::startDemod()
+void AmcRecv::startDemod(ReceiveMode recvMode)
 {
+    _recvMode = recvMode;
+
+    // Configure Port Audio.
+    if(_recvMode == ReceiveMode::PLAYBACK)
+    {
+        _paPlayer.start();
+    }
+
     // Initialize the loop and launch the thread.
     _isReceiving = true;
     _recvThread = boost::thread(&AmcRecv::runDemod, this);
@@ -57,7 +67,7 @@ void AmcRecv::runDemod()
     // Make a temp frame to read into for demodulation.
     std::vector < std::complex < double > > tempFrame(_N);
     unsigned int counter = 0;
-    unsigned int audioDestr = (unsigned int)std::floor(_rate / AUDIO_RATE );
+    unsigned int audioDestr = _rate / AUDIO_RATE;
     float demodRes = 0.0f;
     while(_isReceiving)
     {
@@ -65,15 +75,20 @@ void AmcRecv::runDemod()
         // Read a temp frame, check again if the frame is not larger than the fft size yet.
         if(getTempFrame(tempFrame))
         {
-            boost::unique_lock<boost::shared_mutex> paBuffLock(*_paBuffer->getMutex());
             for(std::complex < double > & sample : tempFrame)
             {
                 demodRes = (float)_demodulator->demod(sample);
 
-//                if(counter % audioDestr == 0)
-//                    _paBuffer->getBuffer().push_back(demodRes);
+                if(_recvMode == ReceiveMode::PLAYBACK)
+                {
+                    if(counter % audioDestr == 0)
+                    {
+//                        boost::unique_lock<boost::shared_mutex> paLock(*_paBuffer->getMutex());
+                        _paBuffer->getBuffer().push_back(demodRes);
+                    }
+                }
+                ++counter;
             }
-            paBuffLock.unlock();
         }
     }
 }
@@ -153,33 +168,4 @@ AmcDemodulator * AmcRecv::getDemodFunction()
     default:
         return new AmcDemodulator();
     }
-}
-
-int AmcRecv::paAmcCallback(const void *inptBuff,
-                           void *outBuff,
-                           unsigned long framesPerBuff,
-                           const PaStreamCallbackTimeInfo *timeInfo,
-                           PaStreamCallbackFlags statusFlags,
-                           void *userData)
-{
-    SharedBuffer<float> * recvData = (SharedBuffer<float>*)userData;
-    float * out = (float*)outBuff;
-    unsigned int i;
-    (void) inptBuff; // Unused arg warning.
-
-    boost::unique_lock<boost::shared_mutex> recvLock(*recvData->getMutex());
-    for(i = 0; i < framesPerBuff; ++i)
-    {
-        if(i < recvData->getBuffer().size())
-        {
-            *out = recvData->getBuffer().front();
-            recvData->getBuffer().pop_front();
-        }
-        else
-            *out = 0.0f;
-
-        ++(*out);
-    }
-    recvLock.unlock();
-    return 0;
 }
