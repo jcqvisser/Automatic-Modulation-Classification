@@ -103,7 +103,7 @@ namespace AMC
             double &kurt);
     auto differentiate(const std::vector<double> &x) -> std::vector<double>;
 
-    auto symmetry(const std::vector<std::complex<double> > &x, const double &fcn) -> double;
+    auto symmetry(const std::vector<std::complex<double> > &x, const double &fcn, const double &bw) -> double;
 
     auto maxPower(const std::vector<double> &x,
                   size_t &k) -> double;

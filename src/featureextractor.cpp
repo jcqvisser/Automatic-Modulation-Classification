@@ -5,6 +5,7 @@ AMC::FeatureExtractor::FeatureExtractor(
         AmcClassifier<double, AMC::ModType> * classifier,
         double fs,
         boost::shared_ptr<SharedType<double> > fcRelative,
+        boost::shared_ptr<SharedType<double> > bwRelative,
         size_t windowSize) :
     _buffer(buffer),  
 	_x(windowSize), 
@@ -13,7 +14,8 @@ AMC::FeatureExtractor::FeatureExtractor(
 	_fileWriter(),
     _classifier(classifier), 
     _sharedModType(new SharedType<AMC::ModType>()),
-    _sharedFcRelative(fcRelative)
+    _sharedFcRelative(fcRelative),
+    _sharedBwRelative(bwRelative)
 {}
 
 boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedModType()
@@ -60,7 +62,7 @@ void AMC::FeatureExtractor::run()
         if(get_x())
         {
             boost::shared_lock<boost::shared_mutex> fcLock(*_sharedFcRelative->getMutex());
-            _fnc = _sharedFcRelative->getData() * _windowSize;
+            _fnc = round(_sharedFcRelative->getData() * _windowSize);
             fcLock.unlock();
 
             _featureThread0 = boost::thread(&AMC::FeatureExtractor::findSigmaAMu42A, this);
@@ -187,7 +189,8 @@ void AMC::FeatureExtractor::findGammaMaxP()
 	size_t unused;
     _gammaMax = AMC::maxPower(_xFft.getData(), unused);
 
-    _P = AMC::symmetry(_xFft.getData(), _fnc);
+    double bw = *_sharedBwRelative.getData();
+    _P = AMC::symmetry(_xFft.getData(), _fnc, bw);
     xFftLock.unlock();
 }
 

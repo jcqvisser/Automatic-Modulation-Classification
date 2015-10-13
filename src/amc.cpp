@@ -313,23 +313,31 @@ std::vector<double> AMC::differentiate(const std::vector<double> &x)
     return dxds;
 }
 
-double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &fcn)
+double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &fcn, const double &bw)
 {
-    // make sure the center frequency of the usrp isn't the same as the carrier frequency of the signal, else this measure is useless.
-    // notes: 09/24
     double pU = 0;
     double pL = 0;
 
     size_t N = x.size();
+    size_t fRange = bw/2*N;
+
+    if ((fcn - fRange) < 0)
+    {
+        fRange = fcn-1;
+    }
+    else if ((fcn + fRange) > 0.5*N);
+    {
+        fRange = 0.5*N-fcn-1;
+    }
 
     if (2*fcn+1 >= N)
     {
         throw std::runtime_error("2*fcn > N. Use a larger window");
     }
-    for (size_t n = 0; n < fcn; ++n)
+    for (size_t n = 0; n < fRange; ++n)
     {
-        pL += std::pow(std::abs(x[n]),2);
-        pU += std::pow(std::abs(x[n+fcn+1]),2);
+        pL += std::pow(std::abs(x[fcn - 1 - n]),2);
+        pU += std::pow(std::abs(x[fcn + 1 + n]),2);
     }
 
     return (pL - pU)/(pL + pU);

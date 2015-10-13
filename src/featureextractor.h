@@ -20,6 +20,7 @@ namespace AMC
                 AmcClassifier<double, AMC::ModType> * classifier,
                 double fs,
                 boost::shared_ptr<SharedType<double> > fcRelative,
+                boost::shared_ptr<SharedType<double> > bwRelative,
                 size_t windowSize);
 
         enum ExtractionMode
@@ -73,6 +74,7 @@ namespace AMC
         boost::scoped_ptr< AmcClassifier<double, AMC::ModType> > _classifier;
         boost::shared_ptr< SharedType<AMC::ModType> > _sharedModType;
         boost::shared_ptr<SharedType<double> > _sharedFcRelative;
+        boost::shared_ptr<SharedType<double> > _sharedBwRelative;
     };
 }
 #endif // FEATUREEXTRACTOR_H
