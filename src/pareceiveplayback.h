@@ -21,8 +21,6 @@ public:
     void stop();
 
 private:
-    bool getAudioBuffer();
-
     boost::shared_ptr <SharedBuffer <float> > _inputBuffer;
     unsigned int _framesPerBuff;
     double _audioRate;

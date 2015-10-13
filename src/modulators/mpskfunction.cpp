@@ -53,6 +53,7 @@ MPskFunction::~MPskFunction()
 
 std::complex < double > MPskFunction::calc(const double &inpt)
 {
+    (void)inpt;
     // Create result object, the result of mod will be placed in this.
     liquid_float_complex res{0.0f, 0.0f};
 

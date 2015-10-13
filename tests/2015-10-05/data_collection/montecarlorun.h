@@ -79,6 +79,7 @@ private:
     boost::scoped_ptr < UhdMock > _dataStream;
     boost::shared_ptr < SharedBuffer < std::complex < double > > > _buffer;
     boost::scoped_ptr < AMC::FeatureExtractor > _featureExtractor;
+    std::vector < boost::shared_ptr <StreamFunction> > _multiFunctions;
 
     double _rate;
     double _timePerScheme;

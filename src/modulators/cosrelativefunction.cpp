@@ -15,6 +15,7 @@ cosRelativeFunction::~cosRelativeFunction()
 
 double cosRelativeFunction::calc(const double &inpt)
 {
+    (void)inpt;
     return cos(2 * _pi * _rel_freq * _t);
     ++_t;
 }

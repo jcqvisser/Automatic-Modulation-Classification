@@ -77,6 +77,8 @@ void AMC::FeatureExtractor::run()
                 _sharedModType->getData() = _classifier->classify(AMC::FeatureExtractor::getFeatureVector());
                 modTypeLock.unlock();
                 break;
+            case AMC::FeatureExtractor::STOPPED:
+                break;
             }
         }
         else

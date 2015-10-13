@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
  *                                      Create stream object                                       *
  **************************************************************************************************/
 
-    std::vector<boost::shared_ptr<StreamFunction> > _streamFunctions;
+    std::vector< boost::shared_ptr <StreamFunction> > _streamFunctions;
 
     StreamFunction * _streamFunction;
 

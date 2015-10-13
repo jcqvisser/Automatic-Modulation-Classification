@@ -93,8 +93,3 @@ void paReceivePlayback::stop()
     _paPlaybackThread.join();
 }
 
-bool paReceivePlayback::getAudioBuffer()
-{
-
-}
-
