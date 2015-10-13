@@ -99,6 +99,8 @@ bool AMC::FeatureExtractor::get_x()
             _x.getData()[n] = _buffer->getBuffer()[n];
         }
 
+        _x.getData() = AMC::normalize(AMC::center(_x.getData()));
+
         bufferLock.unlock();
         xWriteLock.unlock();
         return true;
