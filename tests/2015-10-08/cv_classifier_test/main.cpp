@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 
     AmcClassifier<double, AMC::ModType> * classifier = new AmcCvDecisionTree();
 //    AmcClassifier<double, AMC::ModType> * classifier = new AmcZnDecisionTree();
-    AMC::FeatureExtractor _featureExtractor(_buffer, classifier, rate, _fc_rel, N);
+    AMC::FeatureExtractor _featureExtractor(_buffer, classifier, rate, _fc_rel, _window, N);
 
     boost::shared_ptr < SharedType<AMC::ModType> > _modType(_featureExtractor.getSharedModType());
 

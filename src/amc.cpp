@@ -325,7 +325,7 @@ double AMC::symmetry(const std::vector<std::complex<double> > &x, const double &
     {
         fRange = fcn-1;
     }
-    else if ((fcn + fRange) > 0.5*N);
+    else if ((fcn + fRange) > 0.5*N)
     {
         fRange = 0.5*N-fcn-1;
     }

@@ -189,7 +189,7 @@ void AMC::FeatureExtractor::findGammaMaxP()
 	size_t unused;
     _gammaMax = AMC::maxPower(_xFft.getData(), unused);
 
-    double bw = *_sharedBwRelative.getData();
+    double bw = _sharedBwRelative->getData();
     _P = AMC::symmetry(_xFft.getData(), _fnc, bw);
     xFftLock.unlock();
 }
