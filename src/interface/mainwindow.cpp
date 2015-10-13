@@ -19,7 +19,9 @@ MainWindow::MainWindow(double rate, unsigned int N, QWidget *parent) :
     _buffTimer(),
     _infoText(""),
     _fc(new SharedType<double>),
+    _shadowFc(0.0),
     _windowSize(new SharedType<double>),
+    _shadowWindow(0.0),
     _rate(rate)
 {
     ui->setupUi(this);
@@ -53,6 +55,7 @@ void MainWindow::setFc(boost::shared_ptr < SharedType < double > > fc)
 {    
     boost::shared_lock<boost::shared_mutex> fcLock(*_windowSize->getMutex());
     ui->fcSlider->setValue(fc->getData() * ui->fcSlider->maximum() * 2);
+    _shadowFc = fc->getData();
     fcLock.unlock();
 
     _fc.swap(fc);
@@ -62,6 +65,7 @@ void MainWindow::setWindow(boost::shared_ptr < SharedType < double > > windowSiz
 {
     boost::shared_lock<boost::shared_mutex> winLock(*_windowSize->getMutex());
     ui->windowSlider->setValue(windowSize->getData() * ui->windowSlider->maximum() * 4);
+    _shadowWindow = windowSize->getData();
     winLock.unlock();
 
     _windowSize.swap(windowSize);
@@ -100,13 +104,29 @@ void MainWindow::timerEvent(QTimerEvent * event)
 }
 
 void MainWindow::updateCenterFrequency()
-{
+{    
     boost::unique_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
-    _fc->getData() = (double)ui->fcSlider->value() / (double)ui->fcSlider->maximum() / 2;
+    if(_fc->getData() != _shadowFc)
+    {
+        ui->fcSlider->setValue(_fc->getData() * ui->fcSlider->maximum() * 2);
+    }
+    else
+    {
+        _fc->getData() = (double)ui->fcSlider->value() / (double)ui->fcSlider->maximum() / 2;
+    }
+    _shadowFc = _fc->getData();
     fcLock.unlock();
 
     boost::unique_lock<boost::shared_mutex> winLock(*_windowSize->getMutex());
-    _windowSize->getData() = (double)ui->windowSlider->value() / (double)ui->windowSlider->maximum() / 4;
+    if(_windowSize->getData() != _shadowWindow)
+    {
+        ui->windowSlider->setValue(_windowSize->getData() * ui->windowSlider->maximum() * 4);
+    }
+    else
+    {
+        _windowSize->getData() = (double)ui->windowSlider->value() / (double)ui->windowSlider->maximum() / 4;
+    }
+    _shadowWindow = _windowSize->getData();
     winLock.unlock();
 }
 

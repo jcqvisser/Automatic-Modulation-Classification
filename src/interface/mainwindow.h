@@ -60,7 +60,9 @@ private:
 
     std::string _infoText;
     boost::shared_ptr<SharedType<double> > _fc;
+    double _shadowFc;
     boost::shared_ptr<SharedType<double> > _windowSize;
+    double _shadowWindow;
     double _rate;
 };
 
