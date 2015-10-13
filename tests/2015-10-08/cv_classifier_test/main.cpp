@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     // Signal settings.
     double rate = 2e6;
     // Frequency of transmitted signal
-    double freq = 10e3;
+    double freq = 15e3;
     // Center frequency for window to start at.
     double fc = 100e3;
 
@@ -68,35 +68,35 @@ int main(int argc, char *argv[])
     StreamFunction * _streamFunction;
 
     // Signal 1.
-    double fc1 = 100e3 / rate;
+    double fc1 = rel_fc;
     sideBand = AmDemod::SideBand::DOUBLE;
-    suppCarrier = 0;
+    suppCarrier = 1;
     _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc1, sideBand, suppCarrier);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
     // Signal 2.
-    double fc2 = 200e3 / rate;
+    double fc2 = rel_fc * 2;
     sideBand = AmDemod::SideBand::DOUBLE;
-    suppCarrier = 1;
+    suppCarrier =0;
     _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc2, sideBand, suppCarrier);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
     // Signal 3.
-    double fc3 = 300e3 / rate;
+    double fc3 = rel_fc * 3;
     sideBand = AmDemod::SideBand::LOWER;
     suppCarrier = 1;
     _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc3, sideBand, suppCarrier);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
     // Signal 4.
-    double fc4 = 400e3 / rate;
+    double fc4 = rel_fc * 4;
     sideBand = AmDemod::SideBand::UPPER;
     suppCarrier = 1;
     _streamFunction = new AmFunction(new cosFunction(freq), mod_index, fc4, sideBand, suppCarrier);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
     // Signal 5.
-    double fc5 = 500e3 / rate;
+    double fc5 = rel_fc * 5;
     _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, fc5);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
