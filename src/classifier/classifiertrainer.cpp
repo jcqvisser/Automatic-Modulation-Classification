@@ -72,6 +72,9 @@ ClassifierTrainer::ClassifierTrainer(AmcClassifier<double, AMC::ModType> * class
         inptFile.close();
     }
     std::cout << "Total Feature Groups Found: " << _trainData.size() << std::endl;
+    std::cout << "Random Shuffling feature vectors now.. " << std::endl;
+    randomShuffle();
+    std::cout << "Finished Shuffling feature vectors..." << std::endl;
     std::cout << std::endl;
 }
 
@@ -139,4 +142,28 @@ AMC::ModType ClassifierTrainer::findModTypes(const std::string & cmpString)
     {
         return AMC::ModType::MODTYPE_NR_ITEMS;
     }
+}
+
+void ClassifierTrainer::randomShuffle()
+{
+    if(_trainData.size() != _responseData.size())
+    {
+        throw std::length_error("The length of Train Data and Response data are not equal.");
+    }
+
+    // Random number generator.
+    typedef boost::mt19937 shuffle_gen_type;
+
+    boost::variate_generator<shuffle_gen_type, boost::uniform_int< > > _randInt(
+                shuffle_gen_type(std::time(0)), boost::uniform_int<>(0, _trainData.size() - 1));
+
+    int rand_n;
+
+    for (unsigned int n = 0; n < _trainData.size(); ++n)
+    {
+        rand_n = _randInt();
+        std::swap(_trainData[n], _trainData[rand_n]);
+        std::swap(_responseData[n], _responseData[rand_n]);
+    }
+
 }
