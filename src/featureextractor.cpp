@@ -2,7 +2,6 @@
 
 AMC::FeatureExtractor::FeatureExtractor(
         boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-        AmcClassifier<double, AMC::ModType> * classifier,
         double fs,
         boost::shared_ptr<SharedType<double> > fcRelative,
         boost::shared_ptr<SharedType<double> > bwRelative,
@@ -12,7 +11,7 @@ AMC::FeatureExtractor::FeatureExtractor(
 	_windowSize(windowSize), 
 	_fs(fs), 
 	_fileWriter(),
-    _classifier(classifier), 
+    _classifier(),
     _sharedModType(new SharedType<AMC::ModType>()),
     _sharedFcRelative(fcRelative),
     _sharedBwRelative(bwRelative)
@@ -23,15 +22,27 @@ boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedM
     return _sharedModType;
 }
 
+void AMC::FeatureExtractor::setClassifier(AmcClassifier<double, AMC::ModType> *classifier)
+{
+    _classifier.reset(classifier);
+}
+
+void AMC::FeatureExtractor::setBuffer(boost::shared_ptr<SharedBuffer<std::complex<double> > > buff)
+{
+    _buffer.swap(buff);
+}
+
 void AMC::FeatureExtractor::start(ExtractionMode mode)
 {
     _isExtracting = true;
     _mode = mode;
 
-    if(mode == AMC::FeatureExtractor::CLASSIFY)
+    if(mode == CLASSIFY)
     {
-        _classifier->load("cvTreeStructure");
+        if(!_classifier)
+            throw std::runtime_error("FeatureExtractor Error: No classifier specified.");
     }
+
     _extractorThread = boost::thread(&FeatureExtractor::run, this);
 }
 

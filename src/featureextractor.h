@@ -17,7 +17,6 @@ namespace AMC
     public:
        explicit FeatureExtractor(
                 boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
-                AmcClassifier<double, AMC::ModType> * classifier,
                 double fs,
                 boost::shared_ptr<SharedType<double> > fcRelative,
                 boost::shared_ptr<SharedType<double> > bwRelative,
@@ -36,7 +35,8 @@ namespace AMC
         void start(ExtractionMode mode, AMC::ModType);
         std::vector<double> getFeatureVector();
         boost::shared_ptr< SharedType<AMC::ModType > > getSharedModType();
-
+        void setClassifier(AmcClassifier<double, AMC::ModType> * classifier);
+        void setBuffer(boost::shared_ptr <SharedBuffer <std::complex <double> > > buff);
     private:
         bool _isExtracting;
         boost::thread _extractorThread;
