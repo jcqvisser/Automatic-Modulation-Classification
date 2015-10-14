@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     // Signal settings.
     double rate = 2e6;
     // Frequency of transmitted signal
-    double freq = 15e3;
+    double freq = 5e3;
     // Center frequency for window to start at.
     double fc = 100e3;
 
@@ -108,6 +108,20 @@ int main(int argc, char *argv[])
     fs = 20e3 / rate;
     constSize = 4;
     _streamFunction = new DigitalFunction(new MPskFunction(constSize), fs, fc6);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+    // Signal 7.
+    double fc7 = rel_fc * 7;
+    fs = 20e3 / rate;
+    constSize = 4;
+    _streamFunction = new DigitalFunction(new MQamFunction(constSize), fs, fc7);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+    // Signal 8.
+    double fc8 = rel_fc * 8;
+    fs = 20e3 / rate;
+    constSize = 4;
+    _streamFunction = new DigitalFunction(new MAskFunction(constSize), fs, fc8);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
 

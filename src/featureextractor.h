@@ -3,6 +3,7 @@
 #include <boost/smart_ptr.hpp>
 #include <deque>
 #include <complex>
+#include <map>
 
 #include "amc.h"
 #include "sharedbuffer.h"
@@ -22,7 +23,8 @@ namespace AMC
                 double fs,
                 boost::shared_ptr<SharedType<double> > fcRelative,
                 boost::shared_ptr<SharedType<double> > bwRelative,
-                size_t windowSize);
+                size_t windowSize,
+                size_t modTypeWindowSize = 10);
 
         enum ExtractionMode
         {
@@ -40,7 +42,7 @@ namespace AMC
         void setClassifier(AmcClassifier<double, AMC::ModType> * classifier);
         void setBuffer(boost::shared_ptr <SharedBuffer <std::complex <double> > > buff);
     private:
-        AMC::ModType bufferModType();
+        AMC::ModType getSlowModType();
 
         bool _isExtracting;
         boost::thread _extractorThread;
@@ -61,7 +63,6 @@ namespace AMC
         SharedVector<double> _xPhase;
         SharedVector<double> _xPhaseNL;
         SharedVector<std::complex<double> > _xNormCenter;
-        std::deque<AMC::ModType> _modTypes;
 
         size_t _windowSize;
         void findMu42FSigmaAF();
@@ -80,6 +81,10 @@ namespace AMC
         boost::shared_ptr< SharedType<AMC::ModType> > _sharedModType;
         boost::shared_ptr<SharedType<double> > _sharedFcRelative;
         boost::shared_ptr<SharedType<double> > _sharedBwRelative;
+
+        size_t _maxModTypes;
+        std::deque<AMC::ModType> _modTypes;
+        std::map<AMC::ModType, size_t> _modTypeTally;
     };
 }
 #endif // FEATUREEXTRACTOR_H

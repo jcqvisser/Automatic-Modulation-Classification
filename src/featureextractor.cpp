@@ -1,11 +1,11 @@
 #include "featureextractor.h"
 
-AMC::FeatureExtractor::FeatureExtractor(
-        boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
+AMC::FeatureExtractor::FeatureExtractor(boost::shared_ptr<SharedBuffer<std::complex<double> > > buffer,
         double fs,
         boost::shared_ptr<SharedType<double> > fcRelative,
         boost::shared_ptr<SharedType<double> > bwRelative,
-        size_t windowSize) :
+        size_t windowSize,
+        size_t modTypeWindowSize) :
     _buffer(buffer),  
 	_x(windowSize), 
 	_windowSize(windowSize), 
@@ -14,7 +14,10 @@ AMC::FeatureExtractor::FeatureExtractor(
     _classifier(),
     _sharedModType(new SharedType<AMC::ModType>()),
     _sharedFcRelative(fcRelative),
-    _sharedBwRelative(bwRelative)
+    _sharedBwRelative(bwRelative),
+    _maxModTypes(modTypeWindowSize),
+    _modTypes(),
+    _modTypeTally()
 {}
 
 boost::shared_ptr< SharedType<AMC::ModType > > AMC::FeatureExtractor::getSharedModType()
@@ -30,6 +33,41 @@ void AMC::FeatureExtractor::setClassifier(AmcClassifier<double, AMC::ModType> *c
 void AMC::FeatureExtractor::setBuffer(boost::shared_ptr<SharedBuffer<std::complex<double> > > buff)
 {
     _buffer.swap(buff);
+}
+
+AMC::ModType AMC::FeatureExtractor::getSlowModType()
+{
+    AMC::ModType maxCount;
+    size_t maxVal = 0;
+    // Reset all enum values to 0.
+    _modTypeTally[AMC::ModType::AM_DSB_FC] = 0;
+    _modTypeTally[AMC::ModType::AM_DSB_SC] = 0;
+    _modTypeTally[AMC::ModType::AM_USB_FC] = 0;
+    _modTypeTally[AMC::ModType::AM_USB_SC] = 0;
+    _modTypeTally[AMC::ModType::AM_LSB_FC] = 0;
+    _modTypeTally[AMC::ModType::AM_LSB_SC] = 0;
+    _modTypeTally[AMC::ModType::FM] = 0;
+    _modTypeTally[AMC::ModType::MPSK] = 0;
+    _modTypeTally[AMC::ModType::PSK_2] = 0;
+    _modTypeTally[AMC::ModType::MASK] = 0;
+    _modTypeTally[AMC::ModType::ASK_2] = 0;
+    _modTypeTally[AMC::ModType::MQAM] = 0;
+
+    for(AMC::ModType modType : _modTypes)
+    {
+        _modTypeTally[modType] += 1;
+    }
+
+    for(std::map<AMC::ModType, size_t>::iterator _map_itr = _modTypeTally.begin();
+        _map_itr != _modTypeTally.end(); ++_map_itr)
+    {
+        if(_map_itr->second > maxVal)
+        {
+            maxVal = _map_itr->second;
+            maxCount = _map_itr->first;
+        }
+    }
+    return maxCount;
 }
 
 void AMC::FeatureExtractor::start(ExtractionMode mode)
@@ -88,8 +126,12 @@ void AMC::FeatureExtractor::run()
             case AMC::FeatureExtractor::STOPPED:
                 break;
             case AMC::FeatureExtractor::CLASSIFY:
+                _modTypes.push_back(_classifier->classify(AMC::FeatureExtractor::getFeatureVector()));
+                if(_modTypes.size() > _maxModTypes)
+                    _modTypes.pop_front();
+
                 boost::unique_lock<boost::shared_mutex> modTypeLock(*_sharedModType->getMutex());
-                _sharedModType->getData() = _classifier->classify(AMC::FeatureExtractor::getFeatureVector());
+                _sharedModType->getData() = getSlowModType();
                 modTypeLock.unlock();
                 break;
             }

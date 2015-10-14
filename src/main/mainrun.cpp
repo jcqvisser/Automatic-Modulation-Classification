@@ -28,12 +28,13 @@ void AMC::MainRun::start(AMC::RunMode runMode,
                          std::string classifierFileName,
                          StreamFunction *streamFunc)
 {
+    _runMode = runMode;
     switch(runMode)
     {
     case AMC::CLASSIFY:
         _dataStream.reset(new UhdMock(streamFunc, _rate, _gain, _frameSize));
         configurePrivateVars();
-        setClassifier(classifierType);
+        setClassifier(classifierType, classifierFileName);
         break;
 
     case AMC::CLASSIFY_USRP:
@@ -50,20 +51,19 @@ void AMC::MainRun::start(AMC::RunMode runMode,
                          AMC::ClassifierType classifierType,
                          std::string classifierFileName)
 {
-    setClassifier(classifierType);
+    _runMode = runMode;
 
     switch(runMode)
     {
     case AMC::CLASSIFY_USRP:
         _dataStream.reset(new UhdRead(_rate, 0.0, _gain, _frameSize));
         configurePrivateVars();
-
+        setClassifier(classifierType, classifierFileName);
         break;
 
     case AMC::TRAIN_CLASSIFIER:
     case AMC::TEST_CLASSIFIER:
     case AMC::CLASSIFY:
-    case AMC::CLASSIFY_USRP:
     case AMC::CAPTURE_DATA:
     case AMC::STOPPED:
         throw std::runtime_error("AMC::MainRun Error: Incorrect start conditions called.");
@@ -76,10 +76,13 @@ void AMC::MainRun::start(AMC::RunMode runMode,
                          std::string classifierFileName,
                          std::string dir)
 {
+    _runMode = runMode;
     switch(runMode)
     {
     case AMC::TRAIN_CLASSIFIER:
         _classifier.reset(getClassifier(classifierType));
+        //TODO: Configure classifier trainer, reading data from dir and creating
+        // classifierFileName.xml/etc.
         break;
 
     case AMC::CAPTURE_DATA:
@@ -98,22 +101,30 @@ void AMC::MainRun::start(AMC::RunMode runMode,
                          std::string dir,
                          const AMC::MonteCarloArgs &args)
 {
-    setClassifier(classifierType);
+    _runMode = runMode;
 
     switch(runMode)
     {
+    // Capture data for generating and saving various features from random data.
     case AMC::CAPTURE_DATA:
         break;
+
+    // Test the classifier, generating random data and storing the percentage of correct/incorrect values.
     case AMC::TEST_CLASSIFIER:
         break;
 
+    // Run the classifier, generating random data and configuring the receiver.
     case AMC::CLASSIFY:
+        break;
+
     case AMC::CLASSIFY_USRP:
     case AMC::TRAIN_CLASSIFIER:
     case AMC::STOPPED:
         throw std::runtime_error("AMC::MainRun Error: Incorrect start conditions called.");
         break;
     }
+    // Configure classifier (open file).
+    setClassifier(classifierType, classifierFileName);
 }
 
 void AMC::MainRun::setClassifier(AMC::ClassifierType classifierType)
@@ -154,12 +165,34 @@ void AMC::MainRun::configurePrivateVars()
     _window->getData() = 0.1;
     winLock.unlock();
 
-    _featureExtractor.reset(new FeatureExtractor(
-                                _buffer,
-                                _rate,
-                                _fc,
-                                _window,
-                                _N));
+    switch(_runMode)
+    {
+    case AMC::CLASSIFY:
+    case AMC::CLASSIFY_USRP:
+        _featureExtractor.reset(new FeatureExtractor(
+                                    _buffer,
+                                    _rate,
+                                    _fc,
+                                    _window,
+                                    _N));
+        break;
+
+    case AMC::CAPTURE_DATA:
+    case AMC::TEST_CLASSIFIER:
+    case AMC::STOPPED:
+        _featureExtractor.reset(new FeatureExtractor(
+                                    _buffer,
+                                    _rate,
+                                    _fc,
+                                    _window,
+                                    _N,
+                                    1));
+        break;
+
+    case AMC::TRAIN_CLASSIFIER:
+        break;
+
+    }
 
     _modType.swap(_featureExtractor->getSharedModType());
 
@@ -173,6 +206,7 @@ void AMC::MainRun::configureGuiVars()
                             _N));
 
     _mainWindow.reset(new MainWindow(_rate, _N));
+
     _mainWindow->setData(_fftGenerator->getFreqVec(), _fftGenerator->getFftVec());
     _mainWindow->setBuffer(_buffer);
     _mainWindow->setSharedModType(_modType);
