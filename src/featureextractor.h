@@ -1,14 +1,16 @@
 #ifndef FEATUREEXTRACTOR_H
 #define FEATUREEXTRACTOR_H
-#include "amc.h"
 #include <boost/smart_ptr.hpp>
+#include <deque>
+#include <complex>
+
+#include "amc.h"
 #include "sharedbuffer.h"
 #include "sharedvector.h"
 #include "sharedtype.h"
 #include "sharedbuffer.h"
 #include "classifier/amcclassifier.h"
 #include "filewriter.h"
-#include <complex>
 
 namespace AMC
 {
@@ -38,6 +40,8 @@ namespace AMC
         void setClassifier(AmcClassifier<double, AMC::ModType> * classifier);
         void setBuffer(boost::shared_ptr <SharedBuffer <std::complex <double> > > buff);
     private:
+        AMC::ModType bufferModType();
+
         bool _isExtracting;
         boost::thread _extractorThread;
 		boost::thread _featureThread0;
@@ -57,6 +61,7 @@ namespace AMC
         SharedVector<double> _xPhase;
         SharedVector<double> _xPhaseNL;
         SharedVector<std::complex<double> > _xNormCenter;
+        std::deque<AMC::ModType> _modTypes;
 
         size_t _windowSize;
         void findMu42FSigmaAF();

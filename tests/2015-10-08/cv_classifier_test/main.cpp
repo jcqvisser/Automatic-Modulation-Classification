@@ -135,9 +135,13 @@ int main(int argc, char *argv[])
     // Create fft generator function.
     FFTGenerator _fftGen(_buffer, rate, N);
 
+    AMC::FeatureExtractor _featureExtractor(_buffer, rate, _fc_rel, _window, N);
+
     AmcClassifier<double, AMC::ModType> * classifier = new AmcCvDecisionTree();
+    classifier->load("cvTreeStructure");
 //    AmcClassifier<double, AMC::ModType> * classifier = new AmcZnDecisionTree();
-    AMC::FeatureExtractor _featureExtractor(_buffer, classifier, rate, _fc_rel, _window, N);
+//    classifier->load("znTreeStructure");
+    _featureExtractor.setClassifier(classifier);
 
     boost::shared_ptr < SharedType<AMC::ModType> > _modType(_featureExtractor.getSharedModType());
 
