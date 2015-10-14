@@ -14,10 +14,10 @@ int main(int argc, char *argv[])
     double gain = 1;
 
     // AM Modulation settings
-    MinMax<double> modIndex(0.1, 1);
+    MinMax<double> modIndex(0.5, 1);
 
     // FM Modulation Settings
-    double fmBW = 30e3 / 1e6;
+    double fmBW = 40e3 / 1e6;
     MinMax<double> fmModIndex(fmBW - 0.6 * fmBW, fmBW);
 
     // Digital Modulation Settings
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     // Frame size and FFT size and other.
     size_t N = 4096;
     size_t frameSize = 384;
-    double timePerScheme = 300;
+    double timePerScheme = 100;
 
     MonteCarloRun _sim(modIndex,
                        fmModIndex,

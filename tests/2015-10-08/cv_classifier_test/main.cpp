@@ -51,9 +51,12 @@ int main(int argc, char *argv[])
     // AM.
     double mod_index = 1;
     // FM
-    double fm_mod_index = 20e3/rate;
+    double fm_mod_index = 25e3/rate;
     // Noise
     double snr = 20.0;
+    // Digital
+    double fs;
+    unsigned int constSize;
 
     // Frame size and FFT size.
     size_t N = 4096;
@@ -98,6 +101,13 @@ int main(int argc, char *argv[])
     // Signal 5.
     double fc5 = rel_fc * 5;
     _streamFunction = new FmFunction(new cosFunction(freq), fm_mod_index, fc5);
+    _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
+
+    // Signal 6.
+    double fc6 = rel_fc * 6;
+    fs = 20e3 / rate;
+    constSize = 4;
+    _streamFunction = new DigitalFunction(new MPskFunction(constSize), fs, fc6);
     _streamFunctions.push_back(boost::shared_ptr<StreamFunction>(_streamFunction));
 
 

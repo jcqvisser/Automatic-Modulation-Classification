@@ -15,7 +15,7 @@ MonteCarloRun::MonteCarloRun(
     _modType(new SharedType<AMC::ModType>(AMC::ModType::AM_DSB_FC)),
     _dataStream(new UhdMock(new StreamFunction(), rate, gain, frameSize)),
     _buffer(_dataStream->getBuffer()),
-    _featureExtractor(new AMC::FeatureExtractor(_buffer, new AmcCvDecisionTree(), rate, _dataStream->getFc(), N)),
+    _featureExtractor(new AMC::FeatureExtractor(_buffer, new AmcCvDecisionTree(), rate, _dataStream->getFc(), _dataStream->getWindow(), N)),
     _rate(rate),
     _timePerScheme(timePerSchemeSec * 1e9),
     _frameSize(frameSize),
@@ -40,7 +40,7 @@ MonteCarloRun::MonteCarloRun(
     maxWin = std::max(maxWin, fmModIndex.getMax());
 
     boost::unique_lock<boost::shared_mutex> firLock(*_firWindow->getMutex());
-    _firWindow->getData() = maxWin * 2;
+    _firWindow->getData() = maxWin * 2.1;
     firLock.unlock();
 }
 
