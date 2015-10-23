@@ -87,12 +87,14 @@ private:
     size_t _N;
     boost::shared_ptr< SharedType<double> > _fc;
     boost::shared_ptr< SharedType<double> > _firWindow;
+    boost::shared_ptr< SharedType<double> > _snrShared;
+
+    MinMax<double> _snr;
 
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _modIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _fmModIndex;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _freq;
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _digiFreq;
-    boost::variate_generator<rng_gen_type, boost::uniform_real< > > _snr;
     boost::variate_generator<rng_gen_type, boost::uniform_int< > > _constSize;
 
     boost::timer::cpu_timer _timer;

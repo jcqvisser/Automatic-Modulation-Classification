@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     // Frame size and FFT size and other.
     size_t N = 4096;
     size_t frameSize = 384;
-    double timePerScheme = 100;
+    double timePerSnr = 60;
 
     MonteCarloRun _sim(modIndex,
                        fmModIndex,
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
                        fc,
                        rate,
                        gain,
-                       timePerScheme,
+                       timePerSnr,
                        frameSize,
                        N);
 

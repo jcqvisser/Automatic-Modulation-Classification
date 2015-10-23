@@ -15,23 +15,30 @@ MonteCarloRun::MonteCarloRun(
     _modType(new SharedType<AMC::ModType>(AMC::ModType::AM_DSB_FC)),
     _dataStream(new UhdMock(new StreamFunction(), rate, gain, frameSize)),
     _buffer(_dataStream->getBuffer()),
-    _featureExtractor(new AMC::FeatureExtractor(_buffer, new AmcCvDecisionTree(), rate, _dataStream->getFc(), _dataStream->getWindow(), N)),
+    _featureExtractor(new AMC::FeatureExtractor(_buffer, rate, _dataStream->getFc(), _dataStream->getWindow(), N, 1)),
     _rate(rate),
     _timePerScheme(timePerSchemeSec * 1e9),
     _frameSize(frameSize),
     _N(N),
     _fc(_dataStream->getFc()),
     _firWindow(_dataStream->getWindow()),
+    _snrShared(new SharedType<double>(0.0)),
+    _snr(snr),
     _modIndex(rng_gen_type(std::time(0) + 100), boost::uniform_real<>(modIndex.getMin(), modIndex.getMax())),
     _fmModIndex(rng_gen_type(std::time(0) + 125), boost::uniform_real<>(fmModIndex.getMin(), fmModIndex.getMax())),
     _freq(rng_gen_type(std::time(0) + 259), boost::uniform_real<>(freq.getMin(), freq.getMax())),
     _digiFreq(rng_gen_type(std::time(0) - 9), boost::uniform_real<>(digiFreq.getMin(), digiFreq.getMax())),
-    _snr(rng_gen_type(std::time(0) - 206), boost::uniform_real<>(snr.getMin(), snr.getMax())),
     _constSize(rng_gen_type(std::time(0) + 169), boost::uniform_int<>(2, 8)),
     _timer(),
     _thread(),
     _isRunning(false)
 {
+    AmcClassifier<double, AMC::ModType> * classifier;
+    classifier = new AmcCvDecisionTree();
+    classifier->load("cvTreeStructure");
+    _featureExtractor->setClassifier(classifier);
+    _featureExtractor->setSnr(_snrShared);
+
     boost::unique_lock<boost::shared_mutex> fcLock(*_fc->getMutex());
     _fc->getData() = fc;
     fcLock.unlock();
@@ -95,6 +102,12 @@ void MonteCarloRun::run()
     boost::timer::nanosecond_type _timeSinceLast = _timer.elapsed().wall;
     double period = 1 / _rate;
 
+    boost::unique_lock<boost::shared_mutex> snrLock (*_snrShared->getMutex());
+    _snrShared->getData() = 0.0;
+    snrLock.unlock();
+
+    bool snrChange = false;
+
     while(_isRunning)
     {
         boost::this_thread::sleep_for(boost::chrono::microseconds((long)(period * 1e6 * _N)));
@@ -106,32 +119,46 @@ void MonteCarloRun::run()
 
         if(_timePerScheme < _timer.elapsed().wall - _timeSinceLast)
         {
-            getNextMod();
-
-            boost::shared_lock<boost::shared_mutex> modLock(*_modType->getMutex());
-            AMC::ModType tempModType = _modType->getData();
-            modLock.unlock();
-
-            if(tempModType != AMC::ModType::MODTYPE_NR_ITEMS)
+            snrLock.lock();
+            _snrShared->getData() += 1;
+            if(_snrShared->getData() > _snr.getMax())
             {
-                std::cout << "Setting modulation scheme to: " << AMC::toString(tempModType) << std::endl;
-                _featureExtractor->stop();
-
-                _dataStream->changeFunc(genStreamFunc());
-                clearBuffer();
-
-                _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, tempModType);
-
-                _timeSinceLast = _timer.elapsed().wall;
+                snrChange = true;
+                _snrShared->getData() = 0.0;
             }
-            else
+            snrLock.unlock();
+
+            if(snrChange)
             {
-                _isRunning = false;
-                std::cout << "Finished..." << std::endl;
+                snrChange = false;
 
-                _dataStream->stopStream();
-                _featureExtractor->stop();
+                getNextMod();
+
+                boost::shared_lock<boost::shared_mutex> modLock(*_modType->getMutex());
+                AMC::ModType tempModType = _modType->getData();
+                modLock.unlock();
+
+                if(tempModType != AMC::ModType::MODTYPE_NR_ITEMS)
+                {
+                    std::cout << "Setting modulation scheme to: " << AMC::toString(tempModType) << std::endl;
+                    _featureExtractor->stop();
+
+                    _dataStream->changeFunc(genStreamFunc());
+                    clearBuffer();
+
+                    _featureExtractor->start(AMC::FeatureExtractor::WRITE_TO_FILE, tempModType);
+                }
+                else
+                {
+                    _isRunning = false;
+                    std::cout << "Finished..." << std::endl;
+
+                    _dataStream->stopStream();
+                    _featureExtractor->stop();
+                }
             }
+
+            _timeSinceLast = _timer.elapsed().wall;
         }
     }
 }
@@ -145,6 +172,10 @@ StreamFunction * MonteCarloRun::genStreamFunc()
     boost::shared_lock<boost::shared_mutex> fcLock(*_modType->getMutex());
     double fc = _fc->getData();
     fcLock.unlock();
+
+    boost::unique_lock<boost::shared_mutex> snrLock (*_snrShared->getMutex());
+    double snrVal = _snrShared->getData();
+    snrLock.unlock();
 
     StreamFunction * baseFunc;
 
@@ -203,7 +234,7 @@ StreamFunction * MonteCarloRun::genStreamFunc()
         break;
     }
 
-    return new AwgnFunction(baseFunc, _snr(), _rate, 10e3);
+    return new AwgnFunction(baseFunc, snrVal, _rate, 10e3);
 }
 
 void MonteCarloRun::clearBuffer()

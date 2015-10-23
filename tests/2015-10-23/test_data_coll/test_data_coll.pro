@@ -45,9 +45,7 @@ SOURCES += main.cpp \
     ../../../src/amc.cpp \
     ../../../src/amcrecv.cpp \
     ../../../src/datasink.cpp \
-    ../../../src/featureextractor.cpp \
     ../../../src/fftgenerator.cpp \
-    ../../../src/filewriter.cpp \
     ../../../src/uhdmock.cpp \
     ../../../src/uhdread.cpp \
     ../../../src/modulators/mqamfunction.cpp \
@@ -61,7 +59,9 @@ SOURCES += main.cpp \
     ../../../src/firfilter.cpp \
     ../../../src/modulators/awgnfunction.cpp \
     ../../../src/pareceiveplayback.cpp \
-    ../../../src/modulators/multifunction.cpp
+    ../../../src/modulators/multifunction.cpp \
+    testfilewriter.cpp \
+    featureextractor.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -82,9 +82,7 @@ HEADERS += \
     ../../../src/amc.h \
     ../../../src/amcrecv.h \
     ../../../src/datasink.h \
-    ../../../src/featureextractor.h \
     ../../../src/fftgenerator.h \
-    ../../../src/filewriter.h \
     ../../../src/sharedbuffer.h \
     ../../../src/sharedqvector.h \
     ../../../src/sharedvector.h \
@@ -104,7 +102,9 @@ HEADERS += \
     ../../../src/firfilter.h \
     ../../../src/modulators/awgnfunction.h \
     ../../../src/pareceiveplayback.h \
-    ../../../src/modulators/multifunction.h
+    ../../../src/modulators/multifunction.h \
+    testfilewriter.h \
+    featureextractor.h
 
 FORMS += \
     ../../../src/interface/mainwindow.ui
