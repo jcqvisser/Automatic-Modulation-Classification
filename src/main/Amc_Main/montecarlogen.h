@@ -31,8 +31,11 @@ public:
                   const double & rate);
 
     StreamFunction * getStreamFunc(AMC::ModType modType, double fc);
+    StreamFunction * getStreamFunc(AMC::ModType modType, double fc, double snr);
 
 private:
+    StreamFunction * getBaseStreamFunc(AMC::ModType modType, double fc);
+
     double _rate;
 
     boost::variate_generator<rng_gen_type, boost::uniform_real< > > _modIndex;

@@ -15,6 +15,20 @@ AMC::MonteCarloGen::MonteCarloGen(const AMC::MonteCarloArgs &args,
 
 StreamFunction *AMC::MonteCarloGen::getStreamFunc(AMC::ModType modType, double fc)
 {
+    StreamFunction * baseFunc = getBaseStreamFunc(modType, fc);
+
+    return new AwgnFunction(baseFunc, _snr(), _rate, 10e3);
+}
+
+StreamFunction *AMC::MonteCarloGen::getStreamFunc(AMC::ModType modType, double fc, double snr)
+{
+    StreamFunction * baseFunc = getBaseStreamFunc(modType, fc);
+
+    return new AwgnFunction(baseFunc, snr, _rate, 10e3);
+}
+
+StreamFunction *AMC::MonteCarloGen::getBaseStreamFunc(AMC::ModType modType, double fc)
+{
     StreamFunction * baseFunc;
 
     switch(modType)
@@ -72,5 +86,5 @@ StreamFunction *AMC::MonteCarloGen::getStreamFunc(AMC::ModType modType, double f
         break;
     }
 
-    return new AwgnFunction(baseFunc, _snr(), _rate, 10e3);
+    return baseFunc;
 }

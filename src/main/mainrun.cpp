@@ -98,10 +98,10 @@ void AMC::MainRun::start(AMC::RunMode runMode,
 void AMC::MainRun::start(AMC::RunMode runMode,
                          AMC::ClassifierType classifierType,
                          std::string classifierFileName,
-                         std::string dir,
                          const AMC::MonteCarloArgs &args)
 {
     _runMode = runMode;
+    _monteCarloGen.reset(new MonteCarloGen(args, _rate));
 
     switch(runMode)
     {
@@ -111,6 +111,10 @@ void AMC::MainRun::start(AMC::RunMode runMode,
 
     // Test the classifier, generating random data and storing the percentage of correct/incorrect values.
     case AMC::TEST_CLASSIFIER:
+        _dataStream.reset(new UhdMock(new StreamFunction, _rate, _gain, _frameSize));
+        configurePrivateVars();
+        configureGuiVars();
+        setClassifier(classifierType, classifierFileName);
         break;
 
     // Run the classifier, generating random data and configuring the receiver.
@@ -179,7 +183,6 @@ void AMC::MainRun::configurePrivateVars()
 
     case AMC::CAPTURE_DATA:
     case AMC::TEST_CLASSIFIER:
-    case AMC::STOPPED:
         _featureExtractor.reset(new FeatureExtractor(
                                     _buffer,
                                     _rate,
@@ -187,9 +190,11 @@ void AMC::MainRun::configurePrivateVars()
                                     _window,
                                     _N,
                                     1));
+        _modType.swap(_featureExtractor->getSharedModType());
         break;
 
     case AMC::TRAIN_CLASSIFIER:
+    case AMC::STOPPED:
         break;
 
     }
@@ -216,6 +221,23 @@ void AMC::MainRun::configureGuiVars()
 
 void AMC::MainRun::run()
 {
-
+    while(_isRunning)
+    {
+        switch(_runMode)
+        {
+        case AMC::CLASSIFY:
+            break;
+        case AMC::CLASSIFY_USRP:
+            break;
+        case AMC::CAPTURE_DATA:
+            break;
+        case AMC::TRAIN_CLASSIFIER:
+            break;
+        case AMC::TEST_CLASSIFIER:
+            break;
+        case AMC::STOPPED:
+            break;
+        }
+    }
 }
 

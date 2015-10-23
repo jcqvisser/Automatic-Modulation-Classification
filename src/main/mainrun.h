@@ -69,7 +69,6 @@ public:
     void start(RunMode runMode,
                ClassifierType classifierType,
                std::string classifierFileName,
-               std::string dir,
                const MonteCarloArgs &args);
 
     void stop();
@@ -103,6 +102,7 @@ private:
     boost::scoped_ptr <FeatureExtractor> _featureExtractor;
     boost::scoped_ptr <AmcClassifier <double,AMC::ModType> > _classifier;
     boost::scoped_ptr <FFTGenerator> _fftGenerator;
+    boost::scoped_ptr <MonteCarloGen> _monteCarloGen;
 
     QApplication _qApp;
     boost::scoped_ptr <MainWindow> _mainWindow;
