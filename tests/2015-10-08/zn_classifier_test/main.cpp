@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     AmcClassifier<double, AMC::ModType> *dt0 = new AmcZnDecisionTree();
-    std::string dir = "/home/jcq/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-07";
+    std::string dir = "/home/jcq/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-13";
     ClassifierTrainer ct(dt0, dir);
 
     std::cout << "training" << std::endl;

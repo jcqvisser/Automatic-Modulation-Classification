@@ -114,6 +114,7 @@ void ZnBranchNode::fromString(std::string s)
 {
     size_t sc = s.find_last_of(";")+1;
     _threshold = stod(s.substr(sc, s.length()-sc));
+    _isThresholdSet = true;
 }
 
 std::string ZnBranchNode::toString()

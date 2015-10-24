@@ -7,7 +7,7 @@
 #include "streamer.h"
 #include "fftgenerator.h"
 #include "sharedvector.h"
-#include "amcrecv.h"
+//#include "amcrecv.h"
 #include "featureextractor.h"
 
 #include "interface/mainwindow.h"
@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
     double gain = 1;
     double rel_fc = fc / rate;
     double rel_fs = freq / rate;
+
+    boost::shared_ptr<SharedType<double> > fcr(new SharedType<double>(rel_fc));
 
     // Specific Modulation Settings.
     AmDemod::SideBand sideBand = AmDemod::SideBand::DOUBLE;
@@ -84,27 +86,15 @@ int main(int argc, char *argv[])
 
     AmcClassifier<double, AMC::ModType> * classifier = new AmcZnDecisionTree();
     //classifier->load("test0");
-    std::string dir = "/home/jcq/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-07";
+    std::string dir = "/home/jcq/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-12-3";
     ClassifierTrainer ct(classifier,dir);
     ct.train();
     ct.save("test0");
-    AMC::FeatureExtractor _featureExtractor(_buffer, classifier, N, rate);
+    //AMC::FeatureExtractor _featureExtractor(_buffer, classifier, N, rate);
+    AMC::FeatureExtractor _featureExtractor(_buffer, classifier, rate, fcr, N);
+    AMC::FeatureExtractor _featureExtractor(_buffer, rate, fcr, bwr,N,1);
 
-/***************************************************************************************************
- *                                      Create Demodulator                                         *
- **************************************************************************************************/
 
-    // Create demodulator object.
-    AmcRecv _amcRecv(_buffer, N);
-
-    // Am Demodulator.
-        _amcRecv.setDemod(new AmDemod(mod_index, rel_fc, sideBand, supp_carrier));
-
-    // Fm Demodulator.
-//    _amcRecv.setDemod(new FmDemod(mod_index, rel_fc));
-
-    // MPSK Demodulator
-//    _amcRecv.setDemod(new DigitalDemod(new MPskDemod(constSize), rel_fs, rel_fc));
 
 /***************************************************************************************************
  *                                      Initialize GUI Objects                                     *
@@ -124,9 +114,10 @@ int main(int argc, char *argv[])
  **************************************************************************************************/
 
     _dataStream->startStream();
+
 //    _amcRecv.startDemod();
     _fftGen.startFft();
-    _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY, 0.3);
+    _featureExtractor.start(AMC::FeatureExtractor::ExtractionMode::CLASSIFY);
 
     return _app.exec();
 }

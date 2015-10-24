@@ -41,7 +41,6 @@ SOURCES += main.cpp\
     ../../../src/modulators/fmfunction.cpp \
     ../../../src/modulators/mpskfunction.cpp \
     ../../../src/amc.cpp \
-    ../../../src/amcrecv.cpp \
     ../../../src/fftgenerator.cpp \
     ../../../src/filewriter.cpp \
     ../../../src/featureextractor.cpp \
@@ -52,7 +51,8 @@ SOURCES += main.cpp\
     ../../../src/classifier/znleafnode.cpp \
     ../../../src/classifier/znUnaryLeafNode.cpp \
     ../../../src/uhdmock.cpp \
-    ../../../src/modulators/awgnfunction.cpp
+    ../../../src/modulators/awgnfunction.cpp \
+    ../../../src/firfilter.cpp
 
 HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/interface/mainwindow.h \
@@ -70,7 +70,6 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/modulators/realstreamfunction.h \
     ../../../src/modulators/streamfunction.h \
     ../../../src/amc.h \
-    ../../../src/amcrecv.h \
     ../../../src/sharedbuffer.h \
     ../../../src/sharedqvector.h \
     ../../../src/sharedvector.h \
@@ -88,6 +87,7 @@ HEADERS  += ../../../src/interface/qcustomplot.h \
     ../../../src/classifier/znnode.h \
     ../../../src/classifier/znunaryleafnode.h \
     ../../../src/modulators/awgnfunction.h \
-    ../../../src/sharedtype.h
+    ../../../src/sharedtype.h \
+    ../../../src/firfilter.h
 
 FORMS    += ../../../src/interface/mainwindow.ui

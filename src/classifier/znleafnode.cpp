@@ -84,6 +84,7 @@ void ZnLeafNode::fromString(std::string s)
     size_t sc = s.find_last_of(";")+1;
     std::string st = s.substr(sc, s.length()-sc);
     _threshold = std::stod(st);
+    _isThresholdSet = true;
 }
 
 void ZnLeafNode::load(std::vector<std::string> s)

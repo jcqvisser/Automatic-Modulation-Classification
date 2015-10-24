@@ -25,6 +25,7 @@ void ZnUnaryLeafNode::fromString(std::string s)
 {
     // has no threshold to load
     (void) s; //prevent unused variable warning
+    _isThresholdSet = true;
 }
 std::string ZnUnaryLeafNode::toString()
 {
