@@ -21,6 +21,7 @@
 
 #include "classifier/amccvdecisiontree.h"
 #include "classifier/amcclassifier.h"
+#include "classifier/amczndescisiontree.h"
 
 #include "modulators/streamfunction.h"
 #include "modulators/realstreamfunction.h"

@@ -61,7 +61,11 @@ SOURCES += main.cpp \
     ../../../src/pareceiveplayback.cpp \
     ../../../src/modulators/multifunction.cpp \
     testfilewriter.cpp \
-    featureextractor.cpp
+    featureextractor.cpp \
+    ../../../src/classifier/amczndescisiontree.cpp \
+    ../../../src/classifier/znbranchnode.cpp \
+    ../../../src/classifier/znleafnode.cpp \
+    ../../../src/classifier/znUnaryLeafNode.cpp
 
 HEADERS += \
     ../../../src/classifier/amcclassifier.h \
@@ -104,7 +108,12 @@ HEADERS += \
     ../../../src/pareceiveplayback.h \
     ../../../src/modulators/multifunction.h \
     testfilewriter.h \
-    featureextractor.h
+    featureextractor.h \
+    ../../../src/classifier/amczndescisiontree.h \
+    ../../../src/classifier/znbranchnode.h \
+    ../../../src/classifier/znleafnode.h \
+    ../../../src/classifier/znnode.h \
+    ../../../src/classifier/znunaryleafnode.h
 
 FORMS += \
     ../../../src/interface/mainwindow.ui
