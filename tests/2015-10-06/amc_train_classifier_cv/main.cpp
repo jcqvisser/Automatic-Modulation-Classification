@@ -9,19 +9,19 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    std::string fileName = "znTreeStructure";
+    std::string fileName = "cvTreeStructure";
 
-//    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree(
-//                INT_MAX,
-//                10,
-//                0.01f,
-//                true,
-//                10,
-//                10,
-//                true,
-//                true,
-//                NULL);
-    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcZnDecisionTree();
+    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcCvDecisionTree(
+                INT_MAX,
+                10,
+                0.01f,
+                true,
+                10,
+                10,
+                true,
+                true,
+                NULL);
+//    AmcClassifier<double, AMC::ModType> * _amcClassifier = new AmcZnDecisionTree();
 
     std::string dir = "/home/ants/git/Automatic-Modulation-Classification-ELEN4012/train-data/2015-10-13";
 
