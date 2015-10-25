@@ -36,12 +36,12 @@ MonteCarloRun::MonteCarloRun(
     AmcClassifier<double, AMC::ModType> * classifier;
 
     // Cv Classifier
-    classifier = new AmcCvDecisionTree();
-    classifier->load("cvTreeStructure");
+//    classifier = new AmcCvDecisionTree();
+//    classifier->load("cvTreeStructure");
 
     // Zn Classifier
-//    classifier = new AmcZnDecisionTree();
-//    classifier->load("znTreeStructure");
+    classifier = new AmcZnDecisionTree();
+    classifier->load("znTreeStructure_10-24");
 
     _featureExtractor->setClassifier(classifier);
     _featureExtractor->setSnr(_snrShared);
@@ -51,7 +51,7 @@ MonteCarloRun::MonteCarloRun(
     fcLock.unlock();
 
     boost::unique_lock<boost::shared_mutex> firLock(*_firWindow->getMutex());
-    _firWindow->getData() = _freq.max() / rate * 3.0;
+    _firWindow->getData() = _freq.max() / rate * 2.05;
     firLock.unlock();
 }
 
@@ -275,47 +275,47 @@ void MonteCarloRun::getNextMod()
     {
     case (AMC::ModType::AM_DSB_FC):
         _modType->getData() = AMC::ModType::AM_DSB_SC;
-        tempWindow = _freq.max() / _rate * 3.0;
+        tempWindow = _freq.max() / _rate * 2.05;
         break;
 
     case (AMC::ModType::AM_DSB_SC):
         _modType->getData() = AMC::ModType::AM_LSB_SC;
-        tempWindow = _freq.max() / _rate * 3.0;
+        tempWindow = _freq.max() / _rate * 2.05;
         break;
 
     case (AMC::ModType::AM_LSB_SC):
         _modType->getData() = AMC::ModType::AM_USB_SC;
-        tempWindow = _freq.max() / _rate * 3.0;
+        tempWindow = _freq.max() / _rate * 2.05;
         break;
 
     case (AMC::ModType::AM_USB_SC):
         _modType->getData() = AMC::ModType::FM;
-        tempWindow = _fmModIndex.max() * 3.0;
+        tempWindow = _fmModIndex.max() * 2.05;
         break;
 
     case (AMC::ModType::FM):
         _modType->getData() = AMC::ModType::ASK_2;
-        tempWindow = _digiFreq.max() * 3.0;
+        tempWindow = _digiFreq.max() * 2.05;
         break;
 
     case (AMC::ModType::ASK_2):
         _modType->getData() = AMC::ModType::MASK;
-        tempWindow = _digiFreq.max() * 3.0;
+        tempWindow = _digiFreq.max() * 2.05;
         break;
 
     case (AMC::ModType::MASK):
         _modType->getData() = AMC::ModType::PSK_2;
-        tempWindow = _digiFreq.max() * 3.0;
+        tempWindow = _digiFreq.max() * 2.05;
         break;
 
     case (AMC::ModType::PSK_2):
         _modType->getData() = AMC::ModType::MPSK;
-        tempWindow = _digiFreq.max() * 3.0;
+        tempWindow = _digiFreq.max() * 2.05;
         break;
 
     case (AMC::ModType::MPSK):
         _modType->getData() = AMC::ModType::MQAM;
-        tempWindow = _digiFreq.max() * 3.0;
+        tempWindow = _digiFreq.max() * 2.05;
         break;
 
     case (AMC::ModType::MQAM):

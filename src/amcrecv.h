@@ -3,13 +3,13 @@
 
 #include <boost/smart_ptr.hpp>
 #include <boost/thread.hpp>
-//#include <portaudio.h>
+#include <portaudio.h>
 #include <exception>
 
 #include "sharedbuffer.h"
 #include "sharedtype.h"
 #include "sharedvector.h"
-//#include "pareceiveplayback.h"
+#include "pareceiveplayback.h"
 
 #include "demodulators/amcdemodulator.h"
 #include "demodulators/amdemod.h"
@@ -84,7 +84,7 @@ private:
     double _shadowFc;
     AMC::ModType _shadowModType;
     ReceiveMode _recvMode;
-    //paReceivePlayback _paPlayer;
+    paReceivePlayback _paPlayer;
 };
 
 #endif // AMCRECV_H
