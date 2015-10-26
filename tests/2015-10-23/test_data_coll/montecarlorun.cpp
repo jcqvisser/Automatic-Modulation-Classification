@@ -36,12 +36,12 @@ MonteCarloRun::MonteCarloRun(
     AmcClassifier<double, AMC::ModType> * classifier;
 
     // Cv Classifier
-    classifier = new AmcCvDecisionTree();
-    classifier->load("cvTreeStructure");
+//    classifier = new AmcCvDecisionTree();
+//    classifier->load("cvTreeStructure");
 
     // Zn Classifier
-//    classifier = new AmcZnDecisionTree();
-//    classifier->load("znTreeStructure_10-24");
+    classifier = new AmcZnDecisionTree();
+    classifier->load("znTreeStructure_10-24");
 
     _featureExtractor->setClassifier(classifier);
     _featureExtractor->setSnr(_snrShared);
