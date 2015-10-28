@@ -15,7 +15,7 @@ MonteCarloRun::MonteCarloRun(
     _modType(new SharedType<AMC::ModType>(AMC::ModType::AM_DSB_FC)),
     _dataStream(new UhdMock(new StreamFunction(), rate, gain, frameSize)),
     _buffer(_dataStream->getBuffer()),
-    _featureExtractor(new AMC::FeatureExtractor(_buffer, rate, _dataStream->getFc(), _dataStream->getWindow(), N, 1)),
+    _featureExtractor(new AMC::FeatureExtractor(_buffer, rate, _dataStream->getFc(), _dataStream->getWindow(), N, 10)),
     _rate(rate),
     _timePerScheme(timePerSchemeSec * 1e9),
     _frameSize(frameSize),
@@ -36,12 +36,12 @@ MonteCarloRun::MonteCarloRun(
     AmcClassifier<double, AMC::ModType> * classifier;
 
     // Cv Classifier
-//    classifier = new AmcCvDecisionTree();
-//    classifier->load("cvTreeStructure");
+    classifier = new AmcCvDecisionTree();
+    classifier->load("cvTreeStructure");
 
     // Zn Classifier
-    classifier = new AmcZnDecisionTree();
-    classifier->load("znTreeStructure_10-24");
+//    classifier = new AmcZnDecisionTree();
+//    classifier->load("znTreeStructure_10-24");
 
     _featureExtractor->setClassifier(classifier);
     _featureExtractor->setSnr(_snrShared);

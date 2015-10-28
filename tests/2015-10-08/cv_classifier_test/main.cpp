@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     // Signal settings.
     double rate = 2e6;
     // Frequency of transmitted signal
-    double freq = 5e3;
+    double freq = 16e3;
     // Center frequency for window to start at.
     double fc = 100e3;
 
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     // FM
     double fm_mod_index = 25e3/rate;
     // Noise
-    double snr = 20.0;
+    double snr = 30.0;
     // Digital
     double fs;
     unsigned int constSize;
